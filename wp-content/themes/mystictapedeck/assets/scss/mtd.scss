@@ -1,0 +1,79 @@
+@import "compass";
+@import "compass/css3/box-shadow";
+
+#front-hero {
+  background: url(../images/tapedeck.png) bottom center no-repeat;
+  background-size: cover;
+  .marketing {
+    max-width: 75rem;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 65rem;
+  }
+  .tagline {
+    padding: 20px;
+    background-color: rgba(0,0,0,0.6);
+    background-image: url(../images/cloak_wht.png);
+    background-repeat: no-repeat;
+    background-size: 50px;
+    background-position: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    h1, h4{
+      margin-left: 60px;
+    }
+  }
+}
+
+.intro {
+  padding:10px;
+  &.front {
+    background: #555;
+    color: #fff;
+    h2 {
+      background: #333;
+      padding: 0 5px;
+      font-size: 1.75rem;
+    }
+  }
+}
+.archive .blogpost-entry {
+  .post-thumbnail {
+    float: left;
+    margin: 0 10px 10px 0;
+  }
+}
+
+#footer-container {
+  background: url(../images/tape.jpg) center center no-repeat;
+  background-size: cover;
+  min-height: 700px;
+  #footer {
+    .widget-title {
+      @include box-shadow(rgba(0,0,0,0.75) 0px 5px 10px 0px);
+      background: rgba(255,255,255,0.8);
+      color: #1779ba;
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 5px;
+    }
+    .widget ul {
+      background: rgba(255,255,255,0.6);
+      padding: 10px;
+      a {
+        color: #000;
+        display: inline-block;
+        &:hover {
+          color: #1779ba;
+        }
+      }
+      .link-container {
+        float: left;
+        max-width: 70%;
+        width: auto;
+        position: relative;
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+#front-hero {
+  background: url(../images/tapedeck.png) bottom center no-repeat;
+  background-size: cover; }
+  #front-hero .marketing {
+    max-width: 75rem;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 65rem; }
+  #front-hero .tagline {
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    background-image: url(../images/cloak_wht.png);
+    background-repeat: no-repeat;
+    background-size: 50px;
+    background-position: 10px;
+    box-sizing: border-box;
+    width: 100%; }
+    #front-hero .tagline h1, #front-hero .tagline h4 {
+      margin-left: 60px; }
+
+.intro {
+  padding: 10px; }
+  .intro.front {
+    background: #555;
+    color: #fff; }
+    .intro.front h2 {
+      background: #333;
+      padding: 0 5px;
+      font-size: 1.75rem; }
+
+.archive .blogpost-entry .post-thumbnail {
+  float: left;
+  margin: 0 10px 10px 0; }
+
+#footer-container {
+  background: url(../images/tape.jpg) center center no-repeat;
+  background-size: cover;
+  min-height: 700px; }
+  #footer-container #footer .widget-title {
+    -moz-box-shadow: rgba(0, 0, 0, 0.75) 0px 5px 10px 0px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.75) 0px 5px 10px 0px;
+    box-shadow: rgba(0, 0, 0, 0.75) 0px 5px 10px 0px;
+    background: rgba(255, 255, 255, 0.8);
+    color: #1779ba;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 5px; }
+  #footer-container #footer .widget ul {
+    background: rgba(255, 255, 255, 0.6);
+    padding: 10px; }
+    #footer-container #footer .widget ul a {
+      color: #000;
+      display: inline-block; }
+      #footer-container #footer .widget ul a:hover {
+        color: #1779ba; }
+    #footer-container #footer .widget ul .link-container {
+      float: left;
+      max-width: 70%;
+      width: auto;
+      position: relative; }

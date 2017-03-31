@@ -1,0 +1,3 @@
+[submodule "wp-content/themes/foundationpress"]
+	path = wp-content/themes/foundationpress
+	url = https://github.com/olefredrik/FoundationPress

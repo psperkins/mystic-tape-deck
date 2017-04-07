@@ -25,6 +25,14 @@
   }
 }
 
+.entry-content {
+  figure {
+    &.alignleft, &.alignright {
+      width: 200px;
+    }
+  }
+}
+
 .intro {
   padding:10px;
   &.front {

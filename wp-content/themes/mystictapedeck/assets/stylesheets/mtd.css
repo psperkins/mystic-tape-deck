@@ -18,6 +18,9 @@
     #front-hero .tagline h1, #front-hero .tagline h4 {
       margin-left: 60px; }
 
+.entry-content figure.alignleft, .entry-content figure.alignright {
+  width: 200px; }
+
 .intro {
   padding: 10px; }
   .intro.front {

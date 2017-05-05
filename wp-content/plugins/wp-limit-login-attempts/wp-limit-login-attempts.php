@@ -6,7 +6,7 @@
   Author: Arshid 
   Author URI: https://ciphercoin.com
   Text Domain: wp-limit-login-attempts
-  Version: 2.6.1
+  Version: 2.6.2
 */ 
 
 /*  create or update table */
@@ -50,7 +50,7 @@ function wp_limit_login_stylesheet() {
 }
 /*** Plugin main functions ***/  
 add_action( 'login_enqueue_scripts', 'wp_limit_login_stylesheet');
-add_action('plugins_loaded', 'wp_limit_login_init', 99999);
+add_action('plugins_loaded', 'wp_limit_login_init', 1);
 function wp_limit_login_init(){
  
       function is_session_started(){

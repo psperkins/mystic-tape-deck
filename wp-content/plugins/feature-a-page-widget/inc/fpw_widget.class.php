@@ -1,5 +1,5 @@
 <?php
-if( !class_exists('FPW_Widget') ) :
+if( ! class_exists('FPW_Widget') ) :
 /**
  * Widget Class for Feature a Page Widget
  *
@@ -38,6 +38,7 @@ class FPW_Widget extends WP_Widget {
 			'show_excerpt' => true,
 			'show_read_more' => false
 		);
+		
 		// any options not set get the default
 		$instance = wp_parse_args( $instance, $defaults );
 
@@ -47,16 +48,26 @@ class FPW_Widget extends WP_Widget {
 		<p class="fpw-widget-title">
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
 				<?php _e( 'Widget Title', 'feature-a-page-widget' ); ?>
-				<input type="text" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $instance['title']; ?>" />
 			</label>
+			<input type="text" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $instance['title']; ?>" />
 		</p>
 
 		<p class="fpw-featured-page-id">
 			<label for="<?php echo $this->get_field_id( 'featured_page_id' ); ?>">
 				<span  class="fpw-widget-heading"><?php _e( 'Page to Feature', 'feature-a-page-widget' ); ?></span>
-				<select class="fpw-page-select" data-placeholder="<?php _e( 'Select Featured Page&hellip;', 'feature-a-page-widget' ); ?>" id="<?php echo $this->get_field_id( 'featured_page_id' ); ?>" name="<?php echo $this->get_field_name('featured_page_id'); ?>">
-					<?php echo fpw_page_select_list_options( $instance['featured_page_id'] ); ?>
-				</select>
+				<?php
+				/**
+				 * if true, replace select list in favor of text input for featured post ID, saving memory required to generate list of ALL pages and posts
+				 * @var bool
+				 * @since 2.1.0
+				 */
+				if( apply_filters( 'fpw_temp_memory_fix', false ) ) : ?>
+					<input type="text" id="<?php echo $this->get_field_id( 'featured_page_id' ); ?>" name="<?php echo $this->get_field_name('featured_page_id'); ?>" value="<?php echo intval( $instance['featured_page_id'] ); ?>" />
+				<?php else : ?>
+					<select class="fpw-page-select" data-placeholder="<?php _e( 'Select Featured Page&hellip;', 'feature-a-page-widget' ); ?>" id="<?php echo $this->get_field_id( 'featured_page_id' ); ?>" name="<?php echo $this->get_field_name('featured_page_id'); ?>">
+						<?php echo fpw_page_select_list_options( intval( $instance['featured_page_id'] ) ); ?>
+					</select>
+				<?php endif; ?>
 			</label>
 		</p>
 
@@ -122,7 +133,7 @@ class FPW_Widget extends WP_Widget {
 		if( count( $available_layouts ) > 1 ) :
 		?>
 
-		<fieldset class="fpw-layouts">
+		<fieldset class="fpw-layouts"><div><!-- div solely for normalizing positioning between browsers -->
 
 			<legend class="fpw-widget-heading">
 				<?php _e( 'Layout Options', 'feature-a-page-widget' ); ?>
@@ -131,15 +142,16 @@ class FPW_Widget extends WP_Widget {
 			<?php
 			foreach( $available_layouts as $slug => $label ) :
 			?>
-
-				<label for="<?php echo $this->get_field_id( 'layout-' . $slug ); ?>">
+				<div class="layout-option">
 					<input type="radio" class="fpw-layout-<?php echo $slug; ?>" id="<?php echo $this->get_field_id( 'layout-' . $slug ); ?>" name="<?php echo $this->get_field_name('layout'); ?>" value="<?php echo $slug; ?>" <?php checked( $slug, $instance['layout'] ); ?> />
-					<?php echo $label; ?>
-				</label>
+					<label for="<?php echo $this->get_field_id( 'layout-' . $slug ); ?>">
+						<?php echo $label; ?>
+					</label>
+				</div>
 
 			<?php endforeach; ?>
 
-		</fieldset>
+		</div></fieldset>
 		<?php endif; ?>
 
 		<?php
@@ -207,7 +219,7 @@ class FPW_Widget extends WP_Widget {
 		if( in_array( $new_instance['featured_page_id'], $special_features ) ) {
 			$instance['featured_page_id'] = $new_instance['featured_page_id'];
 		} else {
-			$instance['featured_page_id'] = (int) $new_instance['featured_page_id'];
+			$instance['featured_page_id'] = intval( $new_instance['featured_page_id'] );
 		}
 
 		// esc layout key
@@ -248,12 +260,12 @@ class FPW_Widget extends WP_Widget {
 		$instance = wp_parse_args( $instance, $defaults );
 
 		// without an ID, we're done.
-		if( ! isset( $instance['featured_page_id'] ) ) {
+		if( 0 === $instance['featured_page_id'] ) {
 			return;
 		}
 
-		if( $instance['title'] ) {
-			$title = apply_filters( 'widget_title', $instance['title'] );
+		if( ! empty( $instance['title'] ) ) {
+			$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 		}
 
 		// allow for a default layout without forcing a set option
@@ -309,7 +321,7 @@ class FPW_Widget extends WP_Widget {
 		$widget_loop = new WP_Query(
 			array(
 				'post_type' => 'any',
-				'post__in' => array( (int) $instance['featured_page_id'] ),
+				'post__in' => array( intval( $instance['featured_page_id'] ) ),
 				'ignore_sticky_posts' => true
 			)
 		);
@@ -325,7 +337,7 @@ class FPW_Widget extends WP_Widget {
 			$featured_page = get_post( $instance['featured_page_id'] );
 
 			// Let's make a post_class string
-			$post_class = get_post_class( 'hentry fpw-clearfix fpw-layout-' . esc_attr( $instance['layout'] ), (int) $instance['featured_page_id'] );
+			$post_class = get_post_class( 'hentry fpw-clearfix fpw-layout-' . esc_attr( $instance['layout'] ), intval( $instance['featured_page_id'] ) );
 			$post_classes = '';
 			foreach ($post_class as $class) {
 				$post_classes .= $class . ' ';
@@ -386,8 +398,8 @@ class FPW_Widget extends WP_Widget {
 
 			echo $args['before_widget'];
 
-			if( $instance['title'] ) {
-				echo $args['before_title'] . esc_attr( $instance['title'] ) . $args['after_title'];
+			if( ! empty( $title ) ) {
+				echo $args['before_title'] . $title . $args['after_title'];
 			}
 
 			do_action( 'fpw_loop_start' );

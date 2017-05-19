@@ -52,6 +52,8 @@ function fpw_post_types() {
  *
  * First option is blank
  *
+ * List is cached with a transient
+ *
  * @since 2.0.0
  *
  * @param 	int 	$selected 		ID of selected page, if applicable
@@ -62,62 +64,78 @@ function fpw_page_select_list_options( $selected = null ) {
 	$post_types = fpw_post_types();
 
 	// stop if there are no post types to display
-	if( !$post_types )
+	if( ! $post_types )
 		return;
 
-	// setup string to build options on
-	// first option is blank i.e. "no page selected"
-	$fpw_select_list_options = '<option value=""></option>';
+	$fpw_select_list_options = get_transient( 'fpw_widget_select_list' );
 
-	// loop through each post type
-	foreach( $post_types as $type ) {
+	if( empty( $fpw_select_list_options ) ) {
 
-		// prepare list of pages
-		$posts = get_posts( array(
-			'post_status' => 'publish',
-			'posts_per_page' => -1,
-			'post_type' => $type,
-			'orderby' => 'title',
-			'order' => 'DESC',
-			'suppress_filters' => false
-		));
+		// setup string to build options on
+		// first option is blank i.e. "no page selected"
+		$fpw_select_list_options = '<option value=""></option>';
 
-		$post_type_object = get_post_type_object( $type );
-		$name = $post_type_object->labels->name;
+		// loop through each post type
+		foreach( $post_types as $type ) {
 
-		// open optgroup with post type name
-		$fpw_select_list_options .= '<optgroup label="' . esc_attr( $name ) . '">';
+			$post_type_object = get_post_type_object( $type );
+			$name = $post_type_object->labels->name;
 
-		// loop through each post, output an <option>
-		foreach( $posts as $post) {
+			// open optgroup with post type name
+			$fpw_select_list_options .= '<optgroup label="' . esc_attr( $name ) . '">';
 
-			$post_id = $post->ID;
-			$post_title = $post->post_title;
+			// prepare list of pages
+			$posts = get_posts( array(
+				'post_status' => 'publish',
+				'posts_per_page' => -1,
+				'post_type' => $type,
+				'orderby' => 'title',
+				'order' => 'DESC',
+				'no_found_rows' => true,
+				'update_post_term_cache' => false,
+				'suppress_filters' => false
+			));
 
-			// test for excerpt and feature image, set HTML classes if available
-			$featured_image = null;
-			if( has_post_thumbnail( $post_id ) ) {
-				$featured_image = 'featured-image';
+			// loop through each post, output an <option>
+			foreach( $posts as $post) {
+
+				$post_id = $post->ID;
+				$post_title = $post->post_title;
+
+				// test for excerpt and feature image, set HTML classes if available
+				$featured_image = null;
+				if( has_post_thumbnail( $post_id ) ) {
+					$featured_image = 'featured-image';
+				}
+
+				$excerpt = null;
+				if( has_excerpt( $post_id) ) {
+					$excerpt = 'excerpt';
+				}
+
+				$fpw_select_list_options .= sprintf( '<option class="%3$s %4$s" value="%1$s" data-edit-link="%5$s">%2$s</option>',
+					$post_id,
+					$post_title,
+					$featured_image,
+					$excerpt,
+					esc_url( get_edit_post_link( $post_id ) )
+				);
 			}
 
-			$excerpt = null;
-			if( has_excerpt( $post_id) ) {
-				$excerpt = 'excerpt';
-			}
+			// close the optgroup, continue
+			$fpw_select_list_options .= '</optgroup>';
 
-			$fpw_select_list_options .= sprintf( '<option class="%4$s %5$s" value="%1$s" data-edit-link="%6$s" %3$s>%2$s</option>',
-				$post_id,
-				$post_title,
-				selected( $selected, $post_id, false ),
-				$featured_image,
-				$excerpt,
-				esc_url( get_edit_post_link( $post_id ) )
-			);
 		}
 
-		// close the optgroup, continue
-		$fpw_select_list_options .= '</optgroup>';
+		set_transient( 'fpw_widget_select_list', $fpw_select_list_options, 1 * HOUR_IN_SECONDS );
 
+	}
+
+	// set the selected options for this specific widget
+	if( ! empty( $selected ) ) {
+		$selected_value = 'value="' . $selected . '"';
+		$selected_value_selected = $selected_value . ' selected="selected"';
+		$fpw_select_list_options = str_replace( $selected_value, $selected_value_selected, $fpw_select_list_options );
 	}
 
 	// Add special options - Eventually this will make it in
@@ -131,6 +149,21 @@ function fpw_page_select_list_options( $selected = null ) {
 
 	return $fpw_select_list_options;
 
+}
+
+
+/**
+ * Delete the widget's select list transient if publishing a post or updating a published post
+ *
+ * @param int $post_id ID of a post
+ * @param object $post updated post object
+ *
+ * @since  2.1.0 
+ */
+function fpw_delete_select_list_transient( $post_id, $post ) {
+	if( 'publish' === $post->post_status) {
+		delete_transient( 'fpw_widget_select_list' );
+	}
 }
 
 /**

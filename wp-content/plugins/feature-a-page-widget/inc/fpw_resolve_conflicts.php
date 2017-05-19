@@ -78,7 +78,6 @@ add_action( 'fpw_loop_end', 'fpw_add_podpress' );
  * 
  * @see  https://siteorigin.com/docs/page-builder/widget-compatibility/
  */
-add_action('siteorigin_panel_enqueue_admin_scripts', 'fpw_sopb_admin_scripts' );
 function fpw_sopb_admin_scripts() {
 	// Chosen fancy drop down scripts & styles
 	wp_register_script( 'chosen', plugins_url( 'chosen/chosen.jquery.min.js', dirname(__FILE__) ), array( 'jquery' ), '1.5.1' );
@@ -89,3 +88,4 @@ function fpw_sopb_admin_scripts() {
 	// Plugin CSS
 	wp_enqueue_style( 'fpw_admin_css', plugins_url( 'css/fpw_admin.css', dirname(__FILE__) ), array( 'chosen_css' ), FPW_VERSION );
 }
+add_action('siteorigin_panel_enqueue_admin_scripts', 'fpw_sopb_admin_scripts' );

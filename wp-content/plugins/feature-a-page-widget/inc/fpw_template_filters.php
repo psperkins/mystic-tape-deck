@@ -96,6 +96,7 @@ function fpw_excerpt( $excerpt ) {
 	 * @return bool whether to allow auto-generated excerpts when excerpt is empty
 	 */
 	$fpw_auto_excerpt = apply_filters( 'fpw_auto_excerpt', false );
+
 	if( !has_excerpt() && ! (bool) $fpw_auto_excerpt ) {
 		return;
 	}
@@ -134,6 +135,7 @@ function fpw_excerpt( $excerpt ) {
 function fpw_read_more( $excerpt ) {
 
 	$default_read_more =  esc_html__( 'Read More', 'feature-a-page-widget' );
+	
 	/**
 	 * change "Read More" text in "Read More about __{TITLE}__..." link
 	 * @var string
@@ -148,7 +150,13 @@ function fpw_read_more( $excerpt ) {
 	 */
 	$read_more_ellipsis = apply_filters( 'fpw_read_more_ellipsis', '&hellip;' );
 
+	// avoid hiding page title from read more link
+	remove_filter( 'the_title', 'fpw_page_title', 10 );
+
 	$excerpt = $excerpt . ' <a class="fpw-read-more-link" href="' . get_permalink() . '">' .  esc_html( $read_more_text ) . '<span class="screen-reader-text"> ' . _x( 'about', 'Joining word in accessible read more link. Form: __"Read More"__ about {Page Title}','feature-a-page-widget' ) . ' "' . get_the_title() . '"</span>' . esc_html( $read_more_ellipsis ) . '</a>';
+
+
+	add_filter( 'the_title', 'fpw_page_title', 10, 2 );
 
 	return $excerpt;
 

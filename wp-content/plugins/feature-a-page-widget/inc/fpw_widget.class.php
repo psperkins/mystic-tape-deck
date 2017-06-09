@@ -1,5 +1,6 @@
 <?php
 if( ! class_exists('FPW_Widget') ) :
+
 /**
  * Widget Class for Feature a Page Widget
  *
@@ -11,8 +12,9 @@ if( ! class_exists('FPW_Widget') ) :
  */
 class FPW_Widget extends WP_Widget {
 
-	// widget actual processes
+	// set up the widget
 	public function __construct() {
+
 		parent::__construct(
 	 		'fpw_widget', // Base ID
 			esc_html__( 'Feature a Page', 'feature-a-page-widget' ), // Name
@@ -21,11 +23,10 @@ class FPW_Widget extends WP_Widget {
 				'customize_selective_refresh' => true,
 			)
 		);
+
 	}
 
-	/**
-	* Options for the widget
-	*/
+	// Options for the widget
  	public function form( $instance ) {
 
 		// Some default values for the widget options
@@ -124,8 +125,8 @@ class FPW_Widget extends WP_Widget {
 			</span>
 		</p>
 
-
 		<?php
+
 		$available_layouts = fpw_widget_templates();
 
 		// only display layout settings if there's more than one available layout
@@ -155,20 +156,19 @@ class FPW_Widget extends WP_Widget {
 		<?php endif; ?>
 
 		<?php
-		/**
-		 * Check if 1.X template override is present in active theme
-		 *
-		 * Display a warning if so
-		 */
+
+		// Check if 1.X template override is present in active theme
+		// Display a warning if so
 		$fpw_template = locate_template( 'fpw_views/fpw_default.php', false, true );
+
 		if( $fpw_template ) {
+
 			echo '<p class="fpw-error"><span class="dashicons dashicons-info"></span>' . esc_html__( 'Your theme is using an outdated widget template. It will continue to work, but new widget options added in Version 2.0 will not. Please rename or remove the custom template and update to one or more new templates.', 'feature-a-page-widget' ) . ' ' . esc_html__( '<a href="http://mrwweb.com/wordpress-plugins/feature-a-page-widget/version-2-documentation/" target="_blank">Full Version 2.0 Documentation</a>', 'feature-a-page-widget' ) . '</p>';
 
 		} else {
 
-			/**
-			 * new v2.X advanced options only available if 1.X template override isn't present
-			 */
+			// new v2.X advanced options only available if 1.X template override isn't present
+			
 			?>
 
 			<fieldset name="<?php echo $this->get_field_name('fpw_advanced'); ?>" class="fpw-advanced">
@@ -200,20 +200,18 @@ class FPW_Widget extends WP_Widget {
 
 	// processes widget options to be saved
 	public function update( $new_instance, $old_instance ) {
+
+		// update old options with the new ones
 		$instance = wp_parse_args( $new_instance, $old_instance );
 
-		/**
-		 * Sanitize all the options!
-		 */
-
-		/**
-		 * PLain Text
-		 */
+		/*************************************
+		 * SANITIZE ALL THE OPTIONS
+		 *************************************/
+		
+		// Plain Text
 		$instance['title'] = sanitize_text_field( $new_instance['title'] );
 
-		/**
-		 * Option must be in pre-defined array
-		 */
+		// Option must be in pre-defined array
 		// test for Special values, otherwise, it's an integer
 		$special_features = array(/* 'most_recent' */);
 		if( in_array( $new_instance['featured_page_id'], $special_features ) ) {
@@ -227,26 +225,28 @@ class FPW_Widget extends WP_Widget {
 		// validate layout for accepted options
 		$accepted_layouts = fpw_widget_templates();
 		if( ! in_array( $instance['layout'], array_keys(  $accepted_layouts ) ) ) {
+
 			$accepted_layouts_keys = array_keys( $accepted_layouts );
 			$instance['layout'] = $accepted_layouts_keys[0];
+
 		}
 
-		/**
-		 * boolean options to sanitize
-		 */
+		// boolean options to sanitize
 		$true_falses = array( 'show_title', 'show_image', 'show_excerpt', 'show_read_more' );
 		foreach ( $true_falses as $option ) {
+
 			$instance[$option] = isset( $new_instance[$option] ) ? (bool) $new_instance[$option] : false;
+
 		}
 
 		return $instance;
+
 	}
 
 	// outputs the content of the widget
 	public function widget( $args, $instance ) {
-		/**
-		 * Validate options
-		 *----------------------------------------------------*/
+
+		// Validate widget options
 		$defaults = array(
 			'title' => '',
 			'featured_page_id' => '',
@@ -256,30 +256,34 @@ class FPW_Widget extends WP_Widget {
 			'show_excerpt' => true,
 			'show_read_more' => false
 		);
+
 		// any options not set get the default
 		$instance = wp_parse_args( $instance, $defaults );
 
-		// without an ID, we're done.
+		// if there's no featured post ID, we can stop now.
 		if( 0 === $instance['featured_page_id'] ) {
 			return;
 		}
 
+		// apply widget_title filter if there's a title
 		if( ! empty( $instance['title'] ) ) {
+
 			$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
+
 		}
 
-		// allow for a default layout without forcing a set option
+		// set a required layout if filters result in only 1 available template
 		$accepted_layouts = fpw_widget_templates();
 		if( 1 === count( $accepted_layouts ) ) {
+
 			$accepted_layouts_keys = array_keys( $accepted_layouts );
 			$instance['layout'] = $accepted_layouts_keys[0];
+
 		}
 
-		/**
-		 * Implement advanced widget options via template function filters
-		 *
-		 * removing filters ensures that later instances don't accidentally inherit settings
-		 */
+		// Implement advanced widget options via template function filters
+		// removing filters ensures that later instances don't accidentally inherit settings
+
 		if( (bool) $instance['show_read_more'] ) {
 			add_filter( 'fpw_excerpt', 'fpw_read_more', 999 );
 		} else {
@@ -304,13 +308,15 @@ class FPW_Widget extends WP_Widget {
 			remove_filter( 'fpw_featured_image', '__return_empty_string', 999 );
 		}
 
-		/**
-		 * Widget Output Begins
-		 *
-		 * check active theme for widget template, then use default plugin template file(s)
-		 *
-		 * will use 1.X version template if present in active theme (this may be deprecated at a later time)
-		 */
+		/*************************************
+		 * WIDGET OUTPUT BEGINS
+		 *************************************/
+
+		// check active theme for widget template,
+		// then use default plugin template file(s)
+		// will use 1.X version template if present in active theme
+		// (this may be deprecated at a later time)
+		
 		// v 1.X template
 		$fpw_template = locate_template( 'fpw_views/fpw_default.php', false, true );
 
@@ -320,7 +326,7 @@ class FPW_Widget extends WP_Widget {
 		// Make our new WP_Query instance for the widget. We use it either way
 		$widget_loop = new WP_Query(
 			array(
-				'post_type' => 'any',
+				'post_type' => fpw_post_types(),
 				'post__in' => array( intval( $instance['featured_page_id'] ) ),
 				'ignore_sticky_posts' => true
 			)
@@ -328,6 +334,9 @@ class FPW_Widget extends WP_Widget {
 
 		// Allow themes to override template
 		if( $fpw_template ) {
+
+			// THIS IF() CLAUSE IS FOR THE LEGACY TEMPLATE SYSTEM
+			// WILL EVENTUALLY BE REMOVED
 
 			// for the legacy templates :( now I know better
 			extract($args);
@@ -339,29 +348,40 @@ class FPW_Widget extends WP_Widget {
 			// Let's make a post_class string
 			$post_class = get_post_class( 'hentry fpw-clearfix fpw-layout-' . esc_attr( $instance['layout'] ), intval( $instance['featured_page_id'] ) );
 			$post_classes = '';
+
 			foreach ($post_class as $class) {
+
 				$post_classes .= $class . ' ';
+
 			}
 
 			// see if there's a page title. if so, put it together nicely for use in the widget
 			if ( $featured_page->post_title ) {
+
 				$page_title = apply_filters( 'fpw_page_title', esc_attr__( $featured_page->post_title ) );
 				$page_title_html = sprintf(
 					'<h1 class="fpw-page-title entry-title">%1$s</h1>',
 					sanitize_text_field( $page_title )
 				);
+
 			} else {
+
 				$page_title = null;
 				$page_title_html = null;
+
 			}
 
 			// if there's an excerpt, grab it and filter
 			if( $featured_page->post_excerpt ) {
+
 				$excerpt = $featured_page->post_excerpt;
 				$excerpt = apply_filters( 'the_excerpt', $excerpt );
 				$excerpt = apply_filters( 'fpw_excerpt', $excerpt, $instance['featured_page_id'] );
+
 			} else {
+
 				$excerpt = null;
+
 			}
 
 			// the featured image size is dependant on layout
@@ -385,10 +405,14 @@ class FPW_Widget extends WP_Widget {
 
 			// see if there is a post_thumbnail grab it and filter it
 			if ( has_post_thumbnail( $instance['featured_page_id'] ) ) {
+
 				$featured_image = get_the_post_thumbnail( $instance['featured_page_id'], $image_size );
 				$featured_image = apply_filters( 'fpw_featured_image', $featured_image, $instance['featured_page_id'] );
+
 			} else {
+
 				$featured_image = null;
+
 			}
 
 			// load the template
@@ -396,23 +420,38 @@ class FPW_Widget extends WP_Widget {
 
 		} else {
 
+			// THIS IF() CLAUSE IS THE NEW 2.0 TEMPLATE SYSTEM.
+
 			echo $args['before_widget'];
 
 			if( ! empty( $title ) ) {
 				echo $args['before_title'] . $title . $args['after_title'];
 			}
 
+			// Action run immediately before the Feature a Page Template and after the widget opening wrapper and title are output.
+ 
+			// Useful for unhooking filters that apply to loop functions like the_content that may interfere with the widget.
+ 
+			// Filters that apply Show/Hide options for the widget are hooked here.
+
 			do_action( 'fpw_loop_start' );
 
 			while( $widget_loop->have_posts() ) : $widget_loop->the_post();
 
-			if( $fpw2_template ) {
-				require( $fpw2_template );
-			} else {
-				require( plugin_dir_path( dirname(__FILE__) ) . 'fpw2_views/' . esc_attr( $instance['layout'] ) . '.php' );
-			}
+				if( $fpw2_template ) {
+
+					require( $fpw2_template );
+
+				} else {
+
+					require( plugin_dir_path( dirname( __FILE__ ) ) . 'fpw2_views/' . esc_attr( $instance['layout'] ) . '.php' );
+
+				}
 
 			endwhile;
+
+			// Action run immediately after the Feature a Page Template and before the widget closing wrapper.
+			// Useful for adding back filters unhooked on `fpw_loop_start`
 
 			do_action( 'fpw_loop_end' );
 
@@ -424,6 +463,6 @@ class FPW_Widget extends WP_Widget {
 
 	}
 
-} #end FPW_Widget
+} # end FPW_Widget
 
 endif;

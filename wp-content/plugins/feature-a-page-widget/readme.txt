@@ -3,8 +3,8 @@ Contributors: mrwweb
 Donate link: https://www.paypal.me/rootwiley
 Tags: Widget, Widgets, Sidebar, Featured Page, Featured Post
 Requires at least: 3.9
-Tested up to: 4.8-beta1
-Stable tag: 2.1.0
+Tested up to: 4.8
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,9 +12,7 @@ A widget to display an attractive summary of any page in any widget area.
 
 == Description ==
 
-Feature A Page Widget provides a "just works" solution for showcasing a Page, Post, or Custom Post Type in any widget area (aka sidebar). It leverages core WordPress features, a *simple* set of options, and a sleek UI for selecting one of three widget layouts.
-
-[Full Version 2.0 Documentation](http://mrwweb.com/wordpress-plugins/feature-a-page-widget/version-2-documentation/)
+Feature A Page Widget provides a "just works" solution for showcasing a Page, Post, or custom post type in any widget area (aka sidebar). It leverages core WordPress features, a *simple* set of options, and a sleek UI for selecting one of three widget layouts.
 
 = How to Use the Widget =
 
@@ -23,7 +21,7 @@ Feature A Page Widget provides a "just works" solution for showcasing a Page, Po
 1. Fill out the [Excerpt](http://en.support.wordpress.com/splitting-content/excerpts/#creating-excerpts) and select a [Featured Image](http://en.support.wordpress.com/featured-images/#setting-a-featured-image) on that page.
 1. Go to Appearance > Widgets or Customize > Widgets.
 1. Add an instance of the "Feature a Page Widget" to the widget area (Sidebar, Footer, etc.) of your choosing.
-1. Select the Page, choose a layout, and give the widget a title if you want.
+1. Select the page, choose a layout, and optionally give the widget a title.
 1. Save the widget!
 1. Admire your handiwork.
 
@@ -31,14 +29,14 @@ This plugin enables Featured Images (aka "Post Thumbnails") and Excerpts for Pag
 
 = Important Note: Image Sizes =
 
-This plugin creates multiple custom image sizes. If you use images that were uploaded to the  media library before you installed this plugin, you may need to use [Regenerate Thumbnails](http://wordpress.org/extend/plugins/regenerate-thumbnails/) to create the correctly-sized images.
+This plugin creates multiple custom image sizes. If you use images that were uploaded to the  media library before you installed this plugin, you may need to use a plugin like [Regenerate Thumbnails](http://wordpress.org/extend/plugins/regenerate-thumbnails/) to create the correctly-sized images.
 
 = Customizing the Widget =
 
 There are multiple ways to modify the widget based on your needs:
 
-1. Prewritten CSS selectors to help you get started with custom CSS styles
-1. Three default overrideable templates and the ability to create custom templates
+1. Prewritten CSS selectors in `/css/fpw_starter_styles.css` to help you get started with custom CSS styles in a child theme or the Custom CSS Customizer field
+1. Three default overridable templates and the ability to create custom templates
 1. Eight filters to modify most parts of the widget output (Title, Read More, Image sizes, etc.)
 1. Interested in commissioning a custom layout just for your site? [Get in touch.](https://mrwweb.com/contact/)
 
@@ -46,14 +44,14 @@ See [the FAQs](https://wordpress.org/plugins/feature-a-page-widget/faq/) for lin
 
 = Like the Plugin? =
 
-* [We love 5-star ratings!](http://wordpress.org/support/view/plugin-reviews/feature-a-page-widget).
+* [We love 5-star ratings!](http://wordpress.org/support/view/plugin-reviews/feature-a-page-widget)
 * [Donations accepted](https://www.paypal.me/rootwiley)
 
 = Available Languages =
 
 Please [help translate Feature A Page Widget](https://translate.wordpress.org/projects/wp-plugins/feature-a-page-widget). Users have contributed translations in the following languages:
 
-English (default), German (de_DE), Serbian (sr_RS), Polish (pl_PL), Spanish (es_ES), Italian (it_IT), Dutch (nl_NL)
+English (default), German (`de_DE`), Serbian (`sr_RS`), Polish (`pl_PL`), Spanish (`es_ES`), Italian (`it_IT`), Dutch (`nl_NL`)
 
 = Other Plugins by @MRWweb =
 
@@ -119,7 +117,7 @@ Use the [`fpw_image_size` filter](https://gist.github.com/mrwweb/56edda993e0b706
 
 = Can I use an auto-generated Excerpt if I haven't filled one in? =
 
-There's a filter for that too. See [fpw_auto_excerpt](https://gist.github.com/mrwweb/bebf4cbdcf50d4eadd46).
+There's a filter for that too. See [`fpw_auto_excerpt`](https://gist.github.com/mrwweb/bebf4cbdcf50d4eadd46).
 
 = What are those icons in the "Select Page" drop down? =
 
@@ -129,9 +127,9 @@ When selecting the page to feature in the widget settings, the list of pages inc
 
 This widget is intended to be straightforward and avoid melting into "option soup." However, that means it might not be perfect for what you need.
 
-If you think the widget is *almost right*, double-check that can't use the one of the plugin's filters or the widget view template (see "I want to modify how the widget looks/works"). If that doesn't work, [submit some feedback](http://mrwweb.com/feature-a-page-widget-plugin-wordpress/#gform_wrapper_4) or [vote on possible features](http://mrwweb.com/feature-a-page-widget-plugin-wordpress/#gform_wrapper_5) for future versions of the plugins. And of course, there's always [the support forum](http://wordpress.org/support/plugin/feature-a-page-widget).
+If you think the widget is *almost right*, double-check that can't use the one of the plugin's filters or the widget view template (see "I want to modify how the widget looks/works"). If that doesn't work, [submit some feedback](http://mrwweb.com/feature-a-page-widget-plugin-wordpress/#gform_wrapper_4) for future versions of the plugins. And of course, there's always [the support forum](http://wordpress.org/support/plugin/feature-a-page-widget).
 
-If this plugin is more than a little off, you might be looking for a different plugin like [Posts in Sidebar](http://wordpress.org/extend/plugins/posts-in-sidebar/), [Query Posts Widget](http://wordpress.org/extend/plugins/query-posts/), [Featured Page Widget](http://wordpress.org/extend/plugins/featured-page-widget/), or [Simple Featured Posts Widget](http://wordpress.org/extend/plugins/simple-featured-posts-widget/).
+If this plugin is more than a little off, you might be looking for a different plugin like [Posts in Sidebar](http://wordpress.org/extend/plugins/posts-in-sidebar/) or [Genesis Featured Page Advanced](https://wordpress.org/plugins/genesis-featured-page-advanced/) (Genesis only).
 
 == Screenshots ==
 
@@ -141,6 +139,12 @@ If this plugin is more than a little off, you might be looking for a different p
 4. Uses standard WordPress fields (Title, Featured Image, and Excerpt) that you already know and love.
 
 == Changelog ==
+
+= 2.1.1 (June 8, 2017) =
+- Increase "Page to Feature" list transient caching time from 1 to 4 hours following no reported problems since 2.1.0 release.
+- [Fix] Revise widget query to avoid conflict with plugins including Events Manager. [Props @betyonfire](https://wordpress.org/support/topic/custom-post-types-appear-in-widget-but-not-on-page/)
+- Improve inline documentation thoroughness, clearness, and formatting
+- Increase and standardize whitespace throughout plugin
 
 = 2.1.0 (May 18, 2017) =
 * [New] Implement caching on Widgets admin screen for massive performance improvements (70-80% reduction in query time in testing) on sites with lots of pages and multiple widgets.

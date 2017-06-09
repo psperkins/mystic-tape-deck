@@ -15,6 +15,7 @@
  * @since	2.0.0
  * @license	http://www.gnu.org/licenses/gpl-2.0.html	GPLv2 or later
  */
+
 /**
  * apply filters to the_title in feature a page widget
  *
@@ -72,6 +73,7 @@ function fpw_image_size( $size ) {
 	 * @return string|array       image size slug or width/height array for image size
 	 */
 	$size = apply_filters( 'fpw_image_size', $size );
+	
 	return $size;
 
 }
@@ -166,10 +168,12 @@ function fpw_read_more( $excerpt ) {
  * Apply filters (on which widget options rely) to widget templates
  */
 function fpw_before_loop() {
+
 	add_filter( 'the_title', 'fpw_page_title', 10, 2 );
 	add_filter( 'get_the_excerpt', 'fpw_excerpt' );
 	add_filter( 'post_thumbnail_size', 'fpw_image_size' );
 	add_filter( 'post_thumbnail_html', 'fpw_featured_image_html', 10, 5 );
+
 }
 add_action( 'fpw_loop_start', 'fpw_before_loop' );
 
@@ -177,9 +181,11 @@ add_action( 'fpw_loop_start', 'fpw_before_loop' );
  * Remove filters applied to widget templates to avoid interfering with other stuff
  */
 function fpw_after_loop() {
+
 	remove_filter( 'the_title', 'fpw_page_title', 10 );
 	remove_filter( 'get_the_excerpt', 'fpw_excerpt' );
 	remove_filter( 'post_thumbnail_size', 'fpw_image_size' );
 	remove_filter( 'post_thumbnail_html', 'fpw_featured_image_html', 10 );
+
 }
 add_action( 'fpw_loop_end', 'fpw_after_loop' );

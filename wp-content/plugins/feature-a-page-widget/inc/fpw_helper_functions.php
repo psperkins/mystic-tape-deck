@@ -15,6 +15,7 @@
  * @since	2.0.0
  * @license	http://www.gnu.org/licenses/gpl-2.0.html	GPLv2 or later
  */
+
 /**
  * Generate and filter list of post types.
  *
@@ -28,6 +29,7 @@
  * @return array of post_type slugs
  */
 function fpw_post_types() {
+
 	// default supported post types
 	$fpw_post_types = array( 'page', 'post'	);
 
@@ -43,6 +45,7 @@ function fpw_post_types() {
 	$fpw_post_types = apply_filters( 'fpw_post_types', $fpw_post_types );
 
 	return $fpw_post_types;
+
 }
 
 /**
@@ -64,8 +67,9 @@ function fpw_page_select_list_options( $selected = null ) {
 	$post_types = fpw_post_types();
 
 	// stop if there are no post types to display
-	if( ! $post_types )
+	if( ! $post_types ) {
 		return;
+	}
 
 	$fpw_select_list_options = get_transient( 'fpw_widget_select_list' );
 
@@ -120,6 +124,7 @@ function fpw_page_select_list_options( $selected = null ) {
 					$excerpt,
 					esc_url( get_edit_post_link( $post_id ) )
 				);
+
 			}
 
 			// close the optgroup, continue
@@ -127,15 +132,17 @@ function fpw_page_select_list_options( $selected = null ) {
 
 		}
 
-		set_transient( 'fpw_widget_select_list', $fpw_select_list_options, 1 * HOUR_IN_SECONDS );
+		set_transient( 'fpw_widget_select_list', $fpw_select_list_options, 4 * HOUR_IN_SECONDS );
 
 	}
 
 	// set the selected options for this specific widget
 	if( ! empty( $selected ) ) {
+
 		$selected_value = 'value="' . $selected . '"';
 		$selected_value_selected = $selected_value . ' selected="selected"';
 		$fpw_select_list_options = str_replace( $selected_value, $selected_value_selected, $fpw_select_list_options );
+
 	}
 
 	// Add special options - Eventually this will make it in
@@ -161,9 +168,11 @@ function fpw_page_select_list_options( $selected = null ) {
  * @since  2.1.0 
  */
 function fpw_delete_select_list_transient( $post_id, $post ) {
+
 	if( 'publish' === $post->post_status) {
 		delete_transient( 'fpw_widget_select_list' );
 	}
+	
 }
 
 /**

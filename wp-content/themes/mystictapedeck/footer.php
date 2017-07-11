@@ -11,6 +11,9 @@
 ?>
 
 		</section>
+		<?php if( is_single() ) : ?>
+		<div id='timeline-embed' style="width: 100%; min-height: 600px"></div>
+		<?php endif; ?>
 		<div id="footer-container">
 			<footer id="footer">
 				<?php do_action( 'foundationpress_before_footer' ); ?>
@@ -31,7 +34,42 @@
 	</div><!-- Close off-canvas wrapper -->
 </div><!-- Close off-canvas content wrapper -->
 <?php endif; ?>
+<?php
 
+$list = file_get_contents('http://mystictapedeck.com/wp-json/timeline/v1/posts');
+$json = json_decode($list);
+$events = $json->events;
+$postid = get_the_ID();
+$comparr = [];
+
+foreach($events as $key => $event) {
+	$pid = $event->postid;
+	$comparr[$key] = $pid;
+}
+
+$match = array_search($postid, $comparr);
+if ( $match != false ) {
+	$match = $match;
+} else {
+	$match = '0';
+}
+
+if ( is_single() ):
+?>
+
+<script type="text/javascript">
+       (function($) {
+	        var options = {
+	        	 default_bg_color: '#eaeaea',
+	        	 scale_factor: 0.5,
+	        	 height: 1200,
+	        	 timenav_height: 200,
+					   start_at_slide: <?php echo (int) $match+1; ?>
+					 }
+        	var timeline = new TL.Timeline('timeline-embed','http://mystictapedeck.com/wp-json/timeline/v1/posts', options);
+       })(jQuery);
+</script>
+<?php endif; ?>
 
 <?php wp_footer(); ?>
 <?php do_action( 'foundationpress_before_closing_body' ); ?>

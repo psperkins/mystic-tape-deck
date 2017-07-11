@@ -1,12 +1,17 @@
 <?php
 
-wp_enqueue_style( 'mtd-stylesheet', get_stylesheet_directory_uri() . '/assets/stylesheets/mtd.css', array('main-stylesheet'), '1.0', 'all' );
-wp_enqueue_script( 'mtd-js', get_stylesheet_directory_uri() . '/assets/js/mtd.js', 'jquery', '1.0', true );
 
-remove_filter('term_description','wpautop');
+require_once( __DIR__ . '/cmb2/meta-boxes.php' );
+
+wp_enqueue_style( 'mtd-tlstyles', 'https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css', null, '1.0', 'all' );
+wp_enqueue_style( 'mtd-stylesheet', get_stylesheet_directory_uri() . '/assets/stylesheets/mtd.css', array('main-stylesheet', 'mtd-tlstyles'), '1.0', 'all' );
+wp_enqueue_script( 'mtd-js', get_stylesheet_directory_uri() . '/assets/js/mtd.js', 'jquery', '1.0', true );
+wp_enqueue_script( 'mtd-tljs', 'https://cdn.knightlab.com/libs/timeline3/latest/js/timeline-min.js', 'jquery', '1.0', false );
+
+remove_filter( 'term_description', 'wpautop' );
 
 function mtd_unregister_parent_sidebars() {
-  unregister_sidebar('footer-widgets');
+  unregister_sidebar(' footer-widgets' );
 }
 add_action( 'widgets_init', 'mtd_unregister_parent_sidebars', 11 );
 
@@ -68,3 +73,48 @@ if ( ! function_exists( 'mtd_sidebars' ) ) {
   }
   add_action( 'widgets_init', 'mtd_sidebars' );
 }
+
+function mtd_add_timeline_endpoint( $data ) {
+  $args = array(
+    'post_type' => 'post',
+    'posts_per_page' => -1,
+    'meta_key' => '_timeline_year',
+    'orderby' => 'meta_value_num',
+    'order' => 'ASC'
+  );
+
+  $posts = new WP_Query( $args );
+  $postdata = $posts->posts;
+  $tlinfo = [];
+  $tagargs = array(
+    'fields' => 'ids',
+  );
+  $mainjson = [];
+  $titlejson = [];
+
+  foreach( $postdata as $post ) {
+    $events = new stdClass();
+    $titles = new stdClass();
+    $titles->media = ( object ) null;
+    $titles->text['headline'] = 'THE SHINING ONE';
+    $events->media['url'] = get_the_post_thumbnail_url( $post->ID, 'medium' );
+    $events->media['thumbnail'] = get_the_post_thumbnail_url( $post->ID, 'thumbnail' );
+    $events->start_date['year'] = get_post_meta( $post->ID, '_timeline_year', true );
+    $events->start_date['display_data'] = true;
+    $events->text['headline'] = $post->post_title;
+    $events->text['text'] = get_post_meta( $post->ID, '_timeline_desc', true );
+    $events->postid = $post->ID;
+    $evts[] = $events;
+  }
+  $titlejson['title'] = $titles;
+  $mainjson['title'] = $titles;
+  $mainjson['events'] = $evts;
+  return $mainjson;
+}
+
+add_action( 'rest_api_init', function () {
+  register_rest_route( 'timeline/v1', '/posts', array(
+    'methods' => 'GET',
+    'callback' => 'mtd_add_timeline_endpoint',
+  ) );
+} );

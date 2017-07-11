@@ -88,3 +88,23 @@
     }
   }
 }
+
+// timeline styles
+.tl-text {
+  .tl-headline-date, h3.tl-headline-date {
+    display: inline;
+    padding: 5px;
+    margin: 25px;
+    background: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    color: #ef7070;
+  }
+  h2.tl-headline, h2.tl-headline-title {
+    margin-top: 10px;
+  }
+}
+
+
+
+

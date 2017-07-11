@@ -64,3 +64,14 @@
       position: relative; }
   #footer-container #footer .widget {
     margin-top: 10px; }
+
+.tl-text .tl-headline-date, .tl-text h3.tl-headline-date {
+  display: inline;
+  padding: 5px;
+  margin: 25px;
+  background: #ffffff;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  color: #ef7070; }
+.tl-text h2.tl-headline, .tl-text h2.tl-headline-title {
+  margin-top: 10px; }

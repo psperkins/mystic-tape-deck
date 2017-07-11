@@ -97,8 +97,8 @@ function mtd_add_timeline_endpoint( $data ) {
     $titles = new stdClass();
     $link = get_the_permalink( $post->ID );
     $titles->media = ( object ) null;
-    $titles->text['headline'] = 'THE SHINING ONE';
-    $events->media['url'] = get_the_post_thumbnail_url( $post->ID, 'medium' );
+    $titles->text['headline'] = 'TIMELINE OF THE SHINING ONE';
+    $events->media['url'] = get_the_post_thumbnail_url( $post->ID, 'full' );
     $events->media['thumbnail'] = get_the_post_thumbnail_url( $post->ID, 'thumbnail' );
     $events->start_date['year'] = get_post_meta( $post->ID, '_timeline_year', true );
     $events->start_date['display_data'] = true;

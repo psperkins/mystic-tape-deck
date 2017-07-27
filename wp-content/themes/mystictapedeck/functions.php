@@ -17,8 +17,8 @@ add_action( 'widgets_init', 'mtd_unregister_parent_sidebars', 11 );
 
 function mtd_foundationpress_entry_meta() {
     $blterm = get_the_terms(get_the_ID(), 'byline');
-        echo '<time class="updated" datetime="' . get_the_time( 'c' ) . '">' . sprintf( __( 'Posted on %1$s at %2$s.', 'mystictapedeck' ), get_the_date(), get_the_time() ) . '</time>';
-        echo '<p class="byline author">' . __( 'Transcribed by', 'mystictapedeck' ) . ' <a href="' . get_author_posts_url( get_the_author_meta( 'ID' ) ) . '" rel="author" class="fn">' . get_the_author() . '</a> - <em>"' . $blterm[0]->description . '"</em></p>';
+    echo '<p class="byline author">' . __( 'Content divined by', 'mystictapedeck' ) . ' <a href="' . get_author_posts_url( get_the_author_meta( 'ID' ) ) . '" rel="author" class="fn">' . get_the_author() . '</a> - <em>"' . $blterm[0]->description . '"</em></p>';
+    echo '<time class="updated" datetime="' . get_the_time( 'c' ) . '">' . sprintf( __( 'Posted on %1$s at %2$s.', 'mystictapedeck' ), get_the_date(), get_the_time() ) . '</time>';
 }
 
 if ( ! function_exists( 'mtd_sidebars' ) ) {
@@ -70,6 +70,7 @@ if ( ! function_exists( 'mtd_sidebars' ) ) {
   add_action( 'widgets_init', 'mtd_sidebars' );
 }
 
+// API ENDPOINT FOR TIMELINE
 function mtd_add_timeline_endpoint( $data ) {
   $args = array(
     'post_type' => 'post',
@@ -115,3 +116,11 @@ add_action( 'rest_api_init', function () {
     'callback' => 'mtd_add_timeline_endpoint',
   ) );
 } );
+
+// QUERY MODS
+function mtd_modify_main_query( $query ) {
+  if ( $query->is_category( 'stories' ) && $query->is_main_query() ) {
+    $query->query_vars['order'] = 'ASC';
+  }
+}
+add_action( 'pre_get_posts', 'mtd_modify_main_query' );

@@ -84,3 +84,14 @@ header div.cat-desc {
   margin-bottom: 50px; }
   header div.cat-desc h2 {
     font-size: 2em; }
+
+.post time {
+  font-style: italic;
+  font-size: .75rem;
+  margin-bottom: 20px;
+  display: block; }
+.post header h2 {
+  line-height: 1.2em;
+  font-size: 2rem; }
+.post p.byline {
+  margin-bottom: 0; }

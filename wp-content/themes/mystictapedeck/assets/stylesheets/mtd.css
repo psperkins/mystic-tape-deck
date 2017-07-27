@@ -75,3 +75,12 @@
   color: #ef7070; }
 .tl-text h2.tl-headline, .tl-text h2.tl-headline-title {
   margin-top: 10px; }
+
+header div.cat-desc {
+  background-color: #bfd7ff;
+  padding: 15px;
+  border: 1px solid #6199f9;
+  border-radius: 15px;
+  margin-bottom: 50px; }
+  header div.cat-desc h2 {
+    font-size: 2em; }

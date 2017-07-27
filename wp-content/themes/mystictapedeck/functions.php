@@ -15,14 +15,10 @@ function mtd_unregister_parent_sidebars() {
 }
 add_action( 'widgets_init', 'mtd_unregister_parent_sidebars', 11 );
 
-function foundationpress_entry_meta() {
-    /* translators: %1$s: current date, %2$s: current time */
-    global $post;
-    $blterm = wp_get_post_terms( $post->ID, 'byline' );
-    echo '<time class="updated" datetime="' . get_the_time( 'c' ) . '">' . sprintf( __( 'Posted on %1$s at %2$s.', 'mystictapedeck' ), get_the_date(), get_the_time() ) . '</time>';
-    echo '<p class="byline author">' . __( 'Transcribed by', 'mystictapedeck' ) . ' <a href="' . get_author_posts_url( get_the_author_meta( 'ID' ) ) . '" rel="author" class="fn">' . get_the_author() . '</a> - <em>"' . term_description( $blterm[0]->term_id, 'post_tag' ) . '"</em></p>';
-
-
+function mtd_foundationpress_entry_meta() {
+    $blterm = get_the_terms(get_the_ID(), 'byline');
+        echo '<time class="updated" datetime="' . get_the_time( 'c' ) . '">' . sprintf( __( 'Posted on %1$s at %2$s.', 'mystictapedeck' ), get_the_date(), get_the_time() ) . '</time>';
+        echo '<p class="byline author">' . __( 'Transcribed by', 'mystictapedeck' ) . ' <a href="' . get_author_posts_url( get_the_author_meta( 'ID' ) ) . '" rel="author" class="fn">' . get_the_author() . '</a> - <em>"' . $blterm[0]->description . '"</em></p>';
 }
 
 if ( ! function_exists( 'mtd_sidebars' ) ) {

@@ -76,7 +76,7 @@ function mtd_add_timeline_endpoint( $data ) {
     'post_type' => 'post',
     'posts_per_page' => -1,
     'meta_key' => '_timeline_year',
-    'orderby' => 'meta_value_num',
+    'orderby' => 'meta_value_num date',
     'order' => 'ASC'
   );
 

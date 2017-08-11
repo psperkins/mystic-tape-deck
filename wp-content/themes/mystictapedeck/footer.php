@@ -1,17 +1,15 @@
 <?php
 /**
- * The template for displaying the footer
+ * @file The template for displaying the footer
  *
  * Contains the closing of the "off-canvas-wrap" div and all content after.
- *
- * @package FoundationPress
- * @since FoundationPress 1.0.0
+ * @package MysticTapeDeck
  */
 
 ?>
 
 		</section>
-		<?php if( is_single() ) : ?>
+		<?php if ( is_single() ) : ?>
 		<div id='timeline-embed' style="width: 100%; min-height: 600px"></div>
 		<?php endif; ?>
 		<div id="footer-container">
@@ -36,38 +34,38 @@
 <?php endif; ?>
 <?php
 
-$list = file_get_contents('http://mystictapedeck.com/wp-json/timeline/v1/posts');
-$json = json_decode($list);
+$list = file_get_contents( 'http://mystictapedeck.com/wp-json/timeline/v1/posts' );
+$json = json_decode( $list );
 $events = $json->events;
 $postid = get_the_ID();
 $comparr = [];
 
-foreach($events as $key => $event) {
+foreach ( $events as $key => $event ) {
 	$pid = $event->postid;
-	$comparr[$key] = $pid;
+	$comparr[ $key ] = $pid;
 }
 
-$match = array_search($postid, $comparr);
-if ( $match != false ) {
+$match = array_search( $postid, $comparr );
+if ( false != $match ) {
 	$match = $match;
 } else {
 	$match = '0';
 }
 
-if ( is_single() ):
+if ( is_single() ) :
 ?>
 
 <script type="text/javascript">
-       (function($) {
-	        var options = {
-	        	 default_bg_color: '#eaeaea',
-	        	 scale_factor: 0.5,
-	        	 height: 1200,
-	        	 timenav_height: 240,
-					   start_at_slide: <?php echo (int) $match+1; ?>
-					 }
-        	var timeline = new TL.Timeline('timeline-embed','http://mystictapedeck.com/wp-json/timeline/v1/posts', options);
-       })(jQuery);
+	(function($) {
+		var options = {
+			default_bg_color: '#eaeaea',
+			scale_factor: 0.5,
+			height: 1260,
+			timenav_height: 260,
+			start_at_slide: <?php echo (int) $match + 1; ?>
+		}
+		var timeline = new TL.Timeline('timeline-embed','http://mystictapedeck.com/wp-json/timeline/v1/posts', options);
+	})(jQuery);
 </script>
 <?php endif; ?>
 

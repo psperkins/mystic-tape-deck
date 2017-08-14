@@ -144,7 +144,7 @@ add_action( 'rest_api_init', function () {
  * @param object $query The query being executed.
  */
 function mtd_modify_main_query( $query ) {
-	if ( $query->is_category( 'stories' ) && $query->is_main_query() ) {
+	if ( $query->is_category( array( 'stories', '15th-century' ) ) && $query->is_main_query() ) {
 		$query->query_vars['order'] = 'ASC';
 	}
 }

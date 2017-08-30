@@ -61,7 +61,7 @@ if ( is_single() ) :
 			default_bg_color: '#eaeaea',
 			scale_factor: 0.5,
 			height: 1280,
-			timenav_height: 300,
+			timenav_height: 340,
 			start_at_slide: <?php echo (int) $match + 1; ?>
 		}
 		var timeline = new TL.Timeline('timeline-embed','http://mystictapedeck.com/wp-json/timeline/v1/posts', options);

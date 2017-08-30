@@ -92,6 +92,7 @@ if ( ! function_exists( 'mtd_sidebars' ) ) {
 function mtd_add_timeline_endpoint( $data ) {
 	$args = array(
 		'post_type' => 'post',
+		'post_status' => 'publish',
 		'posts_per_page' => 99,
 		'meta_key' => '_timeline_year',
 		'orderby' => array(

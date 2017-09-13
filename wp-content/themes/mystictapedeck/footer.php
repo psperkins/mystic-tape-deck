@@ -34,7 +34,7 @@
 <?php endif; ?>
 <?php
 
-$list = file_get_contents( 'http://mystictapedeck.com/wp-json/timeline/v1/posts' );
+$list = file_get_contents( 'https://mystictapedeck.com/wp-json/timeline/v1/posts' );
 $json = json_decode( $list );
 $events = $json->events;
 $postid = get_the_ID();
@@ -64,7 +64,7 @@ if ( is_single() ) :
 			timenav_height: 340,
 			start_at_slide: <?php echo (int) $match + 1; ?>
 		}
-		var timeline = new TL.Timeline('timeline-embed','http://mystictapedeck.com/wp-json/timeline/v1/posts', options);
+		var timeline = new TL.Timeline('timeline-embed','https://mystictapedeck.com/wp-json/timeline/v1/posts', options);
 	})(jQuery);
 </script>
 <?php endif; ?>

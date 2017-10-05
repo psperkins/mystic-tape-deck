@@ -129,8 +129,8 @@ function wp_super_cache_init() {
 
 	$cache_filename = $file_prefix . $key . '.php';
 	$meta_file = $file_prefix . $key . '.php';
-	$cache_file = wpsc_get_realpath( $blog_cache_dir . $cache_filename );
-	$meta_pathname = wpsc_get_realpath( $blog_cache_dir . 'meta/' . $meta_file );
+	$cache_file = wpsc_get_realpath( $blog_cache_dir ) . '/' . $cache_filename;
+	$meta_pathname = wpsc_get_realpath( $blog_cache_dir . 'meta/' ) . '/' . $meta_file;
 	return compact( 'key', 'cache_filename', 'meta_file', 'cache_file', 'meta_pathname' );
 }
 
@@ -584,7 +584,7 @@ function wp_cache_debug( $message, $level = 1 ) {
 		return false;
 
 	// Log message: Date URI Message
-	$log_message = date('H:i:s') . " " . getmypid() . " {$_SERVER['REQUEST_URI']} {$message}\n\r";
+	$log_message = date('H:i:s') . " " . getmypid() . " {$_SERVER['REQUEST_URI']} {$message}" . PHP_EOL;
 	// path to the log file in the cache folder
 	$log_file = $cache_path . str_replace('/', '', str_replace('..', '', $wp_cache_debug_log));
 

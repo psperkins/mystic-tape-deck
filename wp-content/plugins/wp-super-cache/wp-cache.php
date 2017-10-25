@@ -3,7 +3,7 @@
 Plugin Name: WP Super Cache
 Plugin URI: https://wordpress.org/plugins/wp-super-cache/
 Description: Very fast caching plugin for WordPress.
-Version: 1.5.6
+Version: 1.5.7.1
 Author: Automattic
 Author URI: https://automattic.com/
 License: GPL2+
@@ -3502,8 +3502,13 @@ function wp_cron_preload_cache() {
 			set_time_limit( 60 );
 			if ( $page_on_front != 0 && ( $post_id == $page_on_front || $post_id == $page_for_posts ) )
 				continue;
-			clear_post_supercache( $post_id );
 			$url = get_permalink( $post_id );
+
+			if ( wp_cache_is_rejected( $url ) ) {
+				wp_cache_debug( "wp_cron_preload_cache: skipped $url per rejected strings setting" );
+				continue;
+			}
+			clear_post_supercache( $post_id );
 			$fp = @fopen( $permalink_counter_msg, 'w' );
 			if ( $fp ) {
 				@fwrite( $fp, $count . " " . $url );
@@ -3979,10 +3984,22 @@ function update_mod_rewrite_rules( $add_rules = true ) {
 	return true;
 }
 
-function wpsc_timestamp_cache_update( $type, $permalink ) {
-	wp_cache_setting( 'wpsc_last_post_update', time() );
+// Delete feeds when the site is updated so that feed files are always fresh
+function wpsc_feed_update( $type, $permalink ) {
+	$wpsc_feed_list = get_option( 'wpsc_feed_list' );
+
+	update_option( 'wpsc_feed_list', array() );
+	if ( is_array( $wpsc_feed_list ) && ! empty( $wpsc_feed_list ) ) {
+		if ( ! function_exists( 'prune_super_cache' ) )
+			include_once( 'wp-cache-phase2.php' );
+		foreach( $wpsc_feed_list as $file ) {
+			wp_cache_debug( "wpsc_feed_update: deleting feed: $file" );
+			prune_super_cache( $file, true );
+			prune_super_cache( dirname( $file ) . '/meta-' . basename( $file ), true );
+		}
+	}
 }
-add_action( 'gc_cache', 'wpsc_timestamp_cache_update', 10, 2 );
+add_action( 'gc_cache', 'wpsc_feed_update', 10, 2 );
 
 function wpsc_get_plugin_list() {
 	$list = do_cacheaction( 'wpsc_filter_list' );

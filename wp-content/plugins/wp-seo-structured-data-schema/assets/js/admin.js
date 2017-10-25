@@ -116,63 +116,81 @@
         }
     });
 
+    function showHideType() {
+        if($('#_schema_aggregate_rating_schema_type').length){
+            var id = $("#_schema_aggregate_rating_schema_type option:selected").val();
+        }
+        if($('#site_type').length){
+            var id = $("#site_type option:selected").val();
+        }
+
+        if (id == "Person") {
+            $(".form-table tr.person, .aggregate-person-holder").show();
+        } else {
+            $(".form-table tr.person, .aggregate-person-holder").hide();
+        }
+        if (id == "Organization") {
+            $(".form-table tr.business-info,.form-table tr.all-type-data, .aggregate-except-organization-holder").hide();
+        } else {
+            $(".form-table tr.business-info,.form-table tr.all-type-data, .aggregate-except-organization-holder").show();
+        }
+    }
+
+    $("#kcseo-option-settings").on('submit', function (e) {
+        e.preventDefault();
+        $('#response').hide();
+        var arg = $(this).serialize(),
+            bindElement = $('#tlpSaveButton');
+        AjaxCall(bindElement, 'kcSeoWpSchemaSettings', arg, function (data) {
+            $('#response').addClass('updated');
+            if (!data.error) {
+                $('#response').removeClass('error');
+            } else {
+                $('#response').addClass('error');
+            }
+            $('#response').show('slow').text(data.msg);
+        });
+    });
+    $("#kcseo-main-settings").on('submit', function (e) {
+        e.preventDefault();
+        $('#response').hide();
+        var arg = $(this).serialize(),
+            bindElement = $('#tlpSaveButton');
+        AjaxCall(bindElement, 'kcSeoMainSettings_action', arg, function (data) {
+            $('#response').addClass('updated');
+            if (!data.error) {
+                $('#response').removeClass('error');
+                $('#response').show('slow').text(data.msg);
+            } else {
+                $('#response').addClass('error');
+                $('#response').show('slow').text(data.msg);
+            }
+        });
+        return false;
+    });
+
+
+    function AjaxCall(element, action, arg, handle) {
+        var data;
+        if (action) data = "action=" + action;
+        if (arg)    data = arg + "&action=" + action;
+        if (arg && !action) data = arg;
+        data = data;
+
+        $.ajax({
+            type: "post",
+            url: ajaxurl,
+            data: data,
+            beforeSend: function () {
+                $("<span class='wseo_loading'></span>").insertAfter(element);
+            },
+            success: function (data) {
+                $(".wseo_loading").remove();
+                handle(data);
+            }
+        });
+    }
+
 })(jQuery);
 
 
-function showHideType() {
-    if(jQuery('#_schema_aggregate_rating_schema_type').length){
-        var id = jQuery("#_schema_aggregate_rating_schema_type option:selected").val();
-    }
-    if(jQuery('#site_type').length){
-        var id = jQuery("#site_type option:selected").val();
-    }
-
-    if (id == "Person") {
-        jQuery(".form-table tr.person, .aggregate-person-holder").show();
-    } else {
-        jQuery(".form-table tr.person, .aggregate-person-holder").hide();
-    }
-    if (id == "Organization") {
-        jQuery(".form-table tr.business-info,.form-table tr.all-type-data, .aggregate-except-organization-holder").hide();
-    } else {
-        jQuery(".form-table tr.business-info,.form-table tr.all-type-data, .aggregate-except-organization-holder").show();
-    }
-}
-function wpSchemaSettings(e) {
-
-    jQuery('#response').hide();
-    arg = jQuery(e).serialize();
-    bindElement = jQuery('#tlpSaveButton');
-    AjaxCall(bindElement, 'kcSeoWpSchemaSettings', arg, function (data) {
-        console.log(data);
-        jQuery('#response').addClass('updated');
-        if (!data.error) {
-            jQuery('#response').removeClass('error');
-            jQuery('#response').show('slow').text(data.msg);
-        } else {
-            jQuery('#response').addClass('error');
-            jQuery('#response').show('slow').text(data.msg);
-        }
-    });
-
-}
-
-function AjaxCall(element, action, arg, handle) {
-    if (action) data = "action=" + action;
-    if (arg)    data = arg + "&action=" + action;
-    if (arg && !action) data = arg;
-    data = data;
-
-    jQuery.ajax({
-        type: "post",
-        url: ajaxurl,
-        data: data,
-        beforeSend: function () {
-            jQuery("<span class='wseo_loading'></span>").insertAfter(element);
-        },
-        success: function (data) {
-            jQuery(".wseo_loading").remove();
-            handle(data);
-        }
-    });
-}

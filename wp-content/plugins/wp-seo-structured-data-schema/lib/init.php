@@ -9,9 +9,10 @@ if ( ! class_exists( 'KcSeoWPSchema' ) ) {
 		function __construct() {
 			$this->KcSeoPrefix = "_schema_";
 			$this->options     = array(
+				'main_settings'     => 'kcseo_wp_schema_settings',
 				'settings'          => 'kcseo_wp_schema',
 				'installed_version' => 'kcseo_wp_installed_version',
-				'version'           => '2.1',
+				'version'           => '2.2',
 				'1_2_fix'           => "kcseo_wp_1_2_data_fix"
 			);
 

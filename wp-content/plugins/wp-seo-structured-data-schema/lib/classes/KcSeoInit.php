@@ -8,6 +8,7 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 			add_action( 'admin_menu', array( $this, 'kcSeo_Wp_Schema_menu' ) );
 			add_action( 'plugins_loaded', array( $this, 'kcSeo_pluginInit' ) );
 			add_action( 'wp_ajax_kcSeoWpSchemaSettings', array( $this, 'kcSeoWpSchemaSettings' ) );
+			add_action( 'wp_ajax_kcSeoMainSettings_action', array( $this, 'kcSeoMainSettings_action' ) );
 			add_action( 'wp_ajax_newSocial', array( $this, 'newSocial' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 
@@ -39,7 +40,7 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 			global $pagenow;
 			// validate page
 			$page = isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : null;
-			if ( $pagenow != 'admin.php' || $page != 'wp-seo-schema' ) {
+			if ( $pagenow != 'admin.php' && ($page == 'wp-seo-schema' || $page == 'wp-seo-schema-settings') ) {
 				return;
 			}
 			// scripts
@@ -145,8 +146,33 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 			wp_send_json( $response );
 			die();
 		}
+		function kcSeoMainSettings_action(){
+			global $KcSeoWPSchema;
+			$error = true;
+			$msg   = null;
+			if ( $KcSeoWPSchema->verifyNonce() ) {
+				unset( $_REQUEST['action'] );
+				unset( $_REQUEST['_kcseo_nonce'] );
+				unset( $_REQUEST['_wp_http_referer'] );
+				update_option( $KcSeoWPSchema->options['main_settings'], $_REQUEST );
+				$error = false;
+				$msg   = __( 'Settings successfully updated', KCSEO_WP_SCHEMA_SLUG );
+			} else {
+				$msg = __( 'Security Error !!', KCSEO_WP_SCHEMA_SLUG );
+			}
+			$response = array(
+				'error' => $error,
+				'msg'   => $msg
+			);
+			wp_send_json( $response );
+			die();
+		}
 
 		function wp_schema_page() {
+			global $KcSeoWPSchema;
+			$KcSeoWPSchema->render( 'schema-options' );
+		}
+		function wp_schema_setting_page() {
 			global $KcSeoWPSchema;
 			$KcSeoWPSchema->render( 'settings' );
 		}
@@ -155,6 +181,8 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 			global $KcSeoWPSchema;
 			add_menu_page( 'WP SEO Structured Data Schema', 'WP SEO Schema', 'manage_options', 'wp-seo-schema',
 				array( $this, 'wp_schema_page' ), $KcSeoWPSchema->assetsUrl . 'images/wp-seo-schema.png' );
+			add_submenu_page( 'wp-seo-schema', 'WP SEO Schema settings', 'Settings', 'manage_options', 'wp-seo-schema-settings',
+				array( $this, 'wp_schema_setting_page' ));
 
 		}
 

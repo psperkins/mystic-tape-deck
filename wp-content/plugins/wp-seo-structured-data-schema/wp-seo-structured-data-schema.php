@@ -3,7 +3,7 @@
  *Plugin Name: WP SEO Structured Data Schema
  * Plugin URI: http://kcseopro.com/
  * Description: Comprehensive JSON-LD based Structured Data solution for WordPress for adding schema for organizations, businesses, blog posts, ratings & more.
- * Version: 2.1
+ * Version: 2.2
  * Author: kcseopro
  * Author URI: http://kcseopro.com/
  * License: A "Slug" license name e.g. GPL2

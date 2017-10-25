@@ -26,7 +26,10 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 							);
 						}
 						if ( ! empty( $metaData['author'] ) ) {
-							$article["author"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] );
+							$article["author"] = array(
+								"@type" => "Person",
+								"name"   => $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] )
+							);
 						}
 						if ( ! empty( $metaData['publisher'] ) ) {
 							if ( ! empty( $metaData['publisherImage'] ) ) {
@@ -65,10 +68,12 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 							$article["dateModified"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['dateModified'] );
 						}
 						if ( ! empty( $metaData['description'] ) ) {
-							$article["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'], 'textarea' );
+							$article["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'],
+								'textarea' );
 						}
 						if ( ! empty( $metaData['articleBody'] ) ) {
-							$article["articleBody"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['articleBody'], 'textarea' );
+							$article["articleBody"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['articleBody'],
+								'textarea' );
 						}
 						$html .= $this->get_jsonEncode( $article );
 						break;
@@ -87,7 +92,10 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 							);
 						}
 						if ( ! empty( $metaData['author'] ) ) {
-							$newsArticle["author"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] );
+							$newsArticle["author"] = array(
+								"@type" => "Person",
+								"name"   => $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] )
+							);
 						}
 						if ( ! empty( $metaData['image'] ) ) {
 							$img                  = $KcSeoWPSchema->imageInfo( absint( $metaData['image'] ) );
@@ -123,10 +131,12 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 							);
 						}
 						if ( ! empty( $metaData['description'] ) ) {
-							$newsArticle["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'], 'textarea' );
+							$newsArticle["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'],
+								'textarea' );
 						}
 						if ( ! empty( $metaData['articleBody'] ) ) {
-							$newsArticle["articleBody"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['articleBody'], 'textarea' );
+							$newsArticle["articleBody"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['articleBody'],
+								'textarea' );
 						}
 						$html .= $this->get_jsonEncode( $newsArticle );
 						break;
@@ -145,7 +155,10 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 							);
 						}
 						if ( ! empty( $metaData['author'] ) ) {
-							$blogPosting["author"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] );
+							$blogPosting["author"] = array(
+								"@type" => "Person",
+								"name"   => $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] )
+							);
 						}
 						if ( ! empty( $metaData['image'] ) ) {
 							$img                  = $KcSeoWPSchema->imageInfo( absint( $metaData['image'] ) );
@@ -181,10 +194,12 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 							);
 						}
 						if ( ! empty( $metaData['description'] ) ) {
-							$blogPosting["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'], 'textarea' );
+							$blogPosting["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'],
+								'textarea' );
 						}
 						if ( ! empty( $metaData['articleBody'] ) ) {
-							$blogPosting["articleBody"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['articleBody'], 'textarea' );
+							$blogPosting["articleBody"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['articleBody'],
+								'textarea' );
 						}
 						$html .= $this->get_jsonEncode( $blogPosting );
 						break;
@@ -203,7 +218,8 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 							$event["endDate"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['endDate'] );
 						}
 						if ( ! empty( $metaData['description'] ) ) {
-							$event["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'], 'textarea' );
+							$event["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'],
+								'textarea' );
 						}
 						if ( ! empty( $metaData['performerName'] ) ) {
 							$event["performer"] = array(
@@ -226,7 +242,8 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 								"@type"         => "Offer",
 								"price"         => $KcSeoWPSchema->sanitizeOutPut( $metaData['price'] ),
 								"priceCurrency" => ! empty( $metaData['priceCurrency'] ) ? $KcSeoWPSchema->sanitizeOutPut( $metaData['priceCurrency'] ) : null,
-								"url"           => ! empty( $metaData['url'] ) ? $KcSeoWPSchema->sanitizeOutPut( $metaData['url'], 'url' ) : null
+								"url"           => ! empty( $metaData['url'] ) ? $KcSeoWPSchema->sanitizeOutPut( $metaData['url'],
+									'url' ) : null
 							);
 						}
 						if ( ! empty( $metaData['url'] ) ) {
@@ -283,7 +300,8 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 							$video["name"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['name'] );
 						}
 						if ( ! empty( $metaData['description'] ) ) {
-							$video["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'], 'textarea' );
+							$video["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'],
+								'textarea' );
 						}
 						if ( ! empty( $metaData['description'] ) ) {
 							$video["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'] );
@@ -406,7 +424,8 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 							$aRating["name"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['name'] );
 						}
 						if ( ! empty( $metaData['description'] ) ) {
-							$aRating["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'], 'textarea' );
+							$aRating["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'],
+								'textarea' );
 						}
 						if ( $aRating["@type"] != "Organization" ) {
 							if ( ! empty( $metaData['image'] ) ) {
@@ -457,10 +476,12 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 							$restaurant["name"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['name'] );
 						}
 						if ( ! empty( $metaData['description'] ) ) {
-							$restaurant["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'], 'textarea' );
+							$restaurant["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'],
+								'textarea' );
 						}
 						if ( ! empty( $metaData['openingHours'] ) ) {
-							$restaurant["openingHours"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['openingHours'], 'textarea' );
+							$restaurant["openingHours"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['openingHours'],
+								'textarea' );
 						}
 						if ( ! empty( $metaData['telephone'] ) ) {
 							$restaurant["telephone"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['telephone'] );
@@ -482,6 +503,41 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 							$restaurant["servesCuisine"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['servesCuisine'] );
 						}
 						$html .= $this->get_jsonEncode( $restaurant );
+						break;
+
+					case 'localBusiness':
+						$localBusiness             = array();
+						$localBusiness["@context"] = "http://schema.org";
+						$localBusiness["@type"]    = "LocalBusiness";
+						if ( ! empty( $metaData['name'] ) ) {
+							$localBusiness["name"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['name'] );
+						}
+						if ( ! empty( $metaData['description'] ) ) {
+							$localBusiness["description"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['description'],
+								'textarea' );
+						}
+						if ( ! empty( $metaData['image'] ) ) {
+							$img                 = $KcSeoWPSchema->imageInfo( absint( $metaData['image'] ) );
+							$localBusiness["image"] = $KcSeoWPSchema->sanitizeOutPut( $img['url'], 'url' );
+						}
+						if ( ! empty( $metaData['priceRange'] ) ) {
+							$localBusiness["priceRange"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['priceRange'] );
+						}
+						if ( ! empty( $metaData['addressLocality'] ) || ! empty( $metaData['addressRegion'] )
+							|| ! empty( $metaData['postalCode'] ) || ! empty( $metaData['streetAddress'] )) {
+							$localBusiness["address"] = array(
+								"@type" => "PostalAddress",
+								"addressLocality" => $KcSeoWPSchema->sanitizeOutPut( $metaData['addressLocality'] ),
+								"addressRegion" => $KcSeoWPSchema->sanitizeOutPut( $metaData['addressRegion'] ),
+								"postalCode"=> $KcSeoWPSchema->sanitizeOutPut( $metaData['postalCode'] ),
+								"streetAddress"=> $KcSeoWPSchema->sanitizeOutPut( $metaData['streetAddress'] )
+							);
+						}
+
+						if ( ! empty( $metaData['telephone'] ) ) {
+							$localBusiness["telephone"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['telephone'] );
+						}
+						$html .= $this->get_jsonEncode( $localBusiness );
 						break;
 
 					default:
@@ -528,7 +584,8 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 					}
 					break;
 				case 'textarea':
-					$html .= "<textarea id='{$id}' class='{$class}' name='{$name}' >" . wp_kses( $value, array() ) . "</textarea>";
+					$html .= "<textarea id='{$id}' class='{$class}' name='{$name}' >" . wp_kses( $value,
+							array() ) . "</textarea>";
 					break;
 
 				case 'image':
@@ -1230,51 +1287,100 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 				'restaurant'       => array(
 					'title'  => 'Restaurant',
 					'fields' => array(
-						'active'       => array(
+						'active'        => array(
 							'type' => 'checkbox'
 						),
-						'name'         => array(
+						'name'          => array(
 							'title'    => 'Name of the Restaurant',
 							'type'     => 'text',
 							'required' => true
 						),
-						'description'  => array(
+						'description'   => array(
 							'title' => 'Description of the Restaurant',
 							'type'  => 'textarea',
 						),
-						'openingHours' => array(
+						'openingHours'  => array(
 							'title' => 'Opening Hours',
 							'type'  => 'textarea',
 							'desc'  => 'Mo,Tu,We,Th,Fr,Sa,Su 11:30-23:00'
 						),
-						'telephone'    => array(
+						'telephone'     => array(
 							'title' => 'Opening Hours',
 							'type'  => 'text',
 							'desc'  => '+155501003333'
 						),
-						'menu'         => array(
+						'menu'          => array(
 							'title' => 'Menu',
 							'type'  => 'text',
 							'desc'  => 'http://example.com/menu'
 						),
-						'image'        => array(
+						'image'         => array(
 							'title'    => 'Image',
 							'type'     => 'image',
 							'required' => true
 						),
-						'address'      => array(
+						'address'       => array(
 							'title' => 'Address',
 							'type'  => 'textarea'
 						),
-						'priceRange'   => array(
+						'priceRange'    => array(
 							'title' => 'Price Range',
 							'type'  => 'text',
 							'desc'  => 'The price range of the business, for example $$$'
 						),
-						'servesCuisine'   => array(
+						'servesCuisine' => array(
 							'title' => 'Serves Cuisine',
 							'type'  => 'text',
 							'desc'  => 'The cuisine of the restaurant.'
+						)
+					)
+				),
+				'localBusiness'    => array(
+					'title'  => 'Local Business',
+					'fields' => array(
+						'active' => array(
+							'type' => 'checkbox'
+						),
+						'name' => array(
+							'title' => 'Name',
+							'type'  => 'text',
+							'required' => true
+						),
+						'description' => array(
+							'title' => 'Description',
+							'type'  => 'textarea',
+						),
+						'image'   => array(
+							'title'    => 'Business Logo',
+							'type'     => 'image',
+							'required' => true
+						),
+						'priceRange'  => array(
+							'title'       => 'Price Range (Recommended)',
+							'type'        => 'text',
+							'desc'        => "The price range of the business, for example $$$."
+						),
+						'addressLocality' => array(
+							'title' => 'Address locality',
+							'type'  => 'text',
+							'desc' => 'City (i.e Kansas city)'
+						),
+						'addressRegion' => array(
+							'title' => 'Address region',
+							'type'  => 'text',
+							'desc' => 'State (i.e. MO)'
+						),
+						'postalCode' => array(
+							'title' => 'Postal code',
+							'type'  => 'text',
+						),
+						'streetAddress' => array(
+							'title' => 'Street address',
+							'type'  => 'text',
+						),
+						'telephone' => array(
+							'title' => 'Telephone (Recommended)',
+							'type'  => 'text',
 						)
 					)
 				)
@@ -1285,7 +1391,8 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 			$html = null;
 			/** @var TYPE_NAME $data */
 			if ( ! empty( $data ) && is_array( $data ) ) {
-				$html .= '<script type="application/ld+json">' . json_encode( $data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) . '</script>';
+				$html .= '<script type="application/ld+json">' . json_encode( $data,
+						JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) . '</script>';
 			}
 
 			return $html;
@@ -1296,7 +1403,6 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 				'Organization',
 				'LocalBusiness',
 				'AccountingService',
-				'Attorney',
 				'AutoBodyShop',
 				'AutoDealer',
 				'AutoPartsStore',
@@ -1343,6 +1449,7 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 				'HVACBusiness',
 				'InsuranceAgency',
 				'JewelryStore',
+				'LegalService',
 				'LiquorStore',
 				'Locksmith',
 				'LodgingBusiness',

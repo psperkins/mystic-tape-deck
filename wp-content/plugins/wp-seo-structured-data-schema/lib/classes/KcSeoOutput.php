@@ -131,8 +131,17 @@ if ( ! class_exists( 'KcSeoOutput' ) ):
 				"postalCode"      => ! empty( $settings['address']['postalcode'] ) ? $KcSeoWPSchema->sanitizeOutPut( $settings['address']['postalcode'] ) : null,
 				"streetAddress"   => ! empty( $settings['address']['street'] ) ? $KcSeoWPSchema->sanitizeOutPut( $settings['address']['street'] ) : null
 			);
+
+			$main_settings    = get_option( $KcSeoWPSchema->options['main_settings'] );
+			$site_schema = !empty($main_settings['site_schema']) ? $main_settings['site_schema'] : 'home_page';
 			if ( $webMeta["@type"] ) {
-				$html .= $schemaModel->get_jsonEncode( $webMeta );
+				if($site_schema == 'home_page'){
+					if(is_home() || is_front_page()){
+						$html .= $schemaModel->get_jsonEncode( $webMeta );
+					}
+				}elseif($site_schema == 'all'){
+					$html .= $schemaModel->get_jsonEncode( $webMeta );
+				}
 			}
 
 			if ( is_single() || is_page() ) {

@@ -60,7 +60,7 @@ if ( is_single() ) :
 		var options = {
 			default_bg_color: '#eaeaea',
 			scale_factor: 0.5,
-			height: 1280,
+			height: 1340,
 			timenav_height: 480,
 			start_at_slide: <?php echo (int) $match + 1; ?>
 		}

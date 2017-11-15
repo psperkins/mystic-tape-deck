@@ -96,10 +96,10 @@ function mtd_add_timeline_endpoint( $data ) {
 		'posts_per_page' => 99,
 		'meta_key' => '_timeline_year',
 		'orderby' => array(
-			'meta_value_num' => ASC,
-			'post_date'      => ASC,
+			'meta_value_num' => DESC,
+			'ID'      => ASC,
 		),
-		'order' => 'ASC',
+		'order' => ASC,
 	);
 
 	$posts = new WP_Query( $args );

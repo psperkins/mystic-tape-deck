@@ -47,13 +47,25 @@ By default the plugin allows you to order posts only within hierarchical taxonom
 
 Keep in mind that you will now see `Pages` as a post type to re-order, selecting such post types which do not have any categories associated with it.
 
-=My posts are not ordered in my custom query, help! =
-The plugin hooks [where_posts](https://developer.wordpress.org/reference/hooks/posts_where/) and [posts_orderby](https://codex.wordpress.org/Plugin_API/Filter_Reference/posts_orderby) to return custom ordered lists of posts.
+= I want liimt/enable roles that can re-order posts =
 
-However, these are by default suppressed in custom queries that use [get_posts()](https://codex.wordpress.org/Function_Reference/get_posts#Parameters) function.
+Since v1.3.0 a new filter has been added that allows you to do that.  Make sure you return a [valid capability](https://codex.wordpress.org/Roles_and_Capabilities#Capabilities),
 
+`add_filter('reorder_post_within_categories_capability', 'enable_editors', 10,2);
+function enable_editors($capability, $post_type){
+    //you can filter based on the post type
+    if('my-users-posts' == $post_type){
+        $capability = 'publish_posts'; //Author role.
+    }
+    return $capability;
+}`
+if an unknown capability is returned, the plugin will default back to 'manage_categories' which is an administrator's capability.
 
 == Changelog ==
+=1.3.0=
+* added filter to change capability of reorder post submenu access.
+=1.2.3=
+* bug fix
 = 1.2.2 =
 * improved custom post selection in settings
 * added filter 'reorder_post_within_categories_and_tags'

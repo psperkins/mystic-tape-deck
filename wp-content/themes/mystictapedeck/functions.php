@@ -97,7 +97,7 @@ function mtd_add_timeline_endpoint( $data ) {
 		'meta_key' => '_timeline_year',
 		'orderby' => array(
 			'meta_value_num' => DESC,
-			'ID'      => ASC,
+			'ID'      => DESC,
 		),
 		'order' => ASC,
 	);

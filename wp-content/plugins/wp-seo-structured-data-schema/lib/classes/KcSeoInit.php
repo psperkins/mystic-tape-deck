@@ -23,6 +23,7 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 		}
 
 
+
 		function update_queue( $plugin, $network_wide = null ) {
 			if ( ! $network_wide ) {
 				return;
@@ -40,26 +41,25 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 			global $pagenow;
 			// validate page
 			$page = isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : null;
-			if ( $pagenow != 'admin.php' && ($page == 'wp-seo-schema' || $page == 'wp-seo-schema-settings') ) {
-				return;
-			}
-			// scripts
-			wp_enqueue_media();
-			wp_enqueue_script( array(
-				'jquery',
-				'kcseo-datepicker',
-				'kcseo-select2-js',
-				'kcseo-tooltip-js',
-				'kcseo-admin-js',
-			) );
+			if ( $pagenow == 'admin.php' && ($page == 'wp-seo-schema' || $page == 'wp-seo-schema-settings') ) {
+				// scripts
+				wp_enqueue_media();
+				wp_enqueue_script( array(
+					'jquery',
+					'kcseo-datepicker',
+					'kcseo-select2-js',
+					'kcseo-tooltip-js',
+					'kcseo-admin-js',
+				) );
 
-			// styles
-			wp_enqueue_style( array(
-				'kcseo-datepicker',
-				'kcseo-select2-css',
-				'kcseo-tooltip-css',
-				'kcseo-admin-css',
-			) );
+				// styles
+				wp_enqueue_style( array(
+					'kcseo-datepicker',
+					'kcseo-select2-css',
+					'kcseo-tooltip-css',
+					'kcseo-admin-css',
+				) );
+			}
 		}
 
 		function kcSeoScript() {
@@ -101,7 +101,8 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 				$styles['kcseo-admin-css']   = $KcSeoWPSchema->assetsUrl . 'css/admin.css';
 			}
 			foreach ( $scripts as $script ) {
-				wp_register_script( $script['handle'], $script['src'], $script['deps'], time(), $script['footer'] ); //$KcSeoWPSchema->options['version']
+				wp_register_script( $script['handle'], $script['src'], $script['deps'], time(),
+					$script['footer'] ); //$KcSeoWPSchema->options['version']
 			}
 			foreach ( $styles as $k => $v ) {
 				wp_register_style( $k, $v, false, $KcSeoWPSchema->options['version'] );
@@ -113,7 +114,7 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 			$id          = ( $_REQUEST['id'] ? $_REQUEST['id'] + 1 : 0 );
 			$html        = null;
 			$html        = "<div class='sfield'>";
-			$html .= "<select name='social[$id][id]'>";
+			$html        .= "<select name='social[$id][id]'>";
 			foreach ( $schemaModel->socialList() as $skey => $social ) {
 				$html .= "<option value='$skey'>$social</option>";
 			}
@@ -146,7 +147,8 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 			wp_send_json( $response );
 			die();
 		}
-		function kcSeoMainSettings_action(){
+
+		function kcSeoMainSettings_action() {
 			global $KcSeoWPSchema;
 			$error = true;
 			$msg   = null;
@@ -172,6 +174,7 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 			global $KcSeoWPSchema;
 			$KcSeoWPSchema->render( 'schema-options' );
 		}
+
 		function wp_schema_setting_page() {
 			global $KcSeoWPSchema;
 			$KcSeoWPSchema->render( 'settings' );
@@ -181,8 +184,9 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 			global $KcSeoWPSchema;
 			add_menu_page( 'WP SEO Structured Data Schema', 'WP SEO Schema', 'manage_options', 'wp-seo-schema',
 				array( $this, 'wp_schema_page' ), $KcSeoWPSchema->assetsUrl . 'images/wp-seo-schema.png' );
-			add_submenu_page( 'wp-seo-schema', 'WP SEO Schema settings', 'Settings', 'manage_options', 'wp-seo-schema-settings',
-				array( $this, 'wp_schema_setting_page' ));
+			add_submenu_page( 'wp-seo-schema', 'WP SEO Schema settings', 'Settings', 'manage_options',
+				'wp-seo-schema-settings',
+				array( $this, 'wp_schema_setting_page' ) );
 
 		}
 
@@ -191,14 +195,15 @@ if ( ! class_exists( 'KcSeoInit' ) ):
 			load_plugin_textdomain( KCSEO_WP_SCHEMA_SLUG, false, KCSEO_WP_SCHEMA_LANGUAGE_PATH );
 			$this->updateVariableAndFixIssue();
 		}
+
 		function activePlugin() {
 			$this->updateVariableAndFixIssue();
 		}
 
-		function updateVariableAndFixIssue(){
+		function updateVariableAndFixIssue() {
 			global $KcSeoWPSchema;
 			$KcSeoWPSchema->fix1_2DataMigration();
-			update_option($KcSeoWPSchema->options['installed_version'],$KcSeoWPSchema->options['version']);
+			update_option( $KcSeoWPSchema->options['installed_version'], $KcSeoWPSchema->options['version'] );
 		}
 
 	}

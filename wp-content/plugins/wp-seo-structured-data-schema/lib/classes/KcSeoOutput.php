@@ -4,7 +4,56 @@ if ( ! class_exists( 'KcSeoOutput' ) ):
 
 	class KcSeoOutput {
 		function __construct() {
-			add_action( 'wp_footer', array( $this, 'load_schema' ), 1 );
+			add_action( 'wp_footer', array( $this, 'footer' ), 1 );
+			add_action( 'kcseo_footer', array( $this, 'debug_mark' ), 2 );
+			add_action( 'kcseo_footer', array( $this, 'load_schema' ), 3 );
+		}
+		private function is_premium(){
+			return false;
+		}
+		private function head_product_name() {
+			if ( $this->is_premium() ) {
+				return 'WP SEO Structured Data pro plugin';
+			}
+			else {
+				return 'WP SEO Structured Data Plugin';
+			}
+		}
+		public function debug_mark( $echo = true ) {
+			$marker = sprintf(
+				'<!-- This site is optimized with Phil Singleton\'s ' . $this->head_product_name() . ' v%1$s - https://kcseopro.com/wordpress-seo-structured-data-schema-plugin/ -->',
+				KCSEO_WP_SCHEMA_VERSION
+			);
+
+			if ( $echo === false ) {
+				return $marker;
+			}
+			else {
+				echo "\n${marker}\n";
+			}
+		}
+
+		function footer(){
+
+			global $wp_query;
+
+			$old_wp_query = null;
+
+			if ( ! $wp_query->is_main_query() ) {
+				$old_wp_query = $wp_query;
+				wp_reset_query();
+			}
+			wp_reset_postdata(); // TODO This is for wrong theme loop
+			do_action( 'kcseo_footer' );
+
+			echo "\n<!-- / ", $this->head_product_name(), ". -->\n\n";
+
+			if ( ! empty( $old_wp_query ) ) {
+				$GLOBALS['wp_query'] = $old_wp_query;
+				unset( $old_wp_query );
+			}
+
+			return;
 		}
 
 		function load_schema() {

@@ -4,7 +4,7 @@ Donate link:
 Tags: seo, schema, structured data, rich snippets, microdata, json-ld, search engine optimization, local seo, google, sitelinks, schema.org, microformat, serp, amp
 Requires at least: 3.5
 Tested up to: 4.8
-Stable tag: 2.2
+Stable tag: 2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,10 @@ You'll find the [FAQ on Kcseopro.com](http://kcseopro.com/).
 
 
 == Changelog ==
+
+= 2.3 =
+* Fix the conflict with Event Manager plugin
+* Add New schema generator at footer
 
 = 2.1 =
 * Can delete all save data

@@ -71,8 +71,5 @@ if ( is_single() ) :
 
 <?php wp_footer(); ?>
 <?php do_action( 'foundationpress_before_closing_body' ); ?>
-<!-- Start of HubSpot Embed Code -->
-<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/4237971.js"></script>
-<!-- End of HubSpot Embed Code -->
 </body>
 </html>

@@ -28,7 +28,7 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 						if ( ! empty( $metaData['author'] ) ) {
 							$article["author"] = array(
 								"@type" => "Person",
-								"name"   => $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] )
+								"name"  => $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] )
 							);
 						}
 						if ( ! empty( $metaData['publisher'] ) ) {
@@ -94,7 +94,7 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 						if ( ! empty( $metaData['author'] ) ) {
 							$newsArticle["author"] = array(
 								"@type" => "Person",
-								"name"   => $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] )
+								"name"  => $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] )
 							);
 						}
 						if ( ! empty( $metaData['image'] ) ) {
@@ -157,7 +157,7 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 						if ( ! empty( $metaData['author'] ) ) {
 							$blogPosting["author"] = array(
 								"@type" => "Person",
-								"name"   => $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] )
+								"name"  => $KcSeoWPSchema->sanitizeOutPut( $metaData['author'] )
 							);
 						}
 						if ( ! empty( $metaData['image'] ) ) {
@@ -517,20 +517,20 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 								'textarea' );
 						}
 						if ( ! empty( $metaData['image'] ) ) {
-							$img                 = $KcSeoWPSchema->imageInfo( absint( $metaData['image'] ) );
+							$img                    = $KcSeoWPSchema->imageInfo( absint( $metaData['image'] ) );
 							$localBusiness["image"] = $KcSeoWPSchema->sanitizeOutPut( $img['url'], 'url' );
 						}
 						if ( ! empty( $metaData['priceRange'] ) ) {
 							$localBusiness["priceRange"] = $KcSeoWPSchema->sanitizeOutPut( $metaData['priceRange'] );
 						}
 						if ( ! empty( $metaData['addressLocality'] ) || ! empty( $metaData['addressRegion'] )
-							|| ! empty( $metaData['postalCode'] ) || ! empty( $metaData['streetAddress'] )) {
+						     || ! empty( $metaData['postalCode'] ) || ! empty( $metaData['streetAddress'] ) ) {
 							$localBusiness["address"] = array(
-								"@type" => "PostalAddress",
+								"@type"           => "PostalAddress",
 								"addressLocality" => $KcSeoWPSchema->sanitizeOutPut( $metaData['addressLocality'] ),
-								"addressRegion" => $KcSeoWPSchema->sanitizeOutPut( $metaData['addressRegion'] ),
-								"postalCode"=> $KcSeoWPSchema->sanitizeOutPut( $metaData['postalCode'] ),
-								"streetAddress"=> $KcSeoWPSchema->sanitizeOutPut( $metaData['streetAddress'] )
+								"addressRegion"   => $KcSeoWPSchema->sanitizeOutPut( $metaData['addressRegion'] ),
+								"postalCode"      => $KcSeoWPSchema->sanitizeOutPut( $metaData['postalCode'] ),
+								"streetAddress"   => $KcSeoWPSchema->sanitizeOutPut( $metaData['streetAddress'] )
 							);
 						}
 
@@ -555,6 +555,7 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 			$id    = $data['id'];
 			$name  = $data['name'];
 			$value = $data['value'];
+			$attr  = !empty($data['attr']) ? $data['attr'] : null;
 
 			$class       = isset( $data['class'] ) ? ( $data['class'] ? $data['class'] : null ) : null;
 			$require     = ( isset( $data['required'] ) ? ( $data['required'] ? "<span class='required'>*</span>" : null ) : null );
@@ -577,11 +578,7 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 					break;
 
 				case 'number':
-					if ( $data['fieldId'] == 'price' ) {
-						$html .= "<input type='number' step='any' id='{$id}' class='{$class}' name='{$name}' value='" . esc_attr( $value ) . "' />";
-					} else {
-						$html .= "<input type='number' id='{$id}' class='{$class}' name='{$name}' value='" . esc_attr( $value ) . "' />";
-					}
+						$html .= "<input type='number' {$attr} id='{$id}' class='{$class}' name='{$name}' value='" . esc_attr( $value ) . "' />";
 					break;
 				case 'textarea':
 					$html .= "<textarea id='{$id}' class='{$class}' name='{$name}' >" . wp_kses( $value,
@@ -906,6 +903,7 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 						'price'           => array(
 							'title' => 'Price (Recommended)',
 							'type'  => 'number',
+							'attr'  => 'step="any"',
 							'desc'  => "This is highly recommended. The lowest available price, including service charges and fees, of this type of ticket. <span class='required'>Not required but (Recommended)</span>"
 						),
 						'priceCurrency'   => array(
@@ -950,17 +948,19 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 						),
 						'ratingValue'   => array(
 							'title' => 'Ratting value',
-							'type'  => 'text',
+							'type'  => 'number',
 							'desc'  => "Rating value. (1 , 2.5, 3, 5 etc)"
 						),
 						'reviewCount'   => array(
 							'title' => 'Total review count',
 							'type'  => 'number',
+							'attr'  => 'step="any"',
 							'desc'  => "Rating ratting value. <span class='required'>This is required if (Ratting value) is given</span>"
 						),
 						'price'         => array(
 							'title' => 'Price',
 							'type'  => 'number',
+							'attr'  => 'step="any"',
 							'desc'  => "The lowest available price, including service charges and fees, of this type of ticket."
 						),
 						'priceCurrency' => array(
@@ -1180,16 +1180,19 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 						'ratingValue'   => array(
 							'title' => 'Rating value',
 							'type'  => 'number',
+							'attr'  => 'step="any"',
 							'desc'  => "A numerical quality rating for the item."
 						),
 						'bestRating'    => array(
 							'title' => 'Best rating',
 							'type'  => 'number',
+							'attr'  => 'step="any"',
 							'desc'  => "The highest value allowed in this rating system."
 						),
 						'worstRating'   => array(
 							'title' => 'Worst rating',
 							'type'  => 'number',
+							'attr'  => 'step="any"',
 							'desc'  => "The lowest value allowed in this rating system. * Required if the rating system is not on a 5-point scale. If worstRating is omitted, 1 is assumed."
 						),
 						'publisher'     => array(
@@ -1249,23 +1252,27 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 						'ratingCount' => array(
 							'title'    => 'Rating Count',
 							'type'     => 'number',
+							'attr'  => 'step="any"',
 							'required' => true,
 							'desc'     => "The total number of ratings for the item on your site. <span class='required'>* At least one of ratingCount or reviewCount is required.</span>"
 						),
 						'reviewCount' => array(
 							'title'    => 'Review Count',
 							'type'     => 'number',
+							'attr'  => 'step="any"',
 							'required' => true,
 							'desc'     => "Specifies the number of people who provided a review with or without an accompanying rating. At least one of ratingCount or reviewCount is required."
 						),
 						'ratingValue' => array(
 							'title'    => 'Rating Value',
 							'type'     => 'number',
+							'attr'  => 'step="any"',
 							'required' => true,
 							'desc'     => "A numerical quality rating for the item."
 						),
 						'ratingValue' => array(
 							'title'    => 'Rating Value',
+							'attr'  => 'step="any"',
 							'type'     => 'number',
 							'required' => true,
 							'desc'     => "A numerical quality rating for the item."
@@ -1273,12 +1280,14 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 						'bestRating'  => array(
 							'title'    => 'Best Rating',
 							'type'     => 'number',
+							'attr'  => 'step="any"',
 							'required' => true,
 							'desc'     => "The highest value allowed in this rating system. <span class='required'>* Required if the rating system is not a 5-point scale.</span> If bestRating is omitted, 5 is assumed."
 						),
 						'worstRating' => array(
 							'title'    => 'Worst Rating',
 							'type'     => 'number',
+							'attr'  => 'step="any"',
 							'required' => true,
 							'desc'     => "The lowest value allowed in this rating system. <span class='required'>* Required if the rating system is not a 5-point scale.</span> If worstRating is omitted, 1 is assumed."
 						)
@@ -1338,47 +1347,47 @@ if ( ! class_exists( 'KcSeoSchemaModel' ) ):
 				'localBusiness'    => array(
 					'title'  => 'Local Business',
 					'fields' => array(
-						'active' => array(
+						'active'          => array(
 							'type' => 'checkbox'
 						),
-						'name' => array(
-							'title' => 'Name',
-							'type'  => 'text',
+						'name'            => array(
+							'title'    => 'Name',
+							'type'     => 'text',
 							'required' => true
 						),
-						'description' => array(
+						'description'     => array(
 							'title' => 'Description',
 							'type'  => 'textarea',
 						),
-						'image'   => array(
+						'image'           => array(
 							'title'    => 'Business Logo',
 							'type'     => 'image',
 							'required' => true
 						),
-						'priceRange'  => array(
-							'title'       => 'Price Range (Recommended)',
-							'type'        => 'text',
-							'desc'        => "The price range of the business, for example $$$."
+						'priceRange'      => array(
+							'title' => 'Price Range (Recommended)',
+							'type'  => 'text',
+							'desc'  => "The price range of the business, for example $$$."
 						),
 						'addressLocality' => array(
 							'title' => 'Address locality',
 							'type'  => 'text',
-							'desc' => 'City (i.e Kansas city)'
+							'desc'  => 'City (i.e Kansas city)'
 						),
-						'addressRegion' => array(
+						'addressRegion'   => array(
 							'title' => 'Address region',
 							'type'  => 'text',
-							'desc' => 'State (i.e. MO)'
+							'desc'  => 'State (i.e. MO)'
 						),
-						'postalCode' => array(
+						'postalCode'      => array(
 							'title' => 'Postal code',
 							'type'  => 'text',
 						),
-						'streetAddress' => array(
+						'streetAddress'   => array(
 							'title' => 'Street address',
 							'type'  => 'text',
 						),
-						'telephone' => array(
+						'telephone'       => array(
 							'title' => 'Telephone (Recommended)',
 							'type'  => 'text',
 						)

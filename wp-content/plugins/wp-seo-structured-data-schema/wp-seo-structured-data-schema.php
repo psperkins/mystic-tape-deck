@@ -3,7 +3,7 @@
  *Plugin Name: WP SEO Structured Data Schema
  * Plugin URI: http://kcseopro.com/
  * Description: Comprehensive JSON-LD based Structured Data solution for WordPress for adding schema for organizations, businesses, blog posts, ratings & more.
- * Version: 2.3
+ * Version: 2.4.1
  * Author: kcseopro
  * Author URI: http://kcseopro.com/
  * License: A "Slug" license name e.g. GPL2
@@ -18,7 +18,9 @@ if (!defined('JSON_PRETTY_PRINT'))
 if (!defined('JSON_UNESCAPED_UNICODE'))
 	define('JSON_UNESCAPED_UNICODE', 256);
 
-define('KCSEO_WP_SCHEMA_VERSION', '2.3');
+
+$plugin_data = get_file_data( __FILE__, array( 'Version' => 'Version' ), false );
+define( 'KCSEO_WP_SCHEMA_VERSION', $plugin_data['Version'] );
 define('KCSEO_WP_SCHEMA_SLUG', 'wp-seo-structured-data-schema');
 define('KCSEO_WP_SCHEMA_PATH', dirname(__FILE__));
 define('KCSEO_WP_SCHEMA_PLUGIN_ACTIVE_FILE_NAME',  plugin_basename( __FILE__ ));
@@ -30,7 +32,7 @@ register_uninstall_hook( __FILE__, 'KCSEO_uninstall');
 
 function KCSEO_uninstall(){
 	global $KcSeoWPSchema;
-	$settings    = get_option( $KcSeoWPSchema->options['settings'] );
+	$settings    = get_option( $KcSeoWPSchema->options['main_settings'] );
 	if(! empty( $settings['delete-data'])){
 		$schemas      = new KcSeoSchemaModel;
 		$schemaFields = $schemas->schemaTypes();

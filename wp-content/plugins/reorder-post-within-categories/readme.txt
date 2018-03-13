@@ -2,7 +2,7 @@
 Contributors: aurelien, aurovrata
 Tags: order, reorder, re order, order by category,order custom post type, order by categories, order category, order categories, order by taxonomy, order by taxonomies
 Requires at least: 3.4
-Tested up to: 4.8.1
+Tested up to: 4.9.4
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2
@@ -16,6 +16,8 @@ Sort Post and Custom Post Type through drag & drop interface of selected categor
 ReOrder Post Within Categories is used to sort posts (and custom post type) in any custom order by drag & drop interface.
 It works with a selected category, each category can have different order of same post.
 
+= Thanks to =
+[Nikita Spivak](https://wordpress.org/support/users/nikitasp/) for the Russian translation.
 
 == Installation ==
 
@@ -43,7 +45,7 @@ function exclude_children($args) {
 = I want to order posts in non-hierarchical taxonomies (tags) =
 By default the plugin allows you to order posts only within hierarchical taxonomies (categories).  This is done as a means to ensure one doesn't have spurious orders as allowing both tags and category ordering could lead to users trying to order a post in both and this would create issues which have not been tested by this author.  Hence tread with caution if you enable this in your functions.php file,
 
-`add_filter('reorder_post_within_categories_and_tags', '__return__false');`
+`add_filter('reorder_post_within_categories_and_tags', '__return__true');`
 
 Keep in mind that you will now see `Pages` as a post type to re-order, selecting such post types which do not have any categories associated with it.
 
@@ -62,6 +64,8 @@ function enable_editors($capability, $post_type){
 if an unknown capability is returned, the plugin will default back to 'manage_categories' which is an administrator's capability.
 
 == Changelog ==
+= 1.4.0 =
+* added russian locale.
 =1.3.0=
 * added filter to change capability of reorder post submenu access.
 =1.2.3=

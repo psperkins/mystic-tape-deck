@@ -3,12 +3,12 @@ Contributors: arshidkv12
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=H5F3Z6S3MNTXA&lc=IN&item_name=wp%2dlogin%2dlimit&amount=5%2e00&currency_code=USD&button_subtype=services&bn=PP%2dBuyNowBF%3abtn_buynowCC_LG%2egif%3aNonHosted
 Tags: login, security, authentication, hack, Loginizer, admin, protection,Proxy detection, Brute Force,block,attempts,captcha,verification,bots,attack,login alerts,lock, log, logging, personal security,wordpress security,secure,wordpress,blocked,secure website, admin, atempts, attemps, Auth, authentication, ban, best security, best security pligin, best wordpress security plugin, best wp security plugin, blacklist, block address, block automatically, block user, blocked, blocked ip, botnet, error log, etempts, failed attempts, limit attempts plugin,limit of locks, limit login attempts, limited attempts, lock, lockdown,login attempt, login alerts,  Login Attempts, login security, maintenance, permissions, personal security, plugin, prevent, prevention, limit login attempts, private, security plugin, protection, ettempts, maximum login security
 Requires at least: 3.0
-Tested up to: 4.7.4
-Stable tag: 2.6.2
+Tested up to: 4.9
+Stable tag: 2.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html 
 
-Limit Login Attempts for login protection. Limit rate of login attempts and block IP temporarily. It is protecting from brute force attacks.. 
+Limit rate of login attempts and block IP temporarily. Brute force attack protection. GDPR compliant. Captcha enabled. 
   
 
 == Description ==
@@ -25,6 +25,7 @@ Go to `Settings > WP Limit Login`.
 * Light weight plugin 
 * Mechanism for slow down brute force attack 
 * Redirect to home page, when abnormal request (It will stop hacking tools)
+* **GDPR** compliant. With this feature turned on, all logged IPs get obfuscated (md5-hashed).
 
 = Limit Login Attempts =
 

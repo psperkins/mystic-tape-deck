@@ -1,21 +1,21 @@
 <?php
 /*
-  Plugin Name: WP Limit Login Attempts  
+  Plugin Name: WP Limit Login Attempts
   Plugin URI: https://ciphercoin.com/
   Description: Limit rate of login attempts and block ip temporarily . It is protecting from brute force attack.
-  Author: Arshid 
+  Author: Arshid
   Author URI: https://ciphercoin.com
   Text Domain: wp-limit-login-attempts
-  Version: 2.6.2
-*/ 
+  Version: 2.6.3
+*/
 
 /*  create or update table */
 register_activation_hook(__FILE__,'wp_limit_login_update_tables');
 function wp_limit_login_update_tables(){
     global $wpdb;
-    $tablename = $wpdb->prefix."limit_login"; 
+    $tablename = $wpdb->prefix."limit_login";
     if($wpdb->get_var("SHOW TABLES LIKE '$tablename'") != $tablename ){
-        
+
         $sql = "CREATE TABLE `$tablename`  (
 		`login_id` INT(11) NOT NULL AUTO_INCREMENT,
 		`login_ip` VARCHAR(50) NOT NULL,
@@ -24,11 +24,11 @@ function wp_limit_login_update_tables(){
 		`locked_time` VARCHAR(100) NOT NULL,
 		PRIMARY KEY  (login_id)
 		);";
- 
+
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		dbDelta($sql);
     }
-    //Add options 
+    //Add options
     add_option( 'no_of_wp_limit_login_attepts', '5', '', 'yes' );
     add_option( 'limit_login_attepts_delay_time', '10', '', 'yes' );
     add_option( 'limit_login_attepts_captcha', '3', '', 'yes' );
@@ -36,23 +36,23 @@ function wp_limit_login_update_tables(){
     add_option( 'limit_login_install_date', date('Y-m-d G:i:s'), '', 'yes');
 }
 
-/*** plugin deactivation ***/
+/** plugin deactivation **/
 register_deactivation_hook(__FILE__,'wp_limit_login_deactivation');
 function wp_limit_login_deactivation(){
     error_log("Plugin deactivated..!");
 }
-/*** Plugin Style  ****/  
+/*** Plugin Style  ****/
 function wp_limit_login_stylesheet() {
 
     wp_enqueue_script( 'login_captcha_script', '//code.jquery.com/jquery-1.8.2.js',1);
     wp_enqueue_style( 'login_captcha_style',  plugin_dir_url( __FILE__ )  . 'style.css');
     wp_enqueue_script( 'login_captcha_main_script', plugin_dir_url( __FILE__ ). 'js/main.js',2);
 }
-/*** Plugin main functions ***/  
+/*** Plugin main functions ***/
 add_action( 'login_enqueue_scripts', 'wp_limit_login_stylesheet');
 add_action('plugins_loaded', 'wp_limit_login_init', 1);
 function wp_limit_login_init(){
- 
+
       function is_session_started(){
             if ( php_sapi_name() !== 'cli' ) {
                 if ( version_compare(phpversion(), '5.4.0', '>=') ) {
@@ -63,19 +63,19 @@ function wp_limit_login_init(){
             }
             return FALSE;
         }
-          
+
       if (is_session_started() === FALSE ) session_start();
-        
+
 
       add_action('login_head', 'wp_limit_login_head');
       add_action('wp_login_failed', 'wp_limit_login_failed');
       add_action('login_errors','wp_limit_login_errors');
       add_filter( 'authenticate', 'wp_limit_login_auth_signon', 30, 3 );
-      add_action( 'admin_init', 'wp_limit_login_admin_init' );  
+      add_action( 'admin_init', 'wp_limit_login_admin_init' );
 
-  function wp_limit_login_head(){ 
-       
-       /* check captcha input */ 
+  function wp_limit_login_head(){
+
+       /* check captcha input */
        if(!isset($_SESSION["popup_flag"]) && empty($_SESSION["popup_flag"])){
 
              $_SESSION["popup_flag"] = "first" ;
@@ -92,19 +92,19 @@ function wp_limit_login_init(){
              }
       }
 
-       
 
-      //pass parameters 
+
+      //pass parameters
         if(get_option('limit_login_captcha','checked') != 'checked'){
 
           $_SESSION["popup_flag"] = 'true_0152';
         }
-        
-        
+
+
 
 ?>
          <script>var popup_flag = "<?php  echo $_SESSION["popup_flag"] ?>";
-        </script>   
+        </script>
         <div class='popup' style="display: none;">
         <div class='popup_box'>
         <p class='x' id='x'> &times </p>
@@ -117,25 +117,25 @@ function wp_limit_login_init(){
 
         </div>
         </div>
-<?php }  
-    
- function wp_limit_login_failed($username){   
+<?php }
 
-     global $msg,$ip,$wpdb; 
+ function wp_limit_login_failed($username){
+
+     global $msg,$ip,$wpdb;
   if ($_SESSION["popup_flag"] == "true_0152"){
-     $ip = getip(); 
+     $ip = getip();
 
      $tablename = $wpdb->prefix."limit_login";
      $tablerows = $wpdb->get_results( "SELECT `login_id`, `login_ip`,`login_attempts`,`attempt_time`,`locked_time` FROM  `$tablename`   WHERE `login_ip` =  '$ip'  ORDER BY `login_id` DESC LIMIT 1 " );
-    
+
      if(count($tablerows)==1){
          $attempt =$tablerows[0]->login_attempts ;
          $noofattmpt = get_option( 'no_of_wp_limit_login_attepts',5);
          if( $attempt<=$noofattmpt){
-              $attempt = $attempt +1; 
+              $attempt = $attempt +1;
               $update_table = array(
               'login_id' =>  $tablerows[0]->login_id ,
-              'login_attempts'  =>   $attempt  
+              'login_attempts'  =>   $attempt
               //'attempt_time' => date('Y-m-d G:i:s')
                );
                $wpdb->update($tablename,$update_table,array('login_id'=>$tablerows[0]->login_id ) );
@@ -145,19 +145,19 @@ function wp_limit_login_init(){
                return $msg;
          }else{
                  if(is_numeric($tablerows[0]->locked_time)){
-                  $attempt = $attempt +1; 
+                  $attempt = $attempt +1;
                   $update_table = array(
                   'login_id' =>  $tablerows[0]->login_id ,
-                  'login_attempts'  =>   $attempt , 
+                  'login_attempts'  =>   $attempt ,
                  // 'attempt_time' => date('Y-m-d G:i:s'),
                   'locked_time' => date('Y-m-d G:i:s')
                    );
                    $wpdb->update($tablename,$update_table,array('login_id'=>$tablerows[0]->login_id ) );
                  }else{
-                  $attempt = $attempt +1; 
+                  $attempt = $attempt +1;
                   $update_table = array(
                   'login_id' =>  $tablerows[0]->login_id ,
-                  'login_attempts'  =>   $attempt   
+                  'login_attempts'  =>   $attempt
                   //'attempt_time' => date('Y-m-d G:i:s')
                    );
                    $wpdb->update($tablename,$update_table,array('login_id'=>$tablerows[0]->login_id ) );
@@ -166,27 +166,27 @@ function wp_limit_login_init(){
                  $msg = "The maximum number of login attempts has been reached. Please try again in ".$delay_time." minutes";
                  return $msg;
              }
-         
+
             $time_now = date_create(date('Y-m-d G:i:s'));
             $attempt_time = date_create($tablerows[0]->attempt_time);
             $interval = date_diff($attempt_time, $time_now);
 
             //if(($interval->format("%s")) <= 2){
-              //wp_redirect(home_url()); 
-              //exit; 
-            //} 
-         
+              //wp_redirect(home_url());
+              //exit;
+            //}
+
          }else{
            global $wpdb;
            $tablename = $wpdb->prefix."limit_login";
            $newdata = array(
             'login_ip' => $ip,
-            'login_attempts' =>  1 , 
+            'login_attempts' =>  1 ,
             'attempt_time' => date('Y-m-d G:i:s'),
             'locked_time' =>0
             );
          $wpdb->insert($tablename,$newdata);
-               $remain_attempt = get_option('no_of_wp_limit_login_attepts',5);  
+               $remain_attempt = get_option('no_of_wp_limit_login_attepts',5);
                $msg = $remain_attempt.' attempts remaining..!';
                return $msg;
      }
@@ -194,32 +194,32 @@ function wp_limit_login_init(){
        $_SESSION["popup_flag"] = "first";
               $error = new WP_Error();
               $error->remove('wp_captcha', "Sorry..! captcha");
-          return $error; 
+          return $error;
    }
-     
- }
-    
 
-function wp_limit_login_admin_init(){ 
+ }
+
+
+function wp_limit_login_admin_init(){
     if(is_user_logged_in()){
     global $wpdb;
     $tablename = $wpdb->prefix."limit_login";
-    $ip = getip(); 
+    $ip = getip();
     wp_limit_login_nag_ignore();
      $tablerows = $wpdb->get_results( "SELECT `login_id`, `login_ip`,`login_attempts`,`locked_time` FROM  `$tablename`   WHERE `login_ip` =  '$ip'  ORDER BY `login_id` DESC LIMIT 1 " );
      if(count($tablerows)==1){
         $update_table = array(
                       'login_id' =>  $tablerows[0]->login_id ,
-                      'login_attempts'  =>   0 , 
+                      'login_attempts'  =>   0 ,
                      // 'attempt_time' => date('Y-m-d G:i:s'),
                       'locked_time' => 0
                        );
        $wpdb->update($tablename,$update_table,array('login_id'=>$tablerows[0]->login_id ) );
-       //update table 
+       //update table
      }
     }
 }
-    
+
 
 
 function wp_limit_login_errors($error){
@@ -240,23 +240,23 @@ function wp_limit_login_errors($error){
     return $error;
 
  }
-    
- 
-    
-  
+
+
+
+
 
 function wp_limit_login_auth_signon( $user, $username, $password ) {
-    
+
     global $ip , $msg,$wpdb;
     $ip = getip();
-    
-  
-    
+
+
+
     if ( empty( $username ) || empty( $password ) ) {
         //do_action( 'wp_login_failed' );
     }
     if (isset($_SESSION["popup_flag"]) && $_SESSION["popup_flag"] == "true_0152"){
- 
+
      $tablename = $wpdb->prefix."limit_login";
      $tablerows = $wpdb->get_results( "SELECT `login_id`, `login_ip`,`login_attempts`,`attempt_time`,`locked_time` FROM  `$tablename`   WHERE `login_ip` =  '$ip'  ORDER BY `login_id` DESC LIMIT 1 " );
    if(count($tablerows)==1){
@@ -265,41 +265,41 @@ function wp_limit_login_auth_signon( $user, $username, $password ) {
     $interval = date_diff($attempt_time, $time_now);
 
     if(($interval->format("%s")) <= 1){
-      if(($tablerows[0]->login_attempts)!=0){  
-          wp_redirect(home_url()); 
+      if(($tablerows[0]->login_attempts)!=0){
+          wp_redirect(home_url());
           exit;
       }else{
           return $user;
       }
     }else{
-      
-        
-       
+
+
+
         $captcha_popup_attempt = get_option( 'limit_login_attepts_captcha',3);
         if((($tablerows[0]->login_attempts) % $captcha_popup_attempt) == 0){
             if (($tablerows[0]->login_attempts) != 0){
-             
+
                 $attempts = $tablerows[0]->login_attempts;
                 $attempts = $attempts + 1;
                 $_SESSION["popup_flag"] = "first";
                 $update_table = array(
                   'login_id' =>  $tablerows[0]->login_id ,
-                  'login_attempts'  =>   $attempts , 
+                  'login_attempts'  =>   $attempts ,
                    );
                    $wpdb->update($tablename,$update_table,array('login_id'=>$tablerows[0]->login_id ) );
             }
         }
-        
-        
-    
+
+
+
             if(!is_numeric($tablerows[0]->locked_time)){
                 $locked_time = date_create($tablerows[0]->locked_time);
                 $time_now = date_create(date('Y-m-d G:i:s'));
                 $interval = date_diff($locked_time, $time_now);
-                 
+
                 $delay_time = get_option('limit_login_attepts_delay_time',10);
                 if(($interval->format("%i")) <= $delay_time){
-                     $msg = "Sorry..! Please wait". $delay_time." minutes..!";  
+                     $msg = "Sorry..! Please wait". $delay_time." minutes..!";
                      $error = new WP_Error();
                      $error->add('wp_to_many_try', $msg);
                     return $error;
@@ -307,35 +307,35 @@ function wp_limit_login_auth_signon( $user, $username, $password ) {
 
                    $update_table = array(
                    'login_id' =>  $tablerows[0]->login_id ,
-                   'login_attempts'  =>   0 , 
+                   'login_attempts'  =>   0 ,
                    'attempt_time' => date('Y-m-d G:i:s'),
                    'locked_time' => 0
                    );
                    $wpdb->update($tablename,$update_table,array('login_id'=>$tablerows[0]->login_id ) );
-                  return $user; 
+                  return $user;
                 }
             }else{
 
-               return $user; 
+               return $user;
             }
-          
+
      }
    }else{
 
-       return $user; 
+       return $user;
    }
      } else{
 
           $_SESSION["popup_flag"] = "first";
           $error = new WP_Error();
           $error->remove('wp_captcha', "Sorry..! captcha");
-          return $error; 
+          return $error;
     }
 }
 
-    
-    
-    
+
+
+
     function getip(){
 
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -356,16 +356,16 @@ function wp_limit_login_auth_signon( $user, $username, $password ) {
           }else{
 
             if( !empty($_SESSION["IP_hash"]) && ( $_SESSION["IP_hash"] != md5( $ip ) ) ){
-              
-              session_unset(); 
+
+              session_unset();
             }
         }
 
-        return $ip;
+        return md5($ip);
     }
-    
-    
-    
+
+
+
     function wp_limit_login_nag_ignore() {
 	global $current_user;
         $user_id = $current_user->ID;
@@ -374,11 +374,11 @@ function wp_limit_login_auth_signon( $user, $username, $password ) {
              add_user_meta($user_id, 'wp_limit_login_nag_ignore', 'true', true);
 	}
   }
-    
-    
+
+
 }
- 
-//auto fill login 
+
+//auto fill login
 add_action("login_form", "wp_login_attempt_focus_start");
 function wp_login_attempt_focus_start() {
     ob_start("wp_login_attempt_focus_replace");
@@ -391,7 +391,7 @@ function wp_login_attempt_focus_replace($html) {
 add_action("login_footer", "wp_login_attempt_focus_end");
 function wp_login_attempt_focus_end() {
     ob_end_flush();
-} 
+}
 
 /* Display a notice that can be dismissed */
 
@@ -402,7 +402,7 @@ function wp_limit_login_admin_notice() {
         $user_id = $current_user->ID;
         /* Check that the user hasn't already clicked to ignore the message */
 	if ( ! get_user_meta($user_id, 'wp_limit_login_nag_ignore') ) {
-        echo '<div style="border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; background: #EBF8A4; border: 1px solid #a2d246; color: #066711; font-size: 14px; font-weight: bold; height: auto; margin: 30px 15px 15px 0px; overflow: hidden; padding: 4px 10px 6px; line-height: 30px;"><p>'; 
+        echo '<div style="border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; background: #EBF8A4; border: 1px solid #a2d246; color: #066711; font-size: 14px; font-weight: bold; height: auto; margin: 30px 15px 15px 0px; overflow: hidden; padding: 4px 10px 6px; line-height: 30px;"><p>';
         printf(__('Your admin is protected. Light wordpress plugin -  <a href="http://www.ciphercoin.com" target="_blank">CipherCoin</a>  |<a href="options-general.php?page=wp-limit-login-attempts">Settings</a> | <a href="%1$s">Hide Notice</a>'), '?wp_limit_login_nag_ignore=0');
         echo "</p></div>";
 	}
@@ -426,17 +426,17 @@ function wp_limit_login_plugin_options() {
     <img src="'.plugin_dir_url( __FILE__ )  .'/images/warn.png""> <b>WP Limit Login attempts Lite</b>
      is a fully functional but limited version of <b><a href="http://www.ciphercoin.com" target="_blank">WP Limit Login attempts Pro</a></b>. Consider upgrading to get access to all premium features and premium support.
   </div>';
-       
-      
-	echo '<div class="admin_menu">';	
+
+
+	echo '<div class="admin_menu">';
 	echo '<h2>WP Limit Login Attempts</h2>';
 	//echo '<form method="POST" action="" >';
 	echo '<div class="row1"><label>Number of login attempts :</label><input disabled type="number" value="5" name="attempts" class="attempts" ></div>';
-	 
+
 	echo '<div class="row2"><label>Lockdown time in minutes:</label><input type="number" value="10"  name="delay" disabled class="delay" ></div>';
- 
+
 	echo '<div class="row3"><label>Number of attempts for captcha:</label><input disabled type="number" value="3" name="no_captcha" class="delay" ></div>';
- 
+
   echo '<div class="row4"><label>Enable captcha:</label>
   <input class="captcha" type="checkbox" disabled name="enable_captcha" checked></div>';
 	echo '<div class="row5"><input type="submit" class="submit_admin" value="Submit"></div>';
@@ -447,18 +447,18 @@ function wp_limit_login_plugin_options() {
 	//<input type="text" name
  echo '<div class="warn_msg">
     <img src="'.plugin_dir_url( __FILE__ )  .'/images/warn.png"">   Please consider upgrading to <b><a href="http://www.ciphercoin.com" target="_blank">WP Limit Login attempts Pro</a></b> if you want to use this feature.
-  </div>'; 
+  </div>';
 }
- 
+
 
 // Add settings link on plugin page
-function wp_limit_login_settings_link($links) { 
-  $settings_link = '<a href="options-general.php?page=wp-limit-login-attempts">Settings</a>'; 
-  array_unshift($links, $settings_link); 
-  return $links; 
+function wp_limit_login_settings_link($links) {
+  $settings_link = '<a href="options-general.php?page=wp-limit-login-attempts">Settings</a>';
+  array_unshift($links, $settings_link);
+  return $links;
 }
- 
-$plugin = plugin_basename(__FILE__); 
+
+$plugin = plugin_basename(__FILE__);
 add_filter("plugin_action_links_$plugin", 'wp_limit_login_settings_link' );
 
 /* Display a notice that can be dismissed */
@@ -472,18 +472,19 @@ function limit_login_admin_notice() {
   $date_diff    = date_diff( $install_date, $date_now );
 
   if ( $date_diff->format("%d") <= 7 ) {
-    
+
     return false;
   }
 
     global $current_user ;
     $user_id = $current_user->ID;
- 
+
     if ( ! get_user_meta($user_id, 'limit_login_rating_ignore_notice' ) ) {
 
-        echo '<div class="updated"><p>'; 
+        echo '<div class="updated"><p>';
 
-        printf(__('Awesome, you\'ve been using <a href="options-general.php?page=wp-limit-login-attempts">WP Limit Login Attempts Plugin</a> for more than 1 week. May we ask you to give it a 5-star rating on WordPress? | <a href="%2$s" target="_blank">Ok, you deserved it</a> | <a href="%1$s">I alredy did</a> | <a href="%1$s">No, not good enough</a>'), 'options-general.php?page=wp-limit-login-attempts&wp_limit_login_rating_ignore=0','https://wordpress.org/plugins/wp-limit-login-attempts/');
+        printf(__('Awesome, you\'ve been using <a href="options-general.php?page=wp-limit-login-attempts">
+        WP Limit Login Attempts Plugin</a> for more than 1 week. May we ask you to give it a 5-star rating on WordPress? | <a href="%2$s" target="_blank">Ok, you deserved it</a> | <a href="%1$s">I already did</a> | <a href="%1$s">No, not good enough</a>'), 'options-general.php?page=wp-limit-login-attempts&wp_limit_login_rating_ignore=0','https://wordpress.org/plugins/wp-limit-login-attempts/');
         echo "</p></div>";
     }
 }
@@ -493,7 +494,7 @@ add_action('admin_init', 'wp_limit_login_rating_ignore');
 function wp_limit_login_rating_ignore() {
     global $current_user;
     $user_id = $current_user->ID;
- 
+
     if ( isset($_GET['wp_limit_login_rating_ignore']) && '0' == $_GET['wp_limit_login_rating_ignore'] ) {
 
         add_user_meta($user_id, 'limit_login_rating_ignore_notice', 'true', true);

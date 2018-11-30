@@ -140,7 +140,7 @@ function mtd_modify_main_query( $query ) {
 	if ( $query->is_post_type_archive( 'song' ) && $query->is_main_query() ) {
 		$query->query_vars['order'] = 'ASC';
 	}
-	if ( $query->is_post_type_archive( 'glossary' ) || is_tax( 'glossary-type' ) && $query->is_main_query() ) {
+	if ( $query->is_post_type_archive( 'glossary' ) || is_tax( 'glossarytype' ) && $query->is_main_query() ) {
         $query->set( 'orderby', 'title' );
         $query->set( 'order', 'ASC' );
     }

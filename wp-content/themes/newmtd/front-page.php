@@ -6,7 +6,6 @@
 <?php if( have_posts() ) : while( have_posts() ) : the_post(); ?>
 				<?php echo the_content(); ?>
 <?php endwhile; endif; ?>
-			<a class="fullwide" href="#">THE COSMOGONY</a>
 		</div>
 	</div>
 	<div class="feature shadow">

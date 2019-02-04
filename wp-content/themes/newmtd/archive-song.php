@@ -15,6 +15,9 @@ if( have_posts() ) : while( have_posts() ) : the_post();
 	$links['mc'] = $musicoin;
 	$links['rn'] = $reverb;
 
+	//echo get_the_ID(); die();
+	$attached = get_post_meta( get_the_ID(), 'related_attached_posts', true );
+
 ?>
 <article class="shadow solid archive">
 	<h2><?php the_title(); ?></h2>
@@ -22,14 +25,19 @@ if( have_posts() ) : while( have_posts() ) : the_post();
 	<?php the_content(); ?>
 	</div>
 	<div class="songmeta">
-		<a href="<?php echo get_the_permalink(); ?>" class="btn btn-primary btn-sm">Lyrics & Mythology</a>
+		<?php
+			if($attached) :
+				foreach ( $attached as $attached_post ) :
+					$att = get_post( $attached_post );
+					$plink = get_the_permalink($attached_post);
+		?>
+		<a href="<?php echo $plink; ?>" class="btn btn-primary btn-sm">Lyrics & Mythology</a>
+	<?php endforeach; endif; ?>
 	</div>
 	<div class="musiclinks clearfix">
 	<?php
 		foreach ($links as $key => $link) {
-			if(!empty($link)) {
-				echo "<a class='musiclink " . $key . "' href='" . $link . "'></a>";
-			}
+			echo "<a class='musiclink " . $key . "' href='" . $link . "'></a>";
 		}
 	?>
 	</div>

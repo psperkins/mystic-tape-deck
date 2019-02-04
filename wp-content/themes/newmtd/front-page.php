@@ -23,10 +23,10 @@
 			if ( has_post_thumbnail() ) {
 				the_post_thumbnail( 'teaser' );
 			}
-		?>
+			the_content(); ?>
+
 		</div>
-	<?php	the_content(); ?>
-	<div class="clearfix"></div>
+		<div class="clearfix"></div>
 	</div>
 	<?php endwhile; endif; ?>
 

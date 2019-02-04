@@ -121,11 +121,12 @@ article h2 {
 }
 
 blockquote {
-  background: white;
+  background: #ffffff;
   border-left: 2px solid #e0ebeb;
-  padding-left: 10px;
   font-style: italic;
   margin: 20px 0 0 20px;
+  display: inline-block;
+  padding: 15px;
 }
 
 .shadow {

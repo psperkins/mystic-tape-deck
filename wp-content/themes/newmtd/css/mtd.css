@@ -122,11 +122,16 @@ article h2 {
 
 blockquote {
   background: #ffffff;
-  border-left: 8px solid #26004d;
+  border-left: 8it pulpx solid #26004d;
   font-style: italic;
   margin: 20px 0 0 20px;
   display: inline-block;
   padding: 15px;
+}
+
+.thumb-container {
+  float: left;
+  margin-right: 15px;
 }
 
 .shadow {

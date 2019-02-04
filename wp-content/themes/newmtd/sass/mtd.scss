@@ -138,11 +138,16 @@ article {
 
 blockquote {
 	background: #ffffff;
-	border-left: 8px solid $violet;
+	border-left: 8it pulpx solid $violet;
 	font-style: italic;
 	margin: 20px 0 0 20px;
 	display: inline-block;
 	padding: 15px;
+}
+
+.thumb-container {
+	float: left;
+	margin-right: 15px;
 }
 
 .shadow {

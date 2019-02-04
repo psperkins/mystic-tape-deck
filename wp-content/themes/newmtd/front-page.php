@@ -18,11 +18,13 @@
 	if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post();
 	?>
 	<h3><a href="#"><?php the_title(); ?></a></h3>
-	<?php
-					if ( has_post_thumbnail() ) {
-					    the_post_thumbnail( 'teaser' );
-					}
-				?>
+		<div class="thumb-container pull-left">
+		<?php
+			if ( has_post_thumbnail() ) {
+				the_post_thumbnail( 'teaser' );
+			}
+		?>
+		</div>
 	<?php	the_content();
 	endwhile; endif; ?>
 	</div>

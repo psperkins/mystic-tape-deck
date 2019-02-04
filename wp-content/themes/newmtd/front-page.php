@@ -28,8 +28,8 @@
 	<?php the_content(); ?>
 	</div>
 		<div class="clearfix"></div>
-	<?php endwhile; endif; ?>
 	</div>
+	<?php endwhile; endif; ?>
 
 <?php
 	$args = array(

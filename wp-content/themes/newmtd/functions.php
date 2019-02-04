@@ -40,7 +40,7 @@ function mtd_enqueue_styles() {
     wp_enqueue_style('google-font', '//fonts.googleapis.com/css?family=Cinzel:400,900|Nanum+Gothic');
     $dependencies = array('bootstrap');
     wp_enqueue_style( 'mtd-bootstrap', get_stylesheet_uri(), $dependencies );
-	wp_enqueue_style( 'mtd-styles', get_stylesheet_directory_uri() . '/css/mtd.css', array( ), NULL, 'all' );
+	wp_enqueue_style( 'mtd-styles', get_stylesheet_directory_uri() . '/css/mtd.css', array( ), rand(1, 1234), 'all' );
 
 
 }

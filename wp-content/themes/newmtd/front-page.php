@@ -8,6 +8,7 @@
 <?php endwhile; endif; ?>
 		</div>
 	</div>
+	<div class="feature shadow">
 <?php
 	$args = array(
 		'post_type' => 'feature',
@@ -16,19 +17,19 @@
 	$query = new WP_Query( $args );
 	if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post();
 	?>
-	<div class="feature shadow">
 	<h3><?php the_title(); ?></h3>
 		<div class="thumb-container pull-left">
 		<?php
 			if ( has_post_thumbnail() ) {
 				the_post_thumbnail( 'teaser' );
 			}
-			the_content(); ?>
-
+		?>
 		</div>
-		<div class="clearfix"></div>
+	<?php the_content(); ?>
 	</div>
+		<div class="clearfix"></div>
 	<?php endwhile; endif; ?>
+	</div>
 
 <?php
 	$args = array(

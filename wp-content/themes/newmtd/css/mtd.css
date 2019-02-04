@@ -17,6 +17,13 @@ body, html {
   /* IE6-9 */
 }
 
+.clearfix {
+  display: block;
+  width: 100%;
+  height: 0;
+  clear: both;
+}
+
 p {
   font-family: "Nanum Gothic", sans-serif;
 }

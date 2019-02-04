@@ -25,9 +25,10 @@
 			}
 		?>
 		</div>
+	<?php	the_content(); ?>
+	<div class="clearfix"></div>
 	</div>
-	<?php	the_content();
-	endwhile; endif; ?>
+	<?php endwhile; endif; ?>
 
 <?php
 	$args = array(

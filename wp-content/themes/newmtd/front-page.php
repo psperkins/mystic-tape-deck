@@ -17,7 +17,7 @@
 	$query = new WP_Query( $args );
 	if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post();
 	?>
-	<h3><a href="#"><?php the_title(); ?></a></h3>
+	<h3><?php the_title(); ?></h3>
 		<div class="thumb-container pull-left">
 		<?php
 			if ( has_post_thumbnail() ) {

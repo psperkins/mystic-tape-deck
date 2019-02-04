@@ -125,6 +125,7 @@ blockquote {
   border-left: 2px solid #e0ebeb;
   padding-left: 10px;
   font-style: italic;
+  margin: 20px 0 0 20px;
 }
 
 .shadow {

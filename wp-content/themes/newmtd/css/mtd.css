@@ -81,6 +81,7 @@ header .header {
 .feature {
   margin-top: 30px;
   background: #f5f5f5;
+  padding: 15px;
 }
 .feature h3 {
   padding: 10px;

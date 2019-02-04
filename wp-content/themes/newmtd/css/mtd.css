@@ -119,7 +119,8 @@ article h2 {
   border-bottom: 3px solid #26004d;
   margin-bottom: 15px;
 }
-article .body blockquote {
+
+blockquote {
   background: #8c8c8c;
   border-left: 2px solid #e0ebeb;
   padding-left: 10px;

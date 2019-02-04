@@ -134,15 +134,13 @@ article {
 		border-bottom: 3px solid $violet;
 		margin-bottom: 15px;
 	}
+}
 
-	.body {
-		blockquote {
-			background: $ltgray;
-			border-left: 2px solid $gray;
-			padding-left: 10px;
-			font-style: italic;
-		}
-	}
+blockquote {
+	background: $ltgray;
+	border-left: 2px solid $gray;
+	padding-left: 10px;
+	font-style: italic;
 }
 
 

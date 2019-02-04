@@ -36,7 +36,7 @@ if ( ! function_exists( 'mtd_sidebars' ) ) {
 }
 
 function mtd_enqueue_styles() {
-    wp_register_style('bootstrap', get_template_directory_uri() . '/bootstrap/css/bootstrap.min.css' );
+    wp_enqueue_style('bootstrap', get_template_directory_uri() . '/bootstrap/css/bootstrap.min.css' );
     wp_enqueue_style('google-font', '//fonts.googleapis.com/css?family=Cinzel:400,900|Nanum+Gothic');
 	wp_enqueue_style( 'mtd-styles', get_stylesheet_directory_uri() . '/css/mtd.css', array( ), rand(1, 1234), 'all' );
 }

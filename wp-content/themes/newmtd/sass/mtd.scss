@@ -129,7 +129,23 @@ article {
 			max-width: 100%;
 		}
 	}
+
+	h2 {
+		border-bottom: 3px solid $violet;
+		margin-bottom: 15px;
+	}
+
+	body {
+		blockquote {
+			background: $ltgray;
+			border-left: 2px solid $gray;
+			padding-left: 10px;
+			font-style: italic;
+		}
+	}
 }
+
+
 
 .shadow {
 	-webkit-box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.75);

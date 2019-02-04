@@ -40,8 +40,7 @@ function mtd_enqueue_styles() {
     wp_enqueue_style('google-font', '//fonts.googleapis.com/css?family=Cinzel:400,900|Nanum+Gothic');
     $dependencies = array('bootstrap');
     wp_enqueue_style( 'mtd-bootstrap', get_stylesheet_uri(), $dependencies );
-    wp_enqueue_style( 'mtd-tlstyles', '//cdn.knightlab.com/libs/timeline3/latest/css/timeline.css', null, '1.0', 'all' );
-	wp_enqueue_style( 'mtd-styles', get_stylesheet_directory_uri() . '/css/mtd.css', array( 'mtd-tlstyles' ), '1.0', 'all' );
+	wp_enqueue_style( 'mtd-styles', get_stylesheet_directory_uri() . '/css/mtd.css', array( ), '1.0', 'all' );
 
 
 }
@@ -51,11 +50,6 @@ function mtd_enqueue_scripts() {
     wp_enqueue_script( 'mtd-js', get_stylesheet_directory_uri() . '/js/mtd.js', 'jquery', '1.0', true );
     wp_enqueue_script( 'mtd-bootstrap', get_template_directory_uri().'/bootstrap/js/bootstrap.min.js', $dependencies, '', true );
     wp_enqueue_script( 'holder-js', get_stylesheet_directory_uri() . '/js/holder.js', 'jquery', '1.0', true );
-	wp_enqueue_script( 'mtd-sljs', '//cdn.knightlab.com/libs/timeline3/latest/js/timeline-min.js', 'jquery', '1.0', true );
-
-
-
-
 }
 
 # Hide Yoast Meta boxes in unnecessary post type
@@ -74,67 +68,12 @@ function mtd_menus() {
 }
 
 /**
- * Add a custom endpoint for TimelineJS data
- *
- * @param string $data The endpoint data from the request.
- */
-function mtd_add_timeline_endpoint( $data ) {
-	$args = array(
-		'post_type' => 'post',
-		'post_status' => 'publish',
-		'posts_per_page' => 99,
-		'meta_key' => '_timeline_year',
-		'orderby' => array(
-			'meta_value_num' => DESC,
-			'ID'      => DESC,
-		),
-		'order' => ASC,
-	);
-
-	$posts = new WP_Query( $args );
-	$postdata = $posts->posts;
-	$tlinfo = [];
-	$tagargs = array(
-		'fields' => 'ids',
-	);
-	$mainjson = [];
-	$titlejson = [];
-
-	foreach ( $postdata as $post ) {
-		$events = new stdClass();
-		$titles = new stdClass();
-		$link = get_the_permalink( $post->ID );
-		$titles->media = (object) null;
-		$titles->text['headline'] = 'CHRONOLOGICAL TIMELINE OF THE MYTHOLOGY OF THE SHINING ONE';
-		$events->media['url'] = get_the_post_thumbnail_url( $post->ID, 'full' );
-		$events->media['thumbnail'] = get_the_post_thumbnail_url( $post->ID, 'teaser' );
-		$events->start_date['year'] = get_post_meta( $post->ID, '_timeline_year', true );
-		$events->start_date['display_data'] = true;
-		$events->text['headline'] = '<a href="' . $link . '">' . $post->post_title . '</a>';
-		$events->text['text'] = get_post_meta( $post->ID, '_timeline_desc', true );
-		$events->postid = $post->ID;
-		$evts[] = $events;
-	}
-	$titlejson['title'] = $titles;
-	$mainjson['title'] = $titles;
-	$mainjson['events'] = $evts;
-	return $mainjson;
-}
-
-add_action( 'rest_api_init', function () {
-	register_rest_route( 'timeline/v1', '/posts', array(
-		'methods' => 'GET',
-		'callback' => 'mtd_add_timeline_endpoint',
-	) );
-} );
-
-/**
  * Add custom sorting for stories category view.
  *
  * @param object $query The query being executed.
  */
 function mtd_modify_main_query( $query ) {
-	if ( $query->is_category( array( 'stories', '15th-century' ) ) && $query->is_main_query() ) {
+	if ( $query->is_category( array( 'mythology' ) ) && $query->is_main_query() ) {
 		$query->query_vars['order'] = 'ASC';
 	}
 	if ( $query->is_post_type_archive( 'song' ) && $query->is_main_query() ) {

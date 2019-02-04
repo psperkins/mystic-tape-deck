@@ -1,22 +1,4 @@
 <?php wp_footer(); ?>
-<?php if(is_category('stories')) : ?>
-<script>
-window.onload = function() {
-	document.getElementById('tab2').addEventListener("click", loadTL());
-}
-function loadTL() {
-	var options = {
-			default_bg_color: '#a6a6a6',
-			height: 200,
-			initial_zoom: 0,
-			slide_padding_lr: 30,
-			is_embed: false,
-			start_at_slide: 0
-		}
-	var timeline = new TL.Timeline('timeline-embed','https://mystictapedeck.com/wp-json/timeline/v1/posts', options);
-}
-</script>
-<?php endif; ?>
 </div> <!-- /container -->
 	<footer>
 		<div id="footer">

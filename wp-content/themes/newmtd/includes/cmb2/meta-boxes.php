@@ -1,42 +1,8 @@
 <?php
 
-add_action( 'cmb2_admin_init', 'cmb2_timeline_metaboxes' );
 /**
  * Define the metabox and field configurations.
  */
-function cmb2_timeline_metaboxes() {
-  $prefix = '_timeline_';
-
-  /**
-   * Initiate the metabox
-   */
-  $tldata = new_cmb2_box( array(
-    'id'            => 'timeline_data',
-    'title'         => __( 'Timeline Data', 'tldata' ),
-    'object_types'  => array( 'post', ), // Post type
-    'context'       => 'normal',
-    'priority'      => 'high',
-    'show_names'    => true,
-    'show_in_rest' => true,
-  ) );
-
-  $tldata->add_field( array(
-    'name'       => __( 'Timeline Year', 'tldata' ),
-    'desc'       => __( 'The year this event took place', 'tldata' ),
-    'id'         => $prefix . 'year',
-    'type'       => 'text',
-    'show_in_rest' => true,
-  ) );
-
-  $tldata->add_field( array(
-    'name'    => __( 'Timeline Description', 'tldata' ),
-    'desc'    => 'timeline description text',
-    'id'      => $prefix . 'desc',
-    'type'    => 'wysiwyg',
-    'show_in_rest' => true,
-    'options' => array(),
-  ) );
-}
 
 function cmb2_teaser_metaboxes() {
   $prefix = '_mtdt_';
@@ -113,7 +79,7 @@ function cmb2_attach_posts_field() {
   $song_meta = new_cmb2_box( array(
     'id'           => 'attached_posts',
     'title'        => __( 'Attached Posts', 'mtd' ),
-    'object_types' => array( 'song', 'glossary' ), // Post type
+    'object_types' => array( 'song', 'glossary', 'post'), // Post type
     'context'      => 'normal',
     'priority'     => 'high',
     'show_names'   => false, // Show field names on the left
@@ -135,7 +101,38 @@ function cmb2_attach_posts_field() {
     ),
   ) );
 }
+
+function cmb2_attach_songs_field() {
+
+  $prefix = 'related_song_';
+
+  $song_meta = new_cmb2_box( array(
+    'id'           => 'attached_songs',
+    'title'        => __( 'Attached Songs', 'mtd' ),
+    'object_types' => array( 'post' ), // Post type
+    'context'      => 'normal',
+    'priority'     => 'high',
+    'show_names'   => false, // Show field names on the left
+  ) );
+
+  $song_meta->add_field( array(
+    'name'    => __( 'Attached Song', 'mtd' ),
+    'desc'    => __( 'Drag posts from the left column to the right column to attach them to this page.<br />You may rearrange the order of the posts in the right column by dragging and dropping.', 'mtd' ),
+    'id'      => $prefix . 'attached_songs',
+    'type'    => 'custom_attached_posts',
+    'column'  => true,
+    'options' => array(
+      'show_thumbnails' => true,
+      'filter_boxes'    => true,
+      'query_args'      => array(
+        'posts_per_page' => 20,
+        'post_type'      => 'song',
+      ),
+    ),
+  ) );
+}
+
+add_action( 'cmb2_init', 'cmb2_attach_songs_field' );
 add_action( 'cmb2_init', 'cmb2_attach_posts_field' );
-add_action( 'cmb2_init', 'cmb2_timeline_metaboxes' );
 add_action( 'cmb2_init', 'cmb2_teaser_metaboxes' );
 add_action( 'cmb2_init', 'cmb2_song_metaboxes' );

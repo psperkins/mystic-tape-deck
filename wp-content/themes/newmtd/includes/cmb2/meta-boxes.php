@@ -132,6 +132,29 @@ function cmb2_attach_songs_field() {
   ) );
 }
 
+function cmb2_attach_prelude_field() {
+
+  $prefix = 'song_';
+
+  $song_meta = new_cmb2_box( array(
+    'id'           => 'prelude',
+    'title'        => __( 'Song Prelude Text', 'mtd' ),
+    'object_types' => array( 'post' ), // Post type
+    'context'      => 'normal',
+    'priority'     => 'high',
+    'show_names'   => false, // Show field names on the left
+  ) );
+
+  $song_meta->add_field( array(
+    'name'    => 'Song Prelude',
+    'desc'    => 'The song prelude text is displayed on the aggregate mythology page.',
+    'default' => '',
+    'id'      => $prefix . 'prelude',
+    'type'    => 'textarea'
+  ) );
+}
+
+add_action( 'cmb2_init', 'cmb2_attach_prelude_field' );
 add_action( 'cmb2_init', 'cmb2_attach_songs_field' );
 add_action( 'cmb2_init', 'cmb2_attach_posts_field' );
 add_action( 'cmb2_init', 'cmb2_teaser_metaboxes' );

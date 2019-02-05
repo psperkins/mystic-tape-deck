@@ -6,6 +6,7 @@
 			<div class="col-sm-12">
 		<?php
 			if( have_posts() ) : while( have_posts() ) : the_post();
+				$prelude = get_post_meta( get_the_ID(), 'song_prelude', true );
 		?>
 				<div class="article preview shadow">
 					<article>
@@ -20,6 +21,7 @@
 						<ul class="postmeta">
 							<li><?php _e( 'Filed Under: ', 'newmtd' ); the_category(', ');?> | </li>
 						</ul>
+						<p><?php echo $prelude; ?></p>
 						<div class="clearfix"></div>
 					</article>
 				</div>

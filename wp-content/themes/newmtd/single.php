@@ -11,6 +11,7 @@ get_header();
 	foreach ( $attached as $attached_post ) {
 		$song = get_post( $attached_post );
 		echo $song->post_content;
+		//echo "<pre>"; var_dump($song); die();
 	}
 	?>
 	<div class="article body">

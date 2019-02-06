@@ -1,7 +1,6 @@
-# Translation of JobRoller
-# Copyright (C) 2010 JobRoller
-# This file can be distributed under the JobRoller terms
-#
+# Translation of Featured Images in RSS
+# Copyright (C) 2019 5StarPkugins.com
+# This file can be distributed under the 5StarPlugins terms
 #
 msgid ""
 msgstr ""

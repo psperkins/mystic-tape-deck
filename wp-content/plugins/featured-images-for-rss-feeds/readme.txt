@@ -1,9 +1,9 @@
-=== Featured Images in RSS & Mailchimp Email ===
-Contributors: presswizards, freemius
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4SE22RQ4CB2E
+=== Featured Images in RSS for Mailchimp & Other Email ===
+Contributors: presswizards
+Donate link: https://5starplugins.com/
 Tags: featured images in rss, rss images, featured image, thumbnails, images in rss, mailchimp, mailchimp rss, rss campaigns, infusionsoft, hubspot, constant contact, content marketing, marketing automation
 Requires at least: 2.9
-Tested up to: 4.9.3
+Tested up to: 5.0.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -12,14 +12,15 @@ Outputs images in your RSS feed to Mailchimp, Infusionsoft, Hubspot, and other s
 
 == Description ==
 
-Get images in your RSS feed instantly for free. Output blog featured photos to Mailchimp RSS emails, Infusionsoft, Hubspot, Constant Contact, Zoho, Feedburner, Bloglovin’, Feedly, and other services that use RSS feed data. A trusted plugin, developed in San Diego, CA (US), with over 20,000 active installs and over 60 5 star reviews. We actively answer every support forum thread.
+Get images in your RSS feed instantly for free. Output blog featured photos to Mailchimp RSS emails, Infusionsoft, Hubspot, Constant Contact, Zoho, Feedburner, Bloglovin’, Feedly, and other services that use RSS feed data. A trusted plugin, developed in San Diego, CA (US), with over 20,000 active installs and 50+ five-star reviews. We actively answer every support forum thread.
 
 Features:
 
 * Featured image size: Select from thumbnail, medium, large, any theme-specific sizes, and full size.
 * Image Position: Select Image left above text, Image left text wrap, Image right text wrap, and Image centered above text.
 * Padding: Instantly set the spacing between the image and the body text.
-* Feedly: Now supports Feedly's webfeedsFeaturedVisual class name on image HTML.
+* Feedly: Now support webfeedsFeaturedVisual class name on image HTML.
+
 
 > **Premium Version Now Available**
 
@@ -28,7 +29,7 @@ Features:
 > Upgrade to Pro Marketer for a full suite of image customization features for professional marketing. Works with Mailchimp, Feedburner, Bloglovin’, Feedly, Infusionsoft, Hubspot, Constant Contact, and other services that use RSS feed data.
 
 > * World-class Support: The main reason to upgrade is our expert support - we'll get everything working and looking great
-> * Media, Image and Enclosure Tag Options: Output images in media, image, and/or enclosure tags for best image support
+> * Media and Enclosure Tag Options: Output images in media and/or enclosure tags for best image support
 > * Option to use Media tag images only: Fix duplicate images issues when using image tags for advanced template designs
 > * Custom Image Sizes: Completely customize the size of image display for RSS feeds
 > * Feature First Image: No featured photos set? No problem. It will use the first photo from the body of your blog post
@@ -53,13 +54,13 @@ We promise you'll love the features this plugin provides for your content market
 
 == Installation ==
 
-Go to Plugins -> Add New, search for the name of the plugin, and then find it in the list, and click Install Now.
+Go to Plugins -> Add New, search for the name of the plugin, and then find it in the list, and click Install Now, then Activate. Configure the plugin options as desired.
 
-Or use the manual upload method:
+Or use the manual upload method if you have a plugin ZIP file:
 
-1. Click the Upload option. Choose the plugin zip file you downloaded. Click the Upload button.
+1. Click the Upload option. Choose the plugin zip file. Click the Upload button.
 2. Activate the plugin.
-3. Set the plugin options, if desired.
+3. Configure the plugin options as desired.
 
 == Frequently Asked Questions ==
 = Images are not aligning or resizing properly =
@@ -85,7 +86,7 @@ Or use the manual upload method:
 Upgrade to Pro Marketer for a full suite of image customization features for professional marketing. Works with Mailchimp, Feedburner, Bloglovin’, Feedly, Infusionsoft, Hubspot, Constant Contact, and other services that use RSS feed data.
 
 * World-class Support: The main reason to upgrade is our expert support - we'll get everything working and looking great
-* Media, Image and Enclosure Tag Options: Output images in media, image, and/or enclosure tags for best image support
+* Media and Enclosure Tag Options: Output images in media and/or enclosure tags for best image support
 * Option to use Media tag images only: Fix duplicate images issues when using image tags for advanced template designs
 * Custom Image Sizes: Completely customize the size of image display for RSS feeds
 * Feature First Image: No featured photos set? No problem. It will use the first photo from the body of your blog post
@@ -120,6 +121,17 @@ Please submit a [rating and review](https://wordpress.org/support/plugin/feature
 4. A sad example of a plain RSS feed with no images, because they aren't using this plugin. Don't have sad RSS feeds, use this plugin!
 
 == Changelog ==
+
+= 1.5.1 =
+* Added: Add option to make the prepended image clickable, props to @crzyhrse for the suggestion.
+* Updated: Revised our support link, free and premium support now provided via https://support.5starplugins.com/
+
+= 1.5 =
+* Fixed: (Premium update only) Various feed XML validation improvements and fixes.
+* Updated: Freemius SDK updated to the latest version
+
+= 1.4.9 =
+* Fixed: (Premium update only) Various feed XML validation improvements and fixes.
 
 = 1.4.8 =
 * Fixed: Various feed XML validation improvements and fixes.
@@ -163,8 +175,6 @@ Please submit a [rating and review](https://wordpress.org/support/plugin/feature
 
 == Upgrade Notice ==
 
-= 1.4.8 =
-* Fixed: Various feed XML validation improvements and fixes.
-* Fixed: To fix a duplicate image issue when adding images as a Media/Enclosure tag, a new option to remove the regular prepended image from the main feed.
-* Added: Media and Enclosure tags (Premium options) now resize to image size chosen, instead of always being full sized.
-* Updated: Freemius SDK updated to the latest version
+= 1.5.1 =
+* Added: Add option to make the prepended image clickable, props to @crzyhrse for the suggestion.
+* Updated: Revised our support link, free and premium support now provided via https://support.5starplugins.com/

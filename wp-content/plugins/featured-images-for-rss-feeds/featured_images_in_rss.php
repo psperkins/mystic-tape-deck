@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Plugin Name: Featured Images in RSS w/ Size and Position
+ * Plugin Name: Featured Images in RSS for Mailchimp & Other Email
  * Plugin URI:  http://wordpress.org/plugins/featured-images-for-rss-feeds/
  * Description: Outputs images in your RSS feed to Mailchimp, Infusionsoft, Hubspot, and other services that use RSS feed data for content marketing.
  * Author:      5 Star Plugins
- * Version:     1.4.8
+ * Version:     1.5.1
  * Author URI:  https://5starplugins.com/
  * Text Domain: featured-images-for-rss-feeds
  *
  * @fs_premium_only /includes/premium/
  */
-define( 'FIRSS_VERSION', '1.4.8' );
+define( 'FIRSS_VERSION', '1.5.1' );
 define( 'FIRSS_PLUGIN_URL', plugins_url( '/', __FILE__ ) );
 // __Freemius
 /**
@@ -101,6 +101,12 @@ if ( !function_exists( 'firss_init' ) ) {
             1000,
             1
         );
+        add_filter(
+            'post_thumbnail_html',
+            'firss_filter_post_thumbnail_html',
+            10,
+            5
+        );
         add_action( 'firss_settings_form_actions', 'firss_call_to_action' );
         add_action( 'firss_settings_after_form', 'firss_inform_premium' );
         firss_load_plugin_textdomain();
@@ -169,6 +175,7 @@ if ( !function_exists( 'firss_init' ) ) {
         register_setting( $group, 'featured_images_in_rss_size' );
         register_setting( $group, 'featured_images_in_rss_css' );
         register_setting( $group, 'featured_images_in_rss_padding' );
+        register_setting( $group, 'featured_images_in_rss_clickable_link' );
         do_action( 'firss_register_settings', $group );
     }
     
@@ -183,6 +190,7 @@ if ( !function_exists( 'firss_init' ) ) {
         $featured_images_in_rss_padding = get_option( 'featured_images_in_rss_padding', 5 );
         $featured_images_in_rss_thumb_size_w = get_option( 'featured_images_in_rss_thumb_size_w' );
         $featured_images_in_rss_thumb_size_h = get_option( 'featured_images_in_rss_thumb_size_h' );
+        $featured_images_in_rss_clickable_link = (bool) get_option( 'featured_images_in_rss_clickable_link' );
         ?>
 	<div class="wrap">
 		<h2></h2>
@@ -191,7 +199,7 @@ if ( !function_exists( 'firss_init' ) ) {
         echo  plugins_url( 'includes/images/banner.jpg', __FILE__ ) ;
         ?>" width="940"></a>
 		</div>
-		<h1 class="header-title">Featured Images in RSS & Mailchimp Email</h1>
+		<h1 class="header-title">Featured Images in RSS for Mailchimp and Other Email</h1>
 
 		<form method="post" action="options.php" class="firss-settings-form">
 
@@ -249,7 +257,7 @@ if ( !function_exists( 'firss_init' ) ) {
 
 						<p>
 							<small><?php 
-        echo  sprintf( __( '(Customize image pixel sizes in <a href="%1$s">Media Options</a>, then you\'ll need to <a href="%2$s" target=_blank>Regenerate Thumbnails</a>.)', 'featured-images-for-rss-feeds' ), '/wp-admin/options-media.php', 'http://wordpress.org/plugins/regenerate-thumbnails/' ) ;
+        echo  sprintf( __( '(You can customize global image pixel sizes in the <a href="%1$s">Media Options</a>... then you\'ll need to <a href="%2$s" target=_blank>Regenerate Thumbnails</a>.)', 'featured-images-for-rss-feeds' ), '/wp-admin/options-media.php', 'http://wordpress.org/plugins/regenerate-thumbnails/' ) ;
         ?>
 							</small>
 						</p>
@@ -294,6 +302,22 @@ if ( !function_exists( 'firss_init' ) ) {
         ?>" class="small-text"> px
 		            </td>
 		        </tr>
+				<tr>
+					<th scope="column"><?php 
+        echo  __( 'Enable clickable images', 'featured-images-for-rss-feeds' ) ;
+        ?></th>
+					<td>
+						<input type="checkbox" name="featured_images_in_rss_clickable_link" <?php 
+        checked( $featured_images_in_rss_clickable_link );
+        ?> >
+						<?php 
+        echo  __( 'Adds the post URL link to the image', 'featured-images-for-rss-feeds' ) ;
+        ?>
+						<p><small><?php 
+        echo  __( 'Outputs additional HTML surrounding the image so when clicked it links to the post URL.', 'featured-images-for-rss-feeds' ) ;
+        ?></small></p>
+					</td>
+				</tr>
 
 		        <?php 
         do_action( 'firss_settings_after' );
@@ -326,7 +350,10 @@ if ( !function_exists( 'firss_init' ) ) {
         echo  sprintf( __( 'To view your site’s raw RSS feed, click here: <a href="%s/feed/" target=_blank>/feed/</a>', 'featured-images-for-rss-feeds' ), esc_url( site_url() ) ) ;
         ?>
 			<p/><?php 
-        echo  sprintf( __( 'Developed and supported by <a href="%s" target=_blank>5 Star Plugins</a>', 'featured-images-for-rss-feeds' ), esc_url( 'https://5starplugins.com/' ) ) ;
+        echo  sprintf( __( 'Free and premium FAQ and Support contact form available at <a href="%s" target=_blank>support.5starplugins.com</a>', 'featured-images-for-rss-feeds' ), esc_url( 'https://support.5starplugins.com/' ) ) ;
+        ?>
+			<p/><?php 
+        echo  sprintf( __( 'Developed and supported by <a href="%s" target=_blank>5 Star Plugins</a> in San Diego, CA', 'featured-images-for-rss-feeds' ), esc_url( 'https://5starplugins.com/' ) ) ;
         ?> <img class="footerLogo" src="<?php 
         echo  plugins_url( 'includes/images/5StarPlugins_Logo80x80.png', __FILE__ ) ;
         ?>" width="20">
@@ -358,6 +385,25 @@ if ( !function_exists( 'firss_init' ) ) {
         return $links;
     }
     
+    function firss_filter_post_thumbnail_html(
+        $html,
+        $pid,
+        $post_thumbnail_id,
+        $size,
+        $attr
+    )
+    {
+        if ( !empty($attr['link_thumbnail']) ) {
+            $html = sprintf(
+                '<a href="%s" title="%s" rel="nofollow">%s</a>',
+                get_permalink( $pid ),
+                esc_attr( get_the_title( $pid ) ),
+                $html
+            );
+        }
+        return $html;
+    }
+    
     /**
      * Feature the images in RSS feeds.
      */
@@ -369,9 +415,11 @@ if ( !function_exists( 'firss_init' ) ) {
             firss_settings_init();
             $featured_images_in_rss_size = get_option( 'featured_images_in_rss_size' );
             $featured_images_in_rss_css_code = firss_eval_css( get_option( 'featured_images_in_rss_css' ) );
+            $featured_images_in_rss_clickable_link = (bool) get_option( 'featured_images_in_rss_clickable_link' );
             $content = get_the_post_thumbnail( $post->ID, $featured_images_in_rss_size, array(
-                'style' => $featured_images_in_rss_css_code,
-                'class' => 'webfeedsFeaturedVisual',
+                'style'          => $featured_images_in_rss_css_code,
+                'class'          => 'webfeedsFeaturedVisual',
+                'link_thumbnail' => $featured_images_in_rss_clickable_link,
             ) ) . $content;
         }
         

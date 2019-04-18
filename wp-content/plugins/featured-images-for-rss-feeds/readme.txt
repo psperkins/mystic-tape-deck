@@ -1,9 +1,9 @@
 === Featured Images in RSS for Mailchimp & Other Email ===
-Contributors: presswizards
+Contributors: presswizards, freemius
 Donate link: https://5starplugins.com/
 Tags: featured images in rss, rss images, featured image, thumbnails, images in rss, mailchimp, mailchimp rss, rss campaigns, infusionsoft, hubspot, constant contact, content marketing, marketing automation
 Requires at least: 2.9
-Tested up to: 5.0.2
+Tested up to: 5.1
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -12,7 +12,7 @@ Outputs images in your RSS feed to Mailchimp, Infusionsoft, Hubspot, and other s
 
 == Description ==
 
-Get images in your RSS feed instantly for free. Output blog featured photos to Mailchimp RSS emails, Infusionsoft, Hubspot, Constant Contact, Zoho, Feedburner, Bloglovin’, Feedly, and other services that use RSS feed data. A trusted plugin, developed in San Diego, CA (US), with over 20,000 active installs and 50+ five-star reviews. We actively answer every support forum thread.
+Get images in your RSS feed instantly for free. Output blog featured photos to Mailchimp RSS emails, Infusionsoft, Hubspot, Constant Contact, Zoho, Feedburner, Bloglovin’, Feedly, and other services that use RSS feed data. A trusted plugin, developed in San Diego, CA (US), with over 30,000 active installs and 65+ five-star reviews. We actively answer every support forum thread.
 
 Features:
 
@@ -122,6 +122,9 @@ Please submit a [rating and review](https://wordpress.org/support/plugin/feature
 
 == Changelog ==
 
+= 1.5.2 =
+* Updated: Update Freemius SDK to latest version, updated WordPress compatibility to v5.1
+
 = 1.5.1 =
 * Added: Add option to make the prepended image clickable, props to @crzyhrse for the suggestion.
 * Updated: Revised our support link, free and premium support now provided via https://support.5starplugins.com/
@@ -164,7 +167,7 @@ Please submit a [rating and review](https://wordpress.org/support/plugin/feature
 * Fix: Updated Freemius SDK to latest version
 
 = 1.4.1 =
-* Fix: Oops - the new opt-in and admin notices were displaying in the wrong place , apologies, this is now fixed.
+* Fix: Oops - the new opt-in and admin notices were displaying in the wrong place, apologies, this is now fixed.
 
 = 1.4 =
 * New: Added option for custom image padding.
@@ -175,6 +178,5 @@ Please submit a [rating and review](https://wordpress.org/support/plugin/feature
 
 == Upgrade Notice ==
 
-= 1.5.1 =
-* Added: Add option to make the prepended image clickable, props to @crzyhrse for the suggestion.
-* Updated: Revised our support link, free and premium support now provided via https://support.5starplugins.com/
+= 1.5.2 =
+* Updated: Update Freemius SDK, updated WordPress compatibility to v5.1

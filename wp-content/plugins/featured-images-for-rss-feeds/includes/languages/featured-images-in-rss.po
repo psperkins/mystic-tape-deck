@@ -165,14 +165,3 @@ msgid ""
 "Delays the publishing of the feed after post is published. Leave empty to "
 "publish immediately."
 msgstr ""
-
-#, fuzzy
-#~ msgid "Clear Tracked Resumes"
-#~ msgstr "My Uploaded CV's"
-
-#~ msgid "My Uploaded Resumes"
-#~ msgstr "My Uploaded CV's"
-
-#, fuzzy
-#~ msgid "Allowed Resume Views"
-#~ msgstr "My Uploaded CV's"

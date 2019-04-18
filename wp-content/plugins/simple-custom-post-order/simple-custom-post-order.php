@@ -1,18 +1,42 @@
 <?php
-/*
- *Plugin Name: Simple Custom Post Order
- *Plugin URI: https://wordpress.org/plugins-wp/simple-custom-post-order/
- *Description: Order Items (Posts, Pages, and Custom Post Types) using a Drag and Drop Sortable JavaScript.
- *Version: 2.4.1
- *Author: Colorlib
- *Author URI: https://colorlib.com/wp/
- *Text Domain: simple-custom-post-order
- *Domain Path: /languages/
- */
+/**
+* Plugin Name: Simple Custom Post Order
+* Plugin URI: https://wordpress.org/plugins-wp/simple-custom-post-order/
+* Description: Order Items (Posts, Pages, and Custom Post Types) using a Drag and Drop Sortable JavaScript.
+* Version: 2.4.3
+* Author: Colorlib
+* Author URI: https://colorlib.com/
+* Tested up to: 5.1
+* Requires: 4.6 or higher
+* License: GPLv3 or later
+* License URI: http://www.gnu.org/licenses/gpl-3.0.html
+* Requires PHP: 5.6
+* Text Domain: simple-custom-post-order
+* Domain Path: /languages
+*
+* Copyright 2013-2017 Sameer Humagain im@hsameer.com.np
+* Copyright 2017-2019 Colorlib support@colorlib.com
+*
+* SVN commit with ownership change: https://plugins.trac.wordpress.org/changeset/1590135/simple-custom-post-order
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License, version 3, as
+* published by the Free Software Foundation.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 
 
 define('SCPORDER_URL', plugins_url('', __FILE__));
 define('SCPORDER_DIR', plugin_dir_path(__FILE__));
+define('SCPORDER_VERSION', '2.4.3');
 
 $scporder = new SCPO_Engine();
 
@@ -46,10 +70,10 @@ class SCPO_Engine {
         add_action( 'admin_notices', array( $this, 'scporder_notice_not_checked' ) );
         add_action( 'wp_ajax_scporder_dismiss_notices', array( $this, 'dismiss_notices' ) );
 
-        add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
+        add_action( 'plugins_loaded', array( $this, 'load_scpo_textdomain' ) );
     }
 
-    public function load_plugin_textdomain(){
+    public function load_scpo_textdomain(){
         load_plugin_textdomain( 'simple-custom-post-order', false, basename( dirname( __FILE__ ) ) . '/languages/' );
     }
 
@@ -183,9 +207,9 @@ class SCPO_Engine {
         if ($this->_check_load_script_css()) {
             wp_enqueue_script('jquery');
             wp_enqueue_script('jquery-ui-sortable');
-            wp_enqueue_script('scporderjs', SCPORDER_URL . '/assets/scporder.js', array('jquery'), null, true);
+            wp_enqueue_script('scporderjs', SCPORDER_URL . '/assets/scporder.js', array('jquery'), SCPORDER_VERSION, true);
 
-            wp_enqueue_style('scporder', SCPORDER_URL . '/assets/scporder.css', array(), null);
+            wp_enqueue_style('scporder', SCPORDER_URL . '/assets/scporder.css', array(), SCPORDER_VERSION );
         }
     }
 
@@ -566,4 +590,4 @@ function scporder_uninstall_db() {
     delete_option('scporder_install');
 }
 
-?>
+require_once 'class-colorlib-dashboard-widget-extend-feed.php';

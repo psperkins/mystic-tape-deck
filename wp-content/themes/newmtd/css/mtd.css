@@ -120,6 +120,10 @@ article h2 {
   border-bottom: 3px solid #26004d;
   margin-bottom: 15px;
 }
+article.review h2 {
+  margin-bottom: 0;
+  border-bottom: none;
+}
 
 blockquote {
   background: #ffffff;

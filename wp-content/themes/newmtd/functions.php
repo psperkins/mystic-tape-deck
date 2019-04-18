@@ -22,11 +22,11 @@ if ( ! function_exists( 'mtd_sidebars' ) ) {
 	 */
 	function mtd_sidebars() {
 		register_sidebar( array(
-			'id'            => 'mtd_front_middle',
-			'class'         => 'mtd-front-middle',
-			'name'          => __( 'Front Page Middle', 'mystic_tape_deck' ),
-			'description'   => __( 'Front Page Middle Sidebar Area', 'mystic_tape_deck' ),
-			'before_widget' => '<div class="row margin-y clearfix">',
+			'id'            => 'mtd_reviews',
+			'class'         => 'mtd-reviews',
+			'name'          => __( 'Reviews Page', 'mystic_tape_deck' ),
+			'description'   => __( 'Reviews Page Sidebar Area', 'mystic_tape_deck' ),
+			'before_widget' => '<div class="widget col-4-xs">',
 			'after_widget'  => '</div>',
 			'before_title'  => '',
 			'after_title'   => '',

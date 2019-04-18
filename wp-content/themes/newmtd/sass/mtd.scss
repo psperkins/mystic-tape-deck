@@ -135,6 +135,12 @@ article {
 		border-bottom: 3px solid $violet;
 		margin-bottom: 15px;
 	}
+	&.review {
+		h2 {
+			margin-bottom: 0;
+			border-bottom: none;
+		}
+	}
 }
 
 blockquote {

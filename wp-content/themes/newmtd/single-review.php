@@ -19,7 +19,7 @@ if ( have_posts() ) :
 			?>
 		</div>
 		<div class="article body col-lg-8">
-			<?php the_excerpt(); ?>
+			<?php the_content(); ?>
 		</div>
 	</div>
 </article>

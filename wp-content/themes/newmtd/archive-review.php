@@ -2,7 +2,7 @@
 <div class="row pad-y">
 <div class="col-lg-8">
 
-<?php the_archive_description( '<div class="taxonomy-description solid shadow">', '</div>' ); ?>
+<?php the_archive_description( '<div class="taxonomy-description solid shadow pad">', '</div>' ); ?>
 <?php
 if ( have_posts() ) :
 	while ( have_posts() ) :
@@ -13,14 +13,14 @@ if ( have_posts() ) :
 	<small>Posted <?php the_time('l, F jS, Y') ?>. <?php echo get_the_term_list( $post->ID, 'genre', 'Genres: ', ', ' ); ?>.</small>
 	<hr/>
 	<div class="row">
-		<div class="thumbnail col-lg-4 pull-left">
+		<div class="article body">
+			<div class="thumbnail">
 			<?php
 			if ( has_post_thumbnail() ) {
 				the_post_thumbnail( 'thumbnail' );
 			}
 			?>
-		</div>
-		<div class="article body col-lg-8">
+			</div>
 			<?php the_excerpt(); ?>
 		</div>
 	</div>

@@ -11,14 +11,14 @@ if ( have_posts() ) :
 	<small>Posted <?php the_time('l, F jS, Y') ?>. <?php echo get_the_term_list( $post->ID, 'genre', 'Genres: ', ', ' ); ?>.</small>
 	<hr/>
 	<div class="row">
-		<div class="thumbnail col-lg-4 pull-left">
+		<div class="thumbnail pull-left">
 			<?php
 			if ( has_post_thumbnail() ) {
 				the_post_thumbnail( 'thumbnail' );
 			}
 			?>
 		</div>
-		<div class="article body col-lg-8">
+		<div class="article body">
 			<?php the_content(); ?>
 		</div>
 	</div>

@@ -1,14 +1,13 @@
 <?php get_header(); ?>
 <div class="row pad-y">
 <div class="col-lg-8">
+
+<?php the_archive_description( '<div class="taxonomy-description solid shadow">', '</div>' ); ?>
 <?php
 if ( have_posts() ) :
 	while ( have_posts() ) :
 		the_post();
 ?>
-<div class="shadow solid pretext pad">
-	<?php the_archive_description(); ?>
-</div>
 <article class="shadow solid review archive">
 	<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 	<small>Posted <?php the_time('l, F jS, Y') ?>. <?php echo get_the_term_list( $post->ID, 'genre', 'Genres: ', ', ' ); ?>.</small>

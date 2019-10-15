@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import Raven from '../lib/Raven';
 import { ajaxUrl, nonce } from '../constants/leadinConfig';
 
@@ -33,7 +35,7 @@ function makeRequest(action, method, payload, success, error) {
     ajaxPayload.data = JSON.stringify(payload);
   }
 
-  jQuery.ajax(ajaxPayload);
+  $.ajax(ajaxPayload);
 }
 
 function post(action, payload, success, error) {
@@ -65,8 +67,8 @@ export function clearPortalIdPolling() {
   stopPortalPolling = true;
 }
 
-export const connect = (portalId, success, error) =>
-  post('leadin_registration_ajax', { portalId }, success, error);
+export const connect = (portalInfo, success, error) =>
+  post('leadin_registration_ajax', portalInfo, success, error);
 
 export const disconnect = post.bind(null, 'leadin_disconnect_ajax', {});
 export const getDomain = get.bind(null, 'leadin_get_domain');

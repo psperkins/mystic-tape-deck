@@ -1,3 +1,7 @@
+'use es6';
+
+import $ from 'jquery';
+
 import EventBus from './EventBus';
 import { log } from '../utils';
 import { domElements } from '../constants/selectors';
@@ -5,35 +9,39 @@ import { hubspotBaseUrl } from '../constants/leadinConfig';
 import Raven from './Raven';
 
 const eventBus = new EventBus();
+const postMessageBuffer = [];
 const callbacks = [];
+let interframeReady = false;
 
 function postMessageObject(message) {
   log('Posting message');
   log(JSON.stringify(message));
-  jQuery(domElements.iframe)[0].contentWindow.postMessage(
+  $(domElements.iframe)[0].contentWindow.postMessage(
     JSON.stringify(message),
     hubspotBaseUrl
   );
 }
 
 function reply(message, response) {
-  if (!response) {
-    response = 'Message Received';
-  }
+  const data = (response && response.data) || null;
+  const error = (response && response.error) || null;
+
   const newMessage = Object.assign({}, message);
-  newMessage.response = response;
+  newMessage.response = {
+    data,
+    error,
+  };
   postMessageObject(newMessage);
 }
 
 function handleResponse(message) {
-  callbacks[message._callbackId - 1](message.response);
+  callbacks[message._leadinCallbackId - 1](message.response);
 }
 
 function handleMessage(message) {
   log('Received message');
   log(JSON.stringify(message));
-
-  if (message.response && message._callbackId) {
+  if (message.hasOwnProperty('response') && message._leadinCallbackId) {
     handleResponse(message);
   } else {
     Object.keys(message).forEach(key => {
@@ -53,27 +61,47 @@ function handleMessageEvent(event) {
   }
 }
 
-export function postMessage(key, payload, onResponse, onTimeout, timeout) {
-  if (!timeout) {
-    timeout = 500;
+function setInterframeReady() {
+  interframeReady = true;
+  while (postMessageBuffer.length > 0) {
+    postMessageObject(postMessageBuffer.pop());
   }
+}
 
-  const timeoutCallback = function() {
-    const errorMessage = `LeadinWordpressPlugin postMessage response timeout on message key: ${key}`;
-    log(errorMessage);
-    Raven.captureMessage(errorMessage);
-    onTimeout();
-  };
+export function postMessage(key, payload = {}, timeout = 500) {
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(
+      Raven.wrap(() => {
+        const errorMessage = `LeadinWordpressPlugin postMessage response timeout on message key: ${key}`;
+        log(errorMessage);
+        Raven.captureMessage(errorMessage);
+        reject(errorMessage);
+      }),
+      timeout
+    );
 
-  const timeoutId = setTimeout(Raven.wrap(timeoutCallback), timeout);
+    const message = {
+      [key]: payload,
+      _leadinCallbackId: callbacks.push((...args) => {
+        const { data, error } = args[0];
+        clearTimeout(timeoutId);
+        if (error) {
+          const errorMessage = `Error on ${key}: ${error}`;
+          log(errorMessage);
+          Raven.captureMessage(errorMessage);
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      }),
+    };
 
-  const message = {};
-  message[key] = payload;
-  message._callbackId = callbacks.push((...args) => {
-    clearTimeout(timeoutId);
-    onResponse(...args);
+    if (interframeReady) {
+      postMessageObject(message);
+    } else {
+      postMessageBuffer.push(message);
+    }
   });
-  postMessageObject(message);
 }
 
 export function onMessage(key, callback) {
@@ -83,5 +111,9 @@ export function onMessage(key, callback) {
 }
 
 export function initInterframe() {
+  onMessage('interframe_ready', (message, sendReply) => {
+    sendReply();
+    setInterframeReady();
+  });
   window.addEventListener('message', handleMessageEvent);
 }

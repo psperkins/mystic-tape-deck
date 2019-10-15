@@ -1,13 +1,14 @@
-import Raven from './lib/Raven';
+import $ from 'jquery';
+
 import { domElements } from './constants/selectors';
 import { changeRoute } from './api/hubspotPluginApi';
-import { validAppRoutes } from './constants/routes';
+import urlsMap from './constants/urlsMap';
 
 export function initNavigation() {
   function setSelectedMenuItem() {
-    jQuery(domElements.subMenuButtons).removeClass('current');
+    $(domElements.subMenuButtons).removeClass('current');
     const pageParam = window.location.search.match(/\?page=leadin_?\w*/)[0]; // filter page query param
-    const selectedElement = jQuery(`a[href="admin.php${pageParam}"]`);
+    const selectedElement = $(`a[href="admin.php${pageParam}"]`);
     selectedElement.parent().addClass('current');
   }
 
@@ -23,49 +24,40 @@ export function initNavigation() {
     setSelectedMenuItem();
   }
 
-  function handleClick() {
-    // Don't interrupt modifier keys
-    if (event.metaKey || event.altKey || event.shiftKey) {
-      return;
-    }
-    window.history.pushState(null, null, jQuery(this).attr('href'));
-    handleNavigation();
-    event.preventDefault();
-  }
-
   // Browser back and forward events navigation
   window.addEventListener('popstate', handleNavigation);
-
-  // Menu Navigation
-  jQuery(domElements.spaNavigationButtons).click(Raven.wrap(handleClick));
 }
 
 // Given a route like "/settings/forms", parse it into "?page=leadin_settings&leadin_route[0]=forms"
 export function syncRoute(path = '') {
-  const routes = path.split('/');
-
-  while (routes[0] === '') {
-    routes.shift();
-  }
-
-  let appRoute = '';
-
-  if (validAppRoutes.includes(routes[0])) {
-    appRoute = `_${routes[0]}`;
-    routes.shift();
-  }
-
-  const queryParamsRoutes = routes.reduce((acc, route, index) => {
-    return `${acc}&${encodeURIComponent(`leadin_route[${index}]`)}=${route}`;
-  }, '');
-
-  window.history.replaceState(
-    null,
-    null,
-    `?page=leadin${appRoute}${queryParamsRoutes}`
+  const baseUrls = Object.keys(urlsMap).sort((a, b) =>
+    a.length < b.length ? 1 : -1
   );
+  let wpPage;
+  let route;
+  baseUrls.some(basePath => {
+    if (path.indexOf(basePath) === 0) {
+      wpPage = urlsMap[basePath];
+      route = path.replace(basePath, '').substr(1);
+      return true;
+    }
+    return false;
+  });
+
+  if (!wpPage) {
+    return;
+  }
+
+  const leadinRouteParam = route
+    .split('/')
+    .map((r, index) => `${encodeURIComponent(`leadin_route[${index}]`)}=${r}`)
+    .join('&');
+
+  const newUrl = `?page=${wpPage}${route ? `&${leadinRouteParam}` : ''}`;
+
+  window.history.replaceState(null, null, newUrl);
 }
 
 export function disableNavigation() {
-  jQuery(domElements.allMenuButtons).off('click');
+  $(domElements.allMenuButtons).off('click');
 }

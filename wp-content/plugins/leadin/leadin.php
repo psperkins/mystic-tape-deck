@@ -3,7 +3,7 @@
  * Plugin Name: HubSpot All-In-One Marketing - Forms, Popups, Live Chat
  * Plugin URI: http://www.hubspot.com/integrations/wordpress
  * Description: HubSpot’s official WordPress plugin allows you to add forms, popups, and live chat to your website and integrate with the best WordPress CRM.
- * Version: 7.8.0
+ * Version: 7.14.1
  * Author: HubSpot
  * Author URI: http://www.hubspot.com
  * License: GPL v3
@@ -60,7 +60,7 @@ if ( ! defined( 'LEADIN_DB_VERSION' ) ) {
 }
 
 if ( ! defined( 'LEADIN_PLUGIN_VERSION' ) ) {
-	define( 'LEADIN_PLUGIN_VERSION', '7.8.0' );
+	define( 'LEADIN_PLUGIN_VERSION', '7.14.1' );
 }
 
 if ( ! defined( 'LEADIN_SOURCE' ) ) {
@@ -91,14 +91,17 @@ if ( ! defined( 'LEADIN_SIGNUP_BASE_URL' ) ) {
 	define( 'LEADIN_SIGNUP_BASE_URL', LEADIN_BASE_URL );
 }
 
-if ( ! defined( 'LEADIN_JS_PATH' ) ) {
-	define( 'LEADIN_JS_PATH', LEADIN_PATH . '/js/dist/leadin.js' );
+if ( ! defined( 'LEADIN_JS_BASE_PATH' ) ) {
+	define( 'LEADIN_JS_BASE_PATH', LEADIN_PATH . '/js/dist' );
 }
 
 if ( ! defined( 'LEADIN_STATIC_BUNDLE_VERSION' ) ) {
-	define( 'LEADIN_STATIC_BUNDLE_VERSION', 'static-1.693' );
+	define( 'LEADIN_STATIC_BUNDLE_VERSION', 'static-1.981' );
 }
 
+if ( ! defined('LEADIN_NEW_BANNER_GATE' ) ) {
+	define('LEADIN_NEW_BANNER_GATE', false );
+}
 // =============================================
 // Include Needed Files
 // =============================================
@@ -111,8 +114,8 @@ require_once LEADIN_PLUGIN_DIR . '/inc/leadin-registration.php';
 require_once LEADIN_PLUGIN_DIR . '/inc/leadin-disconnect.php';
 require_once LEADIN_PLUGIN_DIR . '/inc/leadin-wp-get.php';
 require_once LEADIN_PLUGIN_DIR . '/admin/class-leadinadmin.php';
-
 require_once LEADIN_PLUGIN_DIR . '/inc/class-leadin.php';
+require_once LEADIN_PLUGIN_DIR . '/inc/leadin-gutenberg.php';
 
 
 // =============================================
@@ -187,5 +190,11 @@ function leadin_init() {
 		$leadin_wp = new Leadin();
 		add_shortcode( 'hubspot', 'leadin_add_hubspot_shortcode' );
 }
+
+function leadin_plugin_activate() {
+    set_transient( 'leadin_redirect_after_activation', true, 60 );
+}
+
+register_activation_hook( __FILE__, 'leadin_plugin_activate' );
 
 add_action( 'plugins_loaded', 'leadin_init', 14 );

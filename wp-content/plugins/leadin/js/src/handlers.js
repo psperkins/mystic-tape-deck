@@ -1,17 +1,16 @@
 import {
-  onInterframeReady,
   onConnect,
   onDisconnect,
   onUpgrade,
   onPageReload,
   onInitNavigation,
-  onDisableNavigation,
   onClearQueryParam,
   onGetDomain,
   onGetAssetsPayload,
   onEnterFullScreen,
   onExitFullScreen,
   onSyncRoute,
+  onGetPortalInfo,
 } from './api/hubspotPluginApi';
 import {
   connect,
@@ -19,30 +18,26 @@ import {
   getDomain,
   clearPortalIdPolling,
 } from './api/wordpressApi';
-import { adminUrl, theme } from './constants/leadinConfig';
-import { initNavigation, disableNavigation, syncRoute } from './navigation';
-import enterFullScreen, { exitFullScreen } from './fullscreen';
-import themes from './constants/themes';
+import { adminUrl } from './constants/leadinConfig';
+import { initNavigation, syncRoute } from './navigation';
+import enterFullScreen, { exitFullScreen, checkFullScreen } from './fullscreen';
+import { portalDomain, portalId } from './constants/leadinConfig';
 
-onInterframeReady((message, reply) => {
-  reply('Interframe Ready');
-});
-
-onConnect((portalId, reply) => {
+onConnect((portalInfo, reply) => {
   connect(
-    portalId,
+    portalInfo,
     () => {
       clearPortalIdPolling();
-      reply({ success: true });
+      reply();
     },
-    reply.bind(null, { success: false })
+    reply.bind(null, { error: 'Error connecting to the portal' })
   );
 });
 
 onDisconnect((message, reply) => {
   disconnect(
-    reply.bind(null, { success: true }),
-    reply.bind(null, { success: false })
+    reply,
+    reply.bind(null, { error: 'Error disconnecting from the portal' })
   );
 });
 
@@ -61,11 +56,6 @@ onInitNavigation((message, reply) => {
   initNavigation();
 });
 
-onDisableNavigation((message, reply) => {
-  reply();
-  disableNavigation();
-});
-
 onClearQueryParam((message, reply) => {
   reply();
   let currentWindowLocation = window.location.toString();
@@ -82,13 +72,13 @@ onClearQueryParam((message, reply) => {
 onGetDomain((message, reply) => {
   getDomain(data => {
     if (data.domain) {
-      reply(data.domain);
+      reply({ data: data.domain });
     }
   });
 });
 
 onGetAssetsPayload((message, reply) => {
-  reply({ payload: themes[theme] });
+  reply();
 });
 
 onEnterFullScreen((message, reply) => {
@@ -101,7 +91,12 @@ onExitFullScreen((message, reply) => {
   reply();
 });
 
-onSyncRoute((message, reply) => {
-  syncRoute(message);
+onSyncRoute((route, reply) => {
+  checkFullScreen(route);
+  syncRoute(route);
   reply();
+});
+
+onGetPortalInfo((message, reply) => {
+  reply({ data: { portalDomain, portalId } });
 });

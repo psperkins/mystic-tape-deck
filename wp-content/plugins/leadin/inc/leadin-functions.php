@@ -42,6 +42,14 @@ function leadin_get_user_role() {
 }
 
 /**
+ * Returns if a portal is connected to the plugin.
+ */
+function leadin_is_portal_connected() {
+	$portal_id = get_option( 'leadin_portalId' );
+	return ! empty( $portal_id );
+}
+
+/**
  * Return query string from object
  *
  * @param array $arr query parameters to stringify.
@@ -108,10 +116,23 @@ function leadin_get_affiliate_code() {
  * Return the signup url based on the site options
  */
 function leadin_get_signup_url() {
+	if ( isset ( $_GET[ 'leadin_connect' ] ) ) {
+		$portal_id = $_GET[ 'leadin_connect' ];
+		return LEADIN_BASE_URL . "/hubspot-plugin/$portal_id/connect?" . leadin_get_query_params();
+	}
+
 	// Get attribution string.
 	$acquisition_option = get_option( 'hubspot_acquisition_attribution', '' );
 	parse_str( $acquisition_option, $signup_params );
-	$signup_params['enableCollectedForms'] = 'true';
+	$signup_params[ 'enableCollectedForms' ] = 'true';
+	$treatment_value = leadin_get_treatment( 'WP004' );
+	$signup_params[ 'wp_redirect_url' ] = admin_url( 'admin.php?page=leadin&leadin_connect=true' );
+
+	if ( ! empty ( $_GET[ 'bannerClick' ] ) ) {
+		if ( LEADIN_NEW_BANNER_GATE ) {
+			$signup_params['utm_id'] = 'WP004' . ( $treatment_value == 2 ? 'Variant' : 'Control' );
+		}
+	}
 
 	// Get leadin query.
 	$leadin_query = leadin_get_query_params();
@@ -164,6 +185,30 @@ function leadin_get_leadin_route() {
 }
 
 /**
+ * Get page name from the current page id.
+ * E.g. "hubspot_page_leadin_forms" => "forms"
+ */
+function leadin_get_page_id() {
+	$screen_id = get_current_screen()->id;
+	return preg_replace( '/^(hubspot_page_|toplevel_page_)/', '', $screen_id );
+}
+
+/**
+ * Get a map of page => url
+ */
+function leadin_get_routes_mapping() {
+	$portal_id = get_option( 'leadin_portalId' );
+	$dashboard_path = "/reports-dashboard/$portal_id/marketing";
+
+	return array(
+		'leadin'          	=> $dashboard_path,
+		'leadin_dashboard'	=> $dashboard_path,
+		'leadin_forms'    	=> "/forms/$portal_id",
+		'leadin_settings' 	=> "/hubspot-plugin/$portal_id/settings",
+	);
+}
+
+/**
  * Returns the right iframe src
  * The src will be `/hubspot-plugin/{portalId}/{path}/{routes}`,
  * where path is the content after `leadin_` in ?page=leadin_path
@@ -172,19 +217,23 @@ function leadin_get_leadin_route() {
  * will point to /hubspot-plugin/{portalId}/forms/foo/bar
  */
 function leadin_get_iframe_src() {
-	$sub_routes = join( '/', leadin_get_leadin_route() );
-	$portal_id  = get_option( 'leadin_portalId' );
-	$regex      = '/^hubspot_page_leadin(_|$)/';
-	$page       = get_current_screen()->id;
-
-	if ( empty( $portal_id ) ) {
+	if ( ! leadin_is_portal_connected() ) {
 		return leadin_get_signup_url();
 	}
 
-	$pathname   = preg_replace( $regex, '', $page );
-	$pathname   = empty( $pathname ) ? $pathname : "/$pathname";
+	$page_id   = leadin_get_page_id();
+	$routes    = leadin_get_routes_mapping();
+
+	if ( isset( $routes[$page_id] ) ) {
+		$route = $routes[$page_id];
+	} else {
+		$route = $routes[''];
+	}
+
+	$sub_routes = join( '/', leadin_get_leadin_route() );
 	$sub_routes = empty( $sub_routes ) ? $sub_routes : "/$sub_routes";
-	return LEADIN_BASE_URL . "/hubspot-plugin/$portal_id$pathname$sub_routes?" . leadin_get_query_params();
+
+	return LEADIN_BASE_URL . "$route$sub_routes?" . leadin_get_query_params();
 }
 
 /**
@@ -194,11 +243,18 @@ function leadin_get_background_iframe_src() {
 	$portal_id     = get_option( 'leadin_portalId' );
 	$portal_id_url = '';
 
-	if ( ! empty( $portal_id ) ) {
+	if ( leadin_is_portal_connected() ) {
 		$portal_id_url = "/$portal_id";
 	}
 
-	return LEADIN_BASE_URL . "/hubspot-plugin$portal_id_url/background?" . leadin_get_query_params();
+	$query = '';
+	$screen = get_current_screen();
+	if ( $screen->id === 'dashboard' && LEADIN_NEW_BANNER_GATE ) {
+		$treatment_value = leadin_get_treatment( 'WP004' );
+		$query = 'treatment=WP004' . ( $treatment_value == 2 ? 'Variant' : 'Control' ) . '&';
+	}
+
+	return LEADIN_BASE_URL . "/hubspot-plugin$portal_id_url/background?$query" . leadin_get_query_params();
 }
 
 /**
@@ -209,6 +265,50 @@ function leadin_get_background_iframe_src() {
 function leadin_get_form_shortcode( $form_id ) {
 	$portal_id = get_option( 'leadin_portalId' );
 	return "[hubspot type=form portal=$portal_id id=$form_id]";
+}
+
+/**
+ * Get the leadinConfig
+ */
+function leadin_get_leadin_config() {
+	global $wp_version;
+
+	return array(
+		'adminUrl'            => admin_url(),
+		'ajaxUrl'             => leadin_get_ajax_url(),
+		'env'                 => constant( 'LEADIN_ENV' ),
+		'formsScript'		  		=> constant( 'LEADIN_FORMS_SCRIPT_URL' ),
+		'formsScriptPayload'  => constant( 'LEADIN_FORMS_PAYLOAD' ),
+		'hubspotBaseUrl'      => constant( 'LEADIN_BASE_URL' ),
+		'leadinPluginVersion' => constant( 'LEADIN_PLUGIN_VERSION' ),
+		'locale'              => get_locale(),
+		'nonce'               => wp_create_nonce( 'hubspot-ajax' ),
+		'phpVersion'          => leadin_parse_version( phpversion() ),
+		'pluginPath'          => constant( 'LEADIN_PATH' ),
+		'plugins'             => get_plugins(),
+		'portalId'            => get_option( 'leadin_portalId' ),
+		'portalDomain'        => get_option( 'leadin_portal_domain' ),
+		'routes'              => leadin_get_routes_mapping(),
+		'theme'               => get_option( 'stylesheet' ),
+		'wpVersion'           => leadin_parse_version( $wp_version ),
+		'pricingQuery'				=> leadin_get_query_params(),
+	);
+}
+
+/**
+ * Get leadinI18n
+ */
+function leadin_get_leadin_i18n() {
+	return array(
+		'chatflows'             => __( 'Live Chat', 'leadin' ),
+		'email'                 => __( 'Email', 'leadin' ),
+		'pricing'               => __( 'Advanced Features', 'leadin' ),
+		'signIn'	            => __( 'Sign In', 'leadin' ),
+		'selectExistingForm'    => __( 'Select an existing form', 'leadin' ),
+		'selectForm'            => __('Select a form', 'leadin' ),
+		'formBlockTitle'        => __('HubSpot Form', 'leadin' ),
+		'formBlockDescription'	=> __('Select and embed a HubSpot form', 'leadin' )
+	);
 }
 
 /**

@@ -1,8 +1,10 @@
+import $ from 'jquery';
+
 import Raven from './Raven';
 
 export default class EventBus {
   constructor() {
-    this.bus = jQuery({});
+    this.bus = $({});
   }
 
   trigger(...args) {

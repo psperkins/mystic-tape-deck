@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import Raven, { configureRaven } from './lib/Raven';
 import { addExternalLinks } from './menu';
 import { portalId } from './constants/leadinConfig';
@@ -15,7 +17,9 @@ function main() {
     }
   }
 
-  jQuery(document).ready(addExternalLinks);
+  $(document).ready(() => {
+    addExternalLinks();
+  });
 }
 
 configureRaven();

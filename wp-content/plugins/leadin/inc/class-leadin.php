@@ -5,6 +5,8 @@
  */
 class Leadin {
 
+	const TRACKING_CODE_ID = 'leadin-script-loader-js';
+
 	/**
 	 * Class constructor
 	 */
@@ -14,6 +16,7 @@ class Leadin {
 		add_action( 'wp_head', array( $this, 'add_page_analytics' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_common_frontend_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'add_leadin_frontend_scripts' ) );
+		add_filter( 'script_loader_tag', array( $this, 'add_id_to_tracking_code' ), 10, 3 );
 
 		if ( is_admin() ) {
 			if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
@@ -22,15 +25,22 @@ class Leadin {
 		}
 	}
 
-	// =============================================
-	// Scripts & Styles
-	// =============================================
+	/**
+	 * Add the required id to the tracking code <script>
+	 * @param string $tag tag name.
+	 * @param string $handle handle.
+	 */
+	public function add_id_to_tracking_code( $tag, $handle, $source ) {
+		if ( $handle === self::TRACKING_CODE_ID ) {
+			$tag = str_replace( '<script', '<script async defer id="hs-script-loader"', $tag );
+		}
+		return $tag;
+	}
+
 	/**
 	 * Adds front end javascript + initializes ajax object
 	 */
 	public function add_leadin_frontend_scripts() {
-		add_filter( 'script_loader_tag', array( $this, 'leadin_add_embed_script_attributes' ), 10, 2 );
-
 		$embed_domain = constant( 'LEADIN_SCRIPT_LOADER_DOMAIN' );
 		$portal_id    = get_option( 'leadin_portalId' );
 
@@ -39,7 +49,6 @@ class Leadin {
 		}
 
 		$embed_url = "//$embed_domain/$portal_id.js?integration=WordPress";
-		$embed_id  = 'leadin-scriptloader-js';
 
 		if ( is_single() ) {
 			$page_type = 'post';
@@ -59,9 +68,9 @@ class Leadin {
 			'leadinPluginVersion' => LEADIN_PLUGIN_VERSION,
 		);
 
-		wp_register_script( $embed_id, $embed_url, array( 'jquery' ), LEADIN_PLUGIN_VERSION, true );
-		wp_localize_script( $embed_id, 'leadin_wordpress', $leadin_wordpress_info );
-		wp_enqueue_script( $embed_id );
+		wp_register_script( self::TRACKING_CODE_ID, $embed_url, array( 'jquery' ), NULL, true );
+		wp_localize_script( self::TRACKING_CODE_ID, 'leadin_wordpress', $leadin_wordpress_info );
+		wp_enqueue_script( self::TRACKING_CODE_ID );
 	}
 
 	/**
@@ -97,20 +106,6 @@ class Leadin {
 			</script>
 			<!-- DO NOT COPY THIS SNIPPET! End of Page Analytics Tracking for HubSpot WordPress plugin -->
 			<?php
-		}
-	}
-
-	/**
-	 * Action script-loader-tag
-	 *
-	 * @param string $tag tag name.
-	 * @param string $handle handle.
-	 */
-	public function leadin_add_embed_script_attributes( $tag, $handle ) {
-		if ( 'leadin-scriptloader-js' === $handle ) {
-			return str_replace( ' src', ' async defer src', $tag );
-		} else {
-			return $tag;
 		}
 	}
 }

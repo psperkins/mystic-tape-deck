@@ -1,3 +1,41 @@
+= 7.14.1 (2019.10.10) =
+- Verify email on signup
+- Remove version from tracking code
+- Redirect from top level menu to dashboard
+- Add HubSpot dashboard
+- Fix navbar showing on the form pag
+
+= 7.13.11 (2019.10.10) =
+
+
+= 7.12.14 (2019.09.26) =
+- Add new forms dashboard
+- Add "Advanced Features" link in menu
+
+= 7.11.0 (2019.09.16) =
+- Create new connection banner
+- Refactor iframe communication
+- Change minimum role from "Subscriber" to "Contributor"
+- Fix spinner position
+- Ask for feedback before deactivating
+
+= 7.10.0 (2019.08.29) =
+- Fix duplicate tracking code
+- Fix layout with Update WordPress banner
+- Redirect after plugin activation
+- Add information to the login screen
+- Update connection banner
+
+= 7.9.2 (2019.08.20) =
+- Fix infinite loading in pages editor for Gutenberg Forms block
+- Updated translations
+
+= 7.9.1 (2019.08.15) =
+- Fix register_block_type does not exist error.
+
+= 7.9.0 (2019.08.14) =
+- Add HubSpot Form Gutenberg Block
+
 = 7.8.0 (2019.08.08) =
 - Replace activate_plugins with manage_options
 - Upgrade wordpress-scripts
@@ -288,7 +326,7 @@ servers
 - Fixed dismiss button conflict on WordPress notifications
 - Icon styles no longer conflict with other plugins
 - Deleted contacts no longer show up in the dashboard
-- Popup sync now looks at the actual inputs instead of the field names so it’ll work in other languages
+- Popup sync now looks at the actual inputs instead of the field names so itâ€™ll work in other languages
 - Popup labels now work in IE
 - Fixed bug with SendGrid email delivery for Leadin Pro
 
@@ -315,7 +353,7 @@ servers
 
 = 3.1.5 (2015.03.20) =
 - Bug fixes
-- Changed out call to __DIR__ magic constant which wasn’t implemented until PHP 5.3 in favor of dirname(__FILE__)
+- Changed out call to __DIR__ magic constant which wasnâ€™t implemented until PHP 5.3 in favor of dirname(__FILE__)
 
 = 3.1.4 (2015.03.17) =
 = Enhancements =
@@ -417,7 +455,7 @@ servers
 = 2.2.6 (2014.12.08) =
 = Enhancements =
 - Added names to contact export
-- Added “tagged as” to contact notification email subject lines
+- Added â€œtagged asâ€ to contact notification email subject lines
 
 - Bug fixes
 - Fixed bug with non-tagged contacts being added to tagged lists
@@ -426,7 +464,7 @@ servers
 = Enhancements =
 - Contact Lookup power-up
 - Added names to contact exports
-- Added “tagged as” to the email subject lines
+- Added â€œtagged asâ€ to the email subject lines
 
 - Bug fixes
 - Fixed bug where Leadin would add non-tagged emails to ESP lists when it was not supposed to do those contacts
@@ -479,7 +517,7 @@ servers
 - Timezones with a database offset on the contact timeline were not correctly fixed in last update
 - Fix to ignore all cURL calls if script isn't present on the server
 - Disable beta program is cURL does not exist on the server
-- Fixed “<- All contacts” link showing up next to back link on a specific contact type in timeline view
+- Fixed â€œ<- All contactsâ€ link showing up next to back link on a specific contact type in timeline view
 
 = 2.2.0 (2014.09.25) =
 = Enhancements =

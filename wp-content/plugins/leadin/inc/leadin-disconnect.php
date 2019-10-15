@@ -11,10 +11,11 @@ add_action( 'wp_ajax_leadin_disconnect_ajax', 'leadin_disconnect_ajax', 3 );
  * AJAX handler to disconnect portal id
  */
 function leadin_disconnect_ajax() {
+	delete_option( 'leadin_portal_domain' );
 	if ( get_option( 'leadin_portalId' ) ) {
 		delete_option( 'leadin_portalId' );
 		wp_die( '{"message": "Success!"}' );
 	} else {
-		wp_die( '{"error": "No leadin_portalId found, cannot disconnect."}', '', 400 );
+		wp_die( '{"error": "No leadin_portal_id found, cannot disconnect."}', '', 400 );
 	}
 }

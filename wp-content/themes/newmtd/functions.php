@@ -27,9 +27,9 @@ if ( ! function_exists( 'mtd_sidebars' ) ) {
 			'name'          => __( 'Reviews Page', 'mystic_tape_deck' ),
 			'description'   => __( 'Reviews Page Sidebar Area', 'mystic_tape_deck' ),
 			'before_widget' => '<div class="widget col-4-xs">',
-			'after_widget'  => '</div>',
-			'before_title'  => '',
-			'after_title'   => '',
+			'after_widget'  => '<div class="clear"></div></div>',
+			'before_title'  => '<h4>',
+			'after_title'   => '</h4>',
 		));
 	}
 	add_action( 'widgets_init', 'mtd_sidebars' );

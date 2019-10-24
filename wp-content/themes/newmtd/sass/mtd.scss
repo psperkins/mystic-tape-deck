@@ -402,3 +402,40 @@ a.musiclink {
 		padding-left: 50px;
 	}
 }
+
+.woocommerce {
+  .col-1 {
+    max-width: 100%;
+    width: 100%;
+    p {
+      clear: both;
+      display: block;
+      span {
+        clear: both;
+        position: relative;
+        display: block;
+      }
+    }
+  }
+  .col-2 {
+    max-width: 100%;
+    width: 100%;
+    p {
+      clear: both;
+      display: block;
+      span {
+        clear: both;
+        position: relative;
+        display: block;
+      }
+    }
+  }
+}
+
+.woocommerce form .form-row-last, .woocommerce-page form .form-row-last {
+	float: none;
+}
+
+#customer_details {
+	padding-bottom: 60px;
+}

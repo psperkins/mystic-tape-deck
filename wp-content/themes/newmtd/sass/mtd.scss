@@ -447,3 +447,12 @@ a.musiclink {
 	height: 0;
 	clear: both;
 }
+
+.product_list_widget {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	li {
+		padding: 10px;
+	}
+}

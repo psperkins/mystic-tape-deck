@@ -16,6 +16,10 @@ const customStyles = {
     ...style,
     fontSize: 16,
   }),
+  menu: style => ({
+    ...style,
+    zIndex: 1000,
+  }),
 };
 
 const DropdownIndicator = styled.div`

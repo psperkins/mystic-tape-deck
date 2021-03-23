@@ -1,4 +1,7 @@
 <?php
+
+use Automattic\Jetpack\Connection\Client;
+
 /**
  * VideoPress edit attachment screen
  *
@@ -94,7 +97,7 @@ class VideoPress_Edit_Attachment {
 		if ( isset( $attachment['rating'] ) ) {
 			$rating = $attachment['rating'];
 
-			if ( ! empty( $rating ) && in_array( $rating, array( 'G', 'PG-13', 'R-17', 'X-18' ) ) ) {
+			if ( ! empty( $rating ) && videopress_is_valid_video_rating( $rating ) ) {
 				$values['rating'] = $rating;
 			}
 		}
@@ -114,7 +117,7 @@ class VideoPress_Edit_Attachment {
 		$guid = get_post_meta( $post_id, 'videopress_guid', true );
 
 		$endpoint = "videos/{$guid}";
-		$result   = Jetpack_Client::wpcom_json_api_request_as_blog( $endpoint, Jetpack_Client::WPCOM_JSON_API_VERSION, $args, $values );
+		$result   = Client::wpcom_json_api_request_as_blog( $endpoint, Client::WPCOM_JSON_API_VERSION, $args, $values );
 
 		if ( is_wp_error( $result ) ) {
 			$post['errors']['videopress']['errors'][] = __( 'There was an issue saving your updates to the VideoPress service. Please try again later.', 'jetpack' );
@@ -149,10 +152,9 @@ class VideoPress_Edit_Attachment {
 	 */
 	public function make_video_api_path( $guid ) {
 		return sprintf(
-			'%s://%s/rest/v%s/videos/%s',
-			'https',
-			'public-api.wordpress.com', // JETPACK__WPCOM_JSON_API_HOST,
-			Jetpack_Client::WPCOM_JSON_API_VERSION,
+			'%s/rest/v%s/videos/%s',
+			JETPACK__WPCOM_JSON_API_BASE,
+			Client::WPCOM_JSON_API_VERSION,
 			$guid
 		);
 	}
@@ -292,11 +294,11 @@ class VideoPress_Edit_Attachment {
 <div class="misc-pub-section misc-pub-shortcode">
 	<strong>Shortcode</strong><br>
 	{$shortcode}
-</div> 
+</div>
 <div class="misc-pub-section misc-pub-url">
 	<strong>Url</strong>
 	{$url}
-</div> 
+</div>
 <div class="misc-pub-section misc-pub-poster">
 	<strong>Poster</strong>
 	{$poster}
@@ -314,10 +316,10 @@ class VideoPress_Edit_Attachment {
 			jQuery.ajax( {
 				type: 'post',
 				url: 'admin-ajax.php',
-				data: { 
+				data: {
 					action: 'videopress-update-transcoding-status',
 					post_id: '{$post_id}',
-					_ajax_nonce: '{$nonce}' 
+					_ajax_nonce: '{$nonce}'
 				},
 				complete: function( response ) {
 					if ( 200 === response.status ) {

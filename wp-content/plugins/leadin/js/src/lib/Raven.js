@@ -19,11 +19,12 @@ export function configureRaven() {
       instrument: {
         tryCatch: false,
       },
+      collectWindowErrors: false,
     }
   ).install();
 
   Raven.setTagsContext({
-    leadin: leadinPluginVersion,
+    v: leadinPluginVersion,
     php: phpVersion,
     wordpress: wpVersion,
   });

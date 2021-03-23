@@ -39,10 +39,21 @@ class Reorder_Post_Within_Categories_Admin {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
+	/**
+	*Options used to save the settings page, which taxonomy/post_type to be ordered.
+	*
+	*/
 	public $adminOptionsName = "deefuse_ReOrderSettingAdminOptions";
 
 	public $old_table_name = "reorder_post_rel";
+	/** @since 2.9.0 flag terms with v1.x rankings */
+	private $old_ranking_exists =false;
+	/**
+	* Save plugin settings, to keep track of ugrades.
+	* @since 2.0.0
+	*/
 	public static $settings_option_name = "_rpwc2_settings";
+	public static $settings = null;
 
 	public $custom_cat = 0;
 	public $stop_join = false;
@@ -57,7 +68,12 @@ class Reorder_Post_Within_Categories_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-		$this->_upgrade_to_v2();//if required.
+		//load settings.
+		self::$settings = get_option(self::$settings_option_name, array());
+
+    $this->_upgrade();
+		// $this->_upgrade_to_v2();//if required.
+		$this->upgrade_options();
 	}
 
 	/**
@@ -108,34 +124,47 @@ class Reorder_Post_Within_Categories_Admin {
 		 */
 		$mode = get_option('airplane-mode', 'off');
 		if('on'==$mode){
-			wp_enqueue_script('sortable', plugin_dir_url( __DIR__ ) . 'assets/sortable/Sortable.min.js');
-			wp_enqueue_script('sortable-jquery', plugin_dir_url( __DIR__ ) .  'assets/jquery-sortablejs/jquery-sortable.js', array('jquery', 'sortable'));
+			wp_enqueue_script('sortablejs-plugin', plugin_dir_url( __DIR__ ) . 'assets/sortable/Sortable.min.js');
 		}else{
-			wp_enqueue_script('sortable', '//cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js');
-			wp_enqueue_script('sortable-jquery', '//cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js', array('jquery', 'sortable'));
+			wp_enqueue_script('sortablejs-plugin', '//cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js');
 		}
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/reorder-post-within-categories-admin.js', array( 'sortable-jquery', 'jquery-ui-slider'), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/reorder-post-within-categories-admin.js', array( 'sortablejs-plugin', 'jquery-ui-slider'), $this->version, false );
 		wp_localize_script($this->plugin_name, 'rpwc2',
 		 array(
 				 'deefuseNounceCatReOrder' =>  wp_create_nonce('nonce-CatOrderedChange'),
 				 'deefuseNounceUserOrdering' =>  wp_create_nonce('nonce-UserOrderingChange'),
-         'insertRange'=>__('Chose a rank either below or above your current displayed range where you wish to insert your select items.', 'reorder-post-within-categories')
+         'insertRange'=>__('Chose a rank either below or above your current displayed range where you wish to insert your select items.', 'reorder-post-within-categories'),
+         'noselection'=> __('Please select the posts from the list below to move.', 'reorder-post-within-categories')
 			 )
 		 );
 
 	}
 	/**
 	* function called by ajax when a category order type is changed.
+  * hooked on 'wp_ajax_cat_ordered_changed'.
 	* @since 1.0.0
 	*/
 	public function category_order_change(){
 		if (!isset($_POST['deefuseNounceOrder']) || !wp_verify_nonce($_POST['deefuseNounceOrder'], 'nonce-CatOrderedChange')) {
 			wp_die('nonce failed, reload your page');
 		}
-
-		$settings = get_option(RPWC_OPTIONS, array());
-		$settings[$_POST['current_cat']] = $_POST['valueForManualOrder'];
-		update_option(RPWC_OPTIONS, $settings);
+		// debug_msg($_POST, 'ajax save rank ');
+		$key = $_POST['current_cat'];
+		$option=array();
+		if(isset($_POST['post_type'])){
+			$option[$_POST['current_cat']] = array(
+        'order'=>('true' == $_POST['valueForManualOrder'])?1:0,
+        'override'=>('true' == $_POST['override'])?1:0 /** @since 2.6.0 override orderby */
+      );
+			$key = $_POST['post_type'];
+		}
+		$settings = get_option(RPWC_OPTIONS_2, array());
+		// unset($settings[$key]);
+		if(isset($settings[$key]) && is_array($settings[$key])){
+			$option = array_replace($settings[$key], $option);
+		}
+		$settings[$key] = $option;
+		update_option(RPWC_OPTIONS_2, $settings);
 
 		wp_die();
 	}
@@ -143,41 +172,87 @@ class Reorder_Post_Within_Categories_Admin {
 	 * Returns an array of admin options
 	 */
 	public function get_admin_options(){
-		return get_option($this->adminOptionsName, array());;
+		return get_option($this->adminOptionsName, array());
 	}
+	/**
+	* Upgrade plugin options.
+	*
+	*@since 2.6.0
+	*@param string $param text_description
+	*@return string text_description
+	*/
+	private function upgrade_options(){
+		// debug_msg(self::$settings);
+		if( !isset(self::$settings['options']) ){
+			self::$settings['options'] = $this->version;
+			update_option(self::$settings_option_name, self::$settings);
 
+			$old_options = get_option(RPWC_OPTIONS, array());
+			$new_options = array();
+			foreach($old_options as $key=>$item){
+				if(is_array($item)){ //updated options.
+					$new_options[$key] = array();
+					foreach($item as $term=>$flag){
+						$new_options[$key][$term] = array(
+							'order'=>('true' == $flag)?1:0,
+							'override'=>1
+						);
+					}
+				}else{ //v1.x options.
+					$admin_options=$this->get_admin_options();
+					foreach($admin_options['categories_checked'] as $pt=>$taxonomies){
+						foreach($taxonomies as $taxonomy){
+							$term = get_term_by('id',$key, $taxonomy);
+							if( !empty($term) ){
+								if( is_array($term) ) $term = $term[0];
+								if( !isset($new_options[$pt]) ) $new_options[$pt] = array();
+								$new_options[$pt][$key]=array(
+									'order'=>('true'==$item)?1:0,
+									'override'=>1
+								);
+							}
+						}
+					}
+				}
+			}
+			//save the new options;
+			update_option(RPWC_OPTIONS_2, $new_options);
+		}
+	}
 	/**
 	* Update to new process: extract order from old custom table and insert into postmeta table.
 	* @since 2.0.0
 	*/
-   private function _upgrade_to_v2(){
-     /** simplified @since 2.1.2 */
-		if (function_exists('is_multisite') && is_multisite()) {
-			global $wpdb;
-			$old_blog = $wpdb->blogid;
-			$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
-			/** simplified @since 2.1.2 */
-			foreach ($blogids as $blog_id) {
-				switch_to_blog($blog_id);
-        $this->_upgrade();
-			}
-			switch_to_blog($old_blog);
-    }else $this->_upgrade();
-  }
+  //  private function _upgrade_to_v2(){
+  //    /** simplified @since 2.1.2 */
+	// 	if (function_exists('is_multisite') && is_multisite()) {
+	// 		global $wpdb;
+	// 		$old_blog = $wpdb->blogid;
+	// 		$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+	// 		/** simplified @since 2.1.2 */
+	// 		foreach ($blogids as $blog_id) {
+	// 			switch_to_blog($blog_id);
+  //       $this->_upgrade();
+	// 		}
+	// 		switch_to_blog($old_blog);
+  //   }else $this->_upgrade();
+  // }
 	/**
 	* Update to new process: extract order from old custom table and insert into postmeta table.
 	* @since 2.0.0
 	*/
 	private function _upgrade(){
-		$settings = get_option(self::$settings_option_name, array());
+		//self::$settings = get_option(self::$settings_option_name, array());
 		// debug_msg($settings, 'upgrading...');
 		/** @since 2.0.1*/
 		$upgrade = false;
 		switch(true){
-			case empty($settings): //either first install or new upgrade.
+			case isset(self::$settings['version']) && self::$settings['version'] == $this->version:
+				return; //no need to get any further.
+			case empty(self::$settings): //either first install or new upgrade.
 				$upgrade = true;
 				break;
-			case isset($settings['version']) &&  $settings['version']=="2.0.0": //reset order.
+			case isset(self::$settings['version']) &&  self::$settings['version']=="2.0.0": //reset order.
 				global $wpdb;
 				// debug_msg('deleting all ranks');
 				$wpdb->delete($wpdb->postmeta, array('meta_key'=>'_rpwc2'), array('%s'));
@@ -186,16 +261,20 @@ class Reorder_Post_Within_Categories_Admin {
 		}
 		switch($upgrade){
 		 	case false:
-				$settings['version']=$this->version;
-				if( !isset($settings['upgraded']) ) $settings['upgraded']=false;
+				self::$settings['version']=$this->version;
+				if( !isset(self::$settings['upgraded']) ) self::$settings['upgraded']=false;
 	 			break;
 			case true: //empty = new instal or old version update.
 				//update settings.
-				$settings['version']=$this->version;
-				$settings['upgraded']=false;
+				self::$settings['version']=$this->version;
+				self::$settings['upgraded']=false;
 				global $wpdb;
 				$table_name = $wpdb->prefix . $this->old_table_name;
-				$categories = $wpdb->get_col("SELECT DISTINCT category_id FROM {$table_name}");
+				$categories = array();
+				if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") == $table_name){
+					self::$settings['upgraded']=true; //upgrade settings.
+					$categories = $wpdb->get_col("SELECT DISTINCT category_id FROM {$table_name}");
+				}
         //debug_msg($categories, 'found categories ');
 				if(!empty($wpdb->last_error)) debug_msg($wpdb->last_error, 'SQL ERROR: ');
 				else{ //update db.
@@ -211,11 +290,10 @@ class Reorder_Post_Within_Categories_Admin {
 						$wpdb->query($sql);
             //debug_msg($values, 'stored existing order for cid: '.$cid);
 					}
-					$settings['upgraded']=true; //upgrade settings.
 				}
 				break;
 		}
-		update_option(self::$settings_option_name, $settings);
+		update_option(self::$settings_option_name, self::$settings);
 	}
   /**
   * function called by admn ajax to load more posts.
@@ -237,6 +315,7 @@ class Reorder_Post_Within_Categories_Admin {
 		$reset = false;
 		if(isset($_POST['reset'])) $reset=$_POST['reset'];
     $results = array();
+    // debug_msg($post_type, $term_id.' type ');
     if(!empty($post_type) && $term_id>0){
 			/** @since 2.1.0. allow rank reset*/
 			if($reset) $this->_unrank_all_posts($term_id, $post_type);
@@ -253,9 +332,10 @@ class Reorder_Post_Within_Categories_Admin {
 		$results = array();
 		$ranking = $this->_get_order($post_type, $term_id, $start, $offset);
     $posts = get_posts(array(
+			'post_status'=>'any',
       'post_type' => $post_type,
       'post__in'=>$ranking,
-      'ignore_sticky_posts'=>true,
+      'ignore_sticky_posts'=>false,
       'posts_per_page'=>-1
     ));
 		$results = array_fill(0, count($ranking), '');
@@ -267,25 +347,28 @@ class Reorder_Post_Within_Categories_Admin {
 				'id'=>$post->ID,
         'link'=>admin_url('post.php?post='.$post->ID.'&action=edit'),
         'img'=> $img,
+				'status'=>$post->post_status,
         'title'=>apply_filters('reorder_posts_within_category_card_text',get_the_title($post), $post, $term_id)
       );
     }
 		return $results;
 	}
   /**
-  * Ajax called function to save the new order.
+  * Ajax 'user_ordering' called function to save the new order.
   * @since 1.0.0.
   */
 	public function save_order(){
 		if (!isset($_POST['deefuseNounceUserOrdering']) || !wp_verify_nonce($_POST['deefuseNounceUserOrdering'], 'nonce-UserOrderingChange')) {
 				wp_die('nonce failed, reload your page');
 		}
+		$post_type = $_POST['post_type'];
 		// debug_msg($_POST['order'], 'saving order ');
-		$this->_save_order(explode(",", $_POST['order']), $_POST['category'], $_POST['start']);
+		$this->_save_order($post_type, explode(",", $_POST['order']), $_POST['category'], $_POST['start']);
+
 		wp_die();
 	}
 	/**
-  * Ajax called function to save the new order.
+  * Ajax 'user_shuffle'  called function to save the new order.
   * @since 1.0.0.
   */
 	public function shuffle_order(){
@@ -310,8 +393,7 @@ class Reorder_Post_Within_Categories_Admin {
 		}
 		// $items = explode(',',$items);
 		$order = $this->_get_order($post_type, $term_id, $start-1, $end-$start+1);
-		// debug_msg($order, ($start-1).'->'.($end-$start+1));
-		// debug_msg($items, 'items to move ');
+
 		foreach($items as $post_id){
 			if(false !== ($idx = array_search($post_id, $order))){
 				unset($order[$idx]); //remove from order.
@@ -328,7 +410,7 @@ class Reorder_Post_Within_Categories_Admin {
 				break;
 		}
 		// debug_msg($order, 'new order ');
-		$this->_save_order($order, $term_id, $start-1);
+		$this->_save_order($post_type, $order, $term_id, $start-1);
 		$results = $this->_get_ranked_posts($post_type, $term_id, $_POST['range_start'], $_POST['offset']);
 		wp_send_json_success($results);
     wp_die();
@@ -342,54 +424,143 @@ class Reorder_Post_Within_Categories_Admin {
 	*/
 	protected function _get_order($post_type, $term_id, $start=0, $length=null){
 		global $wpdb;
-		$ranking = $wpdb->get_col($wpdb->prepare("SELECT pm.post_id FROM {$wpdb->postmeta} as pm, {$wpdb->posts} as p
-			WHERE pm.meta_key ='_rpwc2'
-			AND pm.meta_value=%d
-			AND pm.post_id=p.ID
-			AND p.post_type=%s
-      ORDER BY pm.meta_id", $term_id, $post_type));
+		$this->old_ranking_exists = false;
+
+		$query = $wpdb->prepare("SELECT rpwc_pm.post_id
+			FROM {$wpdb->postmeta} as rpwc_pm, {$wpdb->posts} as rpwc_p
+			WHERE rpwc_pm.meta_key ='_rpwc2'
+			AND rpwc_pm.meta_value=%d
+			AND rpwc_pm.post_id=rpwc_p.ID
+			AND rpwc_p.post_type=%s
+      ORDER BY rpwc_pm.meta_id", $term_id, $post_type);
+
+		/** @since 2.4.3 */
+		$this->filter_query($query, "SELECT rpwc_pm.post_id");
+		$ranking = $wpdb->get_col($query);
+			// debug_msg($wpdb->last_query);
 			// debug_msg($ranking, $term_id.':'.$start.'->'.$length);
 		if(empty($ranking)){ //retrieve the default ranking.
+			//check if v1.x table exists.
 			$table_name = $wpdb->prefix . $this->old_table_name;
-			$ranking = $wpdb->get_col($wpdb->prepare("select post_id from {$table_name} where category_id = %d order by id", $term_id));
+			/** @since 2.3.0 check for post_type properly */
+      // debug_msg($wpdb->get_var("SHOW TABLES LIKE '$table_name'"), "SHOW TABLES LIKE '$table_name': ");
+			if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") == $table_name){ //cehck table exits.
+				$ranking = $wpdb->get_col($wpdb->prepare("SELECT rpwc.post_id
+					FROM {$table_name} as rpwc
+					LEFT JOIN {$wpdb->posts} as wp on wp.ID = rpwc.post_id
+					WHERE rpwc.category_id = %d AND wp.post_type=%s order by rpwc.id", $term_id, $post_type));
+				/** @since 2.9.0 display admin notice warning. */
+        $this->old_ranking_exists = !empty($ranking);
+			}
+			// debug_msg($ranking, "ranking " );
 			if(empty($ranking)){
-				$orderby = 'p.post_date';
+				$orderby = 'rpwc_p.post_date';
 				if(apply_filters('reorder_posts_within_category_initial_orderby', false, $post_type, $term_id)){
-					$orderby = 'p.post_name';
+					$orderby = 'rpwc_p.post_name';
 				}
 				$order = 'DESC';
 				if(apply_filters('reorder_posts_within_category_initial_order', false, $post_type, $term_id)){
 					$order = 'ASC';
 				}
-				$sql = $wpdb->prepare("SELECT p.ID FROM {$wpdb->posts} as p LEFT JOIN {$wpdb->term_relationships} AS tr ON p.ID=tr.object_id
-					WHERE  p.post_status='publish'
-					AND p.post_type='%s'
-					AND tr.term_taxonomy_id=%d
+				/** @since 2.6.1 allow for various post status to be filtered */
+				$status = array('publish','private','future');
+				$status = apply_filters('rpwc2_initial_rank_posts_status', $status, $post_type, $term_id);
+				if( !is_array($status) ) $status = array($status);
+				$status = array_intersect($status, array('publish','private','future', 'pending', 'draft'));
+				$status = "('".implode("','",$status)."')";
+
+				$sql = $wpdb->prepare("SELECT rpwc_p.ID FROM {$wpdb->posts} as rpwc_p
+					LEFT JOIN {$wpdb->term_relationships} AS rpwc_tr ON rpwc_p.ID=rpwc_tr.object_id
+					LEFT JOIN {$wpdb->term_taxonomy} AS rpwc_tt ON rpwc_tr.term_taxonomy_id = rpwc_tt.term_taxonomy_id
+					WHERE  rpwc_p.post_status IN {$status}
+					AND rpwc_p.post_type=%s
+					AND rpwc_tt.term_id=%d
 					ORDER BY {$orderby} {$order}", $post_type, $term_id);
+				/** @since 2.4.3 filter the ranking query with the hook at the end of the queue.*/
+				$this->filter_query($sql, "SELECT rpwc_p.ID");
 				$ranking = $wpdb->get_col($sql);
+        /** @since 2.4.0 enable programmatic default ranking */
+        $filtered_ranking = apply_filters('rpwc2_filter_default_ranking', $ranking, $term_id, $_POST['taxonomy'], $post_type);
+        if(!empty($filtered_ranking) && is_array($filtered_ranking)){
+          $new_ranking = array();
+          foreach($filtered_ranking as $post_id){
+            if(($idx = array_search($post_id, $ranking))!==false){
+              $new_ranking[]=$post_id;
+              unset($ranking[$idx]);
+            }
+          }
+          $ranking = array_merge($new_ranking, $ranking);
+        }
 			}
-      // debug_msg($sql);
-			$this->_save_order($ranking, $term_id);
+			$this->_save_order($post_type, $ranking, $term_id);
 		}
 		if( empty($length) || $length> sizeof($ranking)) $length=sizeof($ranking);
 		return array_splice($ranking, $start, $length);
 	}
+  /**
+  * funciton to return the total count of posts in a given term for a given post type.
+  *
+  *@since 2.4.1
+  *@param string $post_type post type
+  *@param mixed array of or single value $term_id id of term to get count of posts.
+  *@return mixed int count of posts for single term, $term_id=>$count pairs for multiple terms..
+  */
+  protected function count_posts_in_term($post_type, $term_id){
+    /** @since 2.7.1 count posts in multiple terms */
+    if(! is_array($term_id)) $term_id = array($term_id);
+    $terms = "(".implode(',',$term_id).")";
+		global $wpdb;
+		/** @since 2.6.1 allow for various post status to be filtered */
+		$status = array('publish','private','future');
+		$status = apply_filters('rpwc2_initial_rank_posts_status', $status, $post_type, $term_id);
+		if( !is_array($status) ) $status = array($status);
+		$status = array_intersect($status, array('publish','private','future', 'pending', 'draft'));
+		$status = "('".implode("','",$status)."')";
+
+    $sql = $wpdb->prepare("SELECT rpwc_tt.term_id, COUNT(rpwc_p.ID) as total FROM {$wpdb->posts} as rpwc_p
+		  LEFT JOIN {$wpdb->term_relationships} AS rpwc_tr ON rpwc_p.ID=rpwc_tr.object_id
+      LEFT JOIN {$wpdb->term_taxonomy} AS rpwc_tt ON rpwc_tr.term_taxonomy_id = rpwc_tt.term_taxonomy_id
+    WHERE  rpwc_p.post_status IN {$status}
+      AND rpwc_p.post_type=%s
+      AND rpwc_tt.term_id IN {$terms}
+    GROUP BY rpwc_tt.term_id", $post_type);
+    $count = $wpdb->get_results($sql);
+		// debug_msg($sql);
+		$return = array();
+		switch(true){
+			case empty($count):
+				break;
+			default:
+			  foreach($count as $row){
+					$return[$row->term_id]=$row->total;
+				}
+				//sql results with no post will not be returned.
+				$return = $return + array_fill_keys($term_id,0);
+				break;
+		}
+    return $return;
+  }
 	/**
 	* General function to save a new order,
 	* @since 2.0.0
 	* @param array $order an array of $post_id in ranked order.
 	* @param int $term_id the id of the category term for which the posts need to be ranked.
 	*/
-	protected function _save_order($order=array(), $term_id=0, $start=0){
+	protected function _save_order($post_type, $order=array(), $term_id=0, $start=0){
 		if(empty($order) || 0==$term_id) return false;
 		global $wpdb;
-		$ranked_rows = $wpdb->get_results($wpdb->prepare("SELECT pm.meta_id, pm.post_id FROM {$wpdb->postmeta} as pm WHERE pm.meta_key ='_rpwc2' AND pm.meta_value=%d", $term_id));
+		// debug_msg($order, 'saving order ');
+		$query =$wpdb->prepare("SELECT rpwc_pm.meta_id, rpwc_p.ID FROM {$wpdb->posts} as rpwc_p LEFT JOIN {$wpdb->postmeta} as rpwc_pm on rpwc_p.ID = rpwc_pm.post_id WHERE rpwc_p.post_type like '%s' AND rpwc_pm.meta_key ='_rpwc2' AND rpwc_pm.meta_value=%d ORDER BY rpwc_pm.meta_id ASC", $post_type, $term_id);
+		/** @since 2.4.3 */
+		$this->filter_query($query, "SELECT rpwc_pm.meta_id, rpwc_p.ID");
+		$ranked_rows = $wpdb->get_results($query);
 
 		if (empty($ranked_rows)) {
 			foreach ($order as $post_id) {
 					$value[] = "($post_id, '_rpwc2', $term_id)";
 			}
 			$sql = sprintf("INSERT INTO {$wpdb->postmeta} (post_id, meta_key, meta_value) VALUES %s", implode(",", $value));
+			//$this->filter_query($query, "SELECT rpwc_pm.meta_id, rpwc_pm.post_id");
 			$wpdb->query($sql);
 		} else {
 			// $ranked_id=array();
@@ -416,6 +587,19 @@ class Reorder_Post_Within_Categories_Admin {
 		return true;
 	}
 	/**
+	* filter queries last to ensure proper results.
+	*
+	*@since 2.4.3
+	*@param string $query to set
+	*@param string $match string to search in query to validate.
+	*/
+	protected function filter_query($query, $match){
+		add_filter('query', function($q) use ($query, $match) {
+			if(strpos($q, $match)!==false) $q = $query;
+			return $q;
+		},PHP_INT_MAX);
+	}
+	/**
 	* function to remove postmeta for terms not manually ordered.
 	* @since 2.0.0
 	*/
@@ -435,7 +619,10 @@ class Reorder_Post_Within_Categories_Admin {
     	$terms_used = wp_list_pluck($terms_used, 'term_id');
     }
 		global $wpdb;
-		$terms_ordered = $wpdb->get_col("SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key LIKE '_rpwc2'");
+		$query = "SELECT DISTINCT rpwc_pm.meta_value FROM $wpdb->postmeta as rpwc_pm WHERE rpwc_pm.meta_key LIKE '_rpwc2'";
+		/** @since 2.4.3 */
+		$this->filter_query($query, "SELECT DISTINCT rpwc_pm.meta_value");
+		$terms_ordered = $wpdb->get_col($query);
 		/** @TODO delete ranking by post type */
 		foreach($terms_ordered as $term_id){
 			if(empty($terms_used) || !in_array($term_id, $terms_used)){
@@ -455,26 +642,35 @@ class Reorder_Post_Within_Categories_Admin {
 		$wpdb->query($sqlDropTable);
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		dbDelta($sqlDropTable);
-		$settings = get_option(self::$settings_option_name, array());
-		$settings['upgraded']=false; //switchoff table delete button.
-		update_option(self::$settings_option_name, $settings);
+		//$settings = get_option(self::$settings_option_name, array());
+		self::$settings['upgraded']=false; //switchoff table delete button.
+		update_option(self::$settings_option_name, self::$settings);
 	}
 	/**
 	* function to save options.
 	* @since 1.0.0.
 	*/
-	public function save_admin_options(){
+	public function save_admin_options_on_init(){
 		// Si le formulaire a Ã©tÃ© soumis, on rÃ©-enregistre les catÃ©gorie dont on veut trier les Ã©lÃ©ments
 		if (!empty($_POST) && isset($_POST['nounceUpdateOptionReorder']) && wp_verify_nonce($_POST['nounceUpdateOptionReorder'], 'updateOptionSettings')) {
 			$categories_checked = array();
 			if (isset($_POST['selection'])) {
 					$categories_checked = $_POST['selection'];
 			}
+
 			$settingsOptions['categories_checked'] = $categories_checked;
-			update_option($this->adminOptionsName, $settingsOptions);
+			$this->save_admin_options($settingsOptions);
 		}
 	}
-
+	/**
+	* Save admin options.
+	*
+	*@since 2.5.0
+	*@param array $settings array of settings.
+	*/
+	public function save_admin_options($settings){
+		update_option($this->adminOptionsName, $settings);
+	}
 	/**
 	* callback funciton to display the order page.
 	* @since 1.0.0
@@ -482,6 +678,7 @@ class Reorder_Post_Within_Categories_Admin {
 	public function print_order_page(){
 		// On rÃ©cupÃ¨re le VPT sur lequel on travaille
 		$page_name = $_GET['page'];
+		// debug_msg('print order page '.$page_name);
 		$cpt_name = substr($page_name, 13, strlen($page_name));
 		$post_type = get_post_types(array('name' => $cpt_name), 'objects');
 		$post_type_detail  = $post_type[$cpt_name];
@@ -503,13 +700,18 @@ class Reorder_Post_Within_Categories_Admin {
 				// Si il y a une catÃ©gorie
 				if (!empty($term)) {
 					$ranking = $this->_get_order($post_type_detail->name, $cat_to_retrieve_post, 0, 20);
-					$total = $term->count;
+					// $total = $term->count;
 					$args = array('post_type' => $post_type_detail->name,
+					  'post_status'=>'any',
 						'post__in'=>$ranking,
-						'ignore_sticky_posts'=>true,
+						'ignore_sticky_posts'=>false,
 						'posts_per_page'=>-1
 					);
 					$posts_array = get_posts($args);
+					/** @since 2.4.1 better for multi post type */
+					// debug_msg($post_type_detail->name, $cat_to_retrieve_post);
+					$total = $this->count_posts_in_term($post_type_detail->name, $cat_to_retrieve_post);
+          $total = $total[$cat_to_retrieve_post];
 					foreach($posts_array as $post) $posts[$post->ID]=$post;
 				}
 			}
@@ -552,7 +754,9 @@ class Reorder_Post_Within_Categories_Admin {
 			*filter to allow other capabilities for managing orders.
 			* @since 1.3.0
 			**/
-			$capability = apply_filters('reorder_post_within_categories_capability', 'manage_categories', $post_type);
+			$capability = 'manage_categories';
+			// if('lp_course'==$post_type) $capability  = 'edit_' . LP_COURSE_CPT . 's';
+			$capability = apply_filters('reorder_post_within_categories_capability', $capability, $post_type);
 			if('manage_categories'!== $capability){ //validate capability.
 				$roles = wp_roles();
 				$is_valid=false;
@@ -564,12 +768,15 @@ class Reorder_Post_Within_Categories_Admin {
 				}
 				if(!$is_valid) $capability = 'manage_categories';
 			}
-			switch ($post_type) {
-				case 'attachment':
+			switch (true) {
+				case 'attachment'==$post_type:
 					$the_page = add_submenu_page('upload.php', 'Re-order', 'Reorder', $capability, 're-orderPost-'.$post_type, array(&$this,'print_order_page'));
 					break;
-				case 'post':
+				case 'post'==$post_type:
 					$the_page = add_submenu_page('edit.php', 'Re-order', 'Reorder', $capability, 're-orderPost-'.$post_type, array(&$this,'print_order_page'));
+					break;
+				case 'lp_course'==$post_type && is_plugin_active('learnpress/learnpress.php'): /** @since 2.5.6 learnpress fix.*/
+						$the_page =  add_submenu_page('learn_press', 'Re-order', 'Reorder', 'edit_lp_courses', 're-orderPost-'.$post_type, array(&$this,'print_order_page'));
 					break;
 				default:
 					$the_page =  add_submenu_page('edit.php?post_type='.$post_type, 'Re-order', 'Reorder', $capability, 're-orderPost-'.$post_type, array(&$this,'print_order_page'));
@@ -580,13 +787,14 @@ class Reorder_Post_Within_Categories_Admin {
 			add_action('admin_head-'. $the_page, array($this,'enqueue_scripts'));
 		}
 	}
+
 	/**
 	 * Dispplay a link to setting page inside the plugin description
 	 */
 	public function display_settings_link($links){
-		$settings_link = '<a href="options-general.php?page=reorder-posts-within-categories.php">' . __('Settings', 'reorder-post-within-categories') . '</a>';
-		array_unshift($links, $settings_link);
-			return $links;
+		$settings_link = '<a href="options-general.php?page=class-reorder-post-within-categories-admin.php">' . __('Settings', 'reorder-post-within-categories') . '</a>';
+		array_push($links, $settings_link);
+		return $links;
 	}
 	/**
 	* display admin notice.
@@ -604,66 +812,93 @@ class Reorder_Post_Within_Categories_Admin {
 	 * @param type $post_id
 	 */
 	public function save_post( $new_status, $old_status, $post){
-		$public=array('publish', 'private', 'future');
-		// debug_msg($new_status.'->'.$old_status );
-		if( in_array($old_status, $public) && !in_array($new_status, $public)){
-			if( !in_array($new_status, $public) ) $this->unrank_post($post->ID);
-			return; //no actions required.
-		}
-		$settings = $this->get_admin_options();
-		if (empty($settings) || !isset($settings['categories_checked'][$post->post_type])) return;
-		$settings = $settings['categories_checked'][$post->post_type];
-
-		//verify post is not a revision
-		$post_id = $post->ID;
 		// Liste des taxonomies associÃ©e Ã  ce post
-		$taxonomies = get_object_taxonomies($post->post_type, 'objects');
+		$taxonomies = get_object_taxonomies($post->post_type);
+    // debug_msg($taxonomies, $post->post_type);
 		if(empty($taxonomies)) return;
-		// for each CPT taxonomy, look at only the hierarchical ones
-		$post_ranks = get_post_meta($post_id, '_rpwc2', false);
-		foreach ($taxonomies as $taxonomie) {
-			if (!in_array($taxonomie->name, $settings)) continue;
-			$terms = get_terms($taxonomie->name);
-			if(empty($terms) || is_wp_error($terms)) continue;
-
-			$terms_of_the_post = wp_get_post_terms($post_id, $taxonomie->name);
-			$term_ids_of_the_post = wp_list_pluck($terms_of_the_post, 'term_id');
-
-			foreach ($terms as $term) {
-				if (!in_array($term->term_id, $term_ids_of_the_post)){
-					if(in_array($term->term_id, $post_ranks)){
-						$this->unrank_post($post_id, $term->term_id);
-					}
-					continue; //post not in term.
-				}
-				if(in_array($term->term_id, $post_ranks)) continue; //post already ranked.
-
-				$ranking = $this->_get_order($post->post_type, $term->term_id);
-				if(!empty($ranking)){ //post_type is manually ranked.
-					//add new rank at the bottom of the order.
-					add_post_meta($post_id, '_rpwc2', $term->term_id, false);
-					// debug_msg($term->term_id.' ranking '.$post_id);
-					/**
-					* Filter to rank new post at the top of the manual order.
-					* @since 2.0.0.
-					* @param boolean $first default false, true will place post first.
-					* @param WP_Post $post the current post being published.
-					* @param WP_Term $term the current taxonomy term within which the post is to be ranked.
-					*/
-					if(apply_filters('reorder_post_within_categories_new_post_first', false, $post, $term)){
-					 	//add new rank at the top of the order.
-						$ranking = unshift_array($ranking, $post_id);
-						$this->_save_order($ranking, $term->term_id);
-					}
-				}
-			}
+		//verify that this post_type is manually ranked for the associated terms.
+		$settings = $this->get_admin_options();
+		if (empty($settings) || !isset($settings['categories_checked'][$post->post_type])){
+			//if there are no taxonomies checked then this post cannot be manually ranked.
+      // debug_msg($settings, 'settings ');
+			return;
 		}
+		//taxonomies ranked for this post type.
+		$ranked_tax = $settings['categories_checked'][$post->post_type];
+		//taxonomies associated with this post that are manually ranked.
+		$ranked_tax = array_intersect($ranked_tax, $taxonomies);
+		// debug_msg($ranked_tax, 'ranked tax ');
+		if(empty($ranked_tax)) return;
+
+		//find if terms are currently being ranked.
+		$ranked_terms = get_option(RPWC_OPTIONS_2, array());
+		// debug_msg($ranked_terms, 'ranked terms ');
+
+		if(!isset($ranked_terms[$post->post_type])) return; //no terms ranked for this post type.
+
+		$ranked_terms = array_keys( $ranked_terms[$post->post_type] );
+		$ranked_ids = array();
+		foreach($ranked_tax as $tax){
+			$post_terms = wp_get_post_terms($post->ID, $tax, array( 'fields' => 'ids' ));
+			$ranked_ids += array_intersect($post_terms, $ranked_terms);
+		}
+
+		if(empty($ranked_ids)) return; //no terms to rank.
+
+		$public =array('publish', 'private', 'future');
+    $draft = array( 'draft', 'pending');
+
+		$post_ranks = get_post_meta($post->ID, '_rpwc2', false);
+		$old_ranks = array_diff($post_ranks, $ranked_ids);
+		//these are terms which this post you to be part of and were ranked.
+		foreach($old_ranks as $term_id) $this->unrank_post($post->ID, $term_id);
+
+		//finally check the current status of the post.
+		switch(true){
+			case in_array($new_status, $public):
+				//status->publish = rank this post.
+				foreach($ranked_ids as $term_id){
+					/** @since 2.5.0 give more control of which post status to rank */
+					$rank_post = apply_filters("rpwc2_rank_published_posts", true, $term_id, $new_status, $old_status, $term_id, $post);
+					if(!in_array($term_id, $post_ranks) && $rank_post) $this->rank_post($post, $term_id);
+					else if(in_array($term_id, $post_ranks) && !$rank_post) $this->unrank_post($post->ID, $term_id);
+				}
+				break;
+			case in_array($new_status, $draft):
+				//status->draft
+				foreach($ranked_ids as $term_id){
+					/** @since 2.5.0 give more control of which post status to rank */
+					$rank_post = apply_filters("rpwc2_rank_draft_posts", false, $new_status, $old_status,$term_id);
+
+					if(!in_array($term_id, $post_ranks) && $rank_post) $this->rank_post($post, $term_id);
+					else if(in_array($term_id, $post_ranks) && !$rank_post) $this->unrank_post($post->ID, $term_id);
+				}
+				break;
+      case 'trash'==$new_status:
+        // if( in_array($term_id, $post_ranks) ) $this->unrank_post($post->ID, $term_id);
+        break;
+		}
+	}
+	/**
+	* Rank a new post.
+	*
+	*@since 2.5.0
+	*@param string $param text_description
+	*@return string text_description
+	*/
+	public function rank_post($post, $term_id){
+		if(apply_filters('reorder_post_within_categories_new_post_first', false, $post, $term_id)){
+			$ranking = $this->_get_order($post->post_type, $term_id);
+			add_post_meta($post->ID, '_rpwc2', $term_id, false);
+			array_unshift($ranking, $post->ID);
+			$this->_save_order($post->post_type, $ranking, $term_id);
+		}else add_post_meta($post->ID, '_rpwc2', $term_id, false);
 	}
 	/**
 	 * When a post is deleted we remove all entries from the custom table
 	 * @param type $post_id
 	 */
-	public function unrank_post($post_id, $term_id=null){
+	public function unrank_post($post_id, $term_id=''){
 		delete_post_meta($post_id, '_rpwc2', $term_id);
 	}
 	/**

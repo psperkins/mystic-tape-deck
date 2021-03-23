@@ -16,15 +16,15 @@ class WPSEO_Shortlinker {
 	 * @return array The shortlink data.
 	 */
 	protected function collect_additional_shortlink_data() {
-		return array(
+		return [
 			'php_version'      => $this->get_php_version(),
 			'platform'         => 'wordpress',
-			'platform_version' => $GLOBALS['wp_version'],
+			'platform_version' => $this->get_platform_version(),
 			'software'         => $this->get_software(),
 			'software_version' => WPSEO_VERSION,
 			'days_active'      => $this->get_days_active(),
 			'user_language'    => $this->get_user_language(),
-		);
+		];
 	}
 
 	/**
@@ -83,12 +83,21 @@ class WPSEO_Shortlinker {
 	}
 
 	/**
+	 * Gets the current site's platform version.
+	 *
+	 * @return string The wp_version.
+	 */
+	protected function get_platform_version() {
+		return $GLOBALS['wp_version'];
+	}
+
+	/**
 	 * Get our software and whether it's active or not.
 	 *
 	 * @return string The software name + activation state.
 	 */
 	private function get_software() {
-		if ( WPSEO_Utils::is_yoast_seo_premium() ) {
+		if ( YoastSEO()->helpers->product->is_premium() ) {
 			return 'premium';
 		}
 

@@ -1,45 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import debounce from 'lodash/debounce';
-import GutenbergWrapper from '../../Common/GutenbergWrapper';
-import UISelect from '../../UIComponents/UISelect';
 import { searchForms } from '../../../api/hubspotPluginApi';
+import { fetchForms as searchFormsOAuth } from '../../../api/hubspotApiClient';
 import useForm from './useForm';
+import FormSelector from './FormSelector';
+import FormErrorHandler from './FormErrorHandler';
 import LoadingBlock from '../../Common/LoadingBlock';
-import { i18n } from '../../../constants/leadinConfig';
+import { oauth } from '../../../constants/leadinConfig';
 
 const mapForm = form => ({
   label: form.name,
   value: form.guid,
 });
 
-export default function FormSelect({ formId, handleChange }) {
-  const { form, loading } = useForm(formId);
+export default function FormSelect({ formId, formName, handleChange }) {
+  const { form, loading } = useForm(formId, formName);
+  const [searchformError, setSearchFormError] = useState(null);
+
+  const searchFormMethod = oauth ? searchFormsOAuth : searchForms;
 
   const loadOptions = debounce(
-    (search, callback) =>
-      searchForms(search).then(forms => callback(forms.map(mapForm))),
+    (search, callback) => {
+      searchFormMethod(search)
+        .then(forms => callback(forms.map(mapForm)))
+        .catch(error => setSearchFormError(error));
+    },
     300,
     { trailing: true }
   );
 
-  const defaultOptions = form ? [mapForm(form)] : true;
+  const defaultOptions = form && !oauth ? [mapForm(form)] : true;
   const value = form ? mapForm(form) : null;
 
+  const formApiError = oauth && searchformError;
   return loading ? (
     <LoadingBlock />
+  ) : !formApiError ? (
+    <FormSelector
+      defaultOptions={defaultOptions}
+      loadOptions={loadOptions}
+      onChange={handleChange}
+      value={value}
+    />
   ) : (
-    <GutenbergWrapper>
-      <p>
-        <b>{i18n.selectExistingForm}</b>
-      </p>
-      <UISelect
-        defaultOptions={defaultOptions}
-        cacheOptions={true}
-        loadOptions={loadOptions}
-        onChange={handleChange}
-        placeholder={i18n.selectForm}
-        value={value}
-      />
-    </GutenbergWrapper>
+    <FormErrorHandler
+      status={formApiError.status}
+      resetErrorState={() => setSearchFormError(null)}
+    />
   );
 }

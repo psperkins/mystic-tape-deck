@@ -4,7 +4,7 @@
  Plugin URI: http://newstatpress.altervista.org
  Text Domain: newstatpress
  Description: Real time stats for your Wordpress blog
- Version: 1.3.2
+ Version: 1.3.5
  Author: Stefano Tognon and cHab (from Daniele Lippi works)
  Author URI: http://newstatpress.altervista.org
 ************************************************************/
@@ -15,7 +15,7 @@ if( !defined( 'ABSPATH' ) ) {
   die(__('ERROR: This plugin requires WordPress and will not function if called directly.','newstatpress'));
 }
 
-$_NEWSTATPRESS['version']='1.3.2';
+$_NEWSTATPRESS['version']='1.3.5';
 $_NEWSTATPRESS['feedtype']='';
 
 global $newstatpress_dir,
@@ -923,7 +923,7 @@ function nsp_Lastmonth() {
        {
          $Key_name=$index['Key_name'];
          $Column_name=$index['Column_name'];
-         if ($wpdb->query("SHOW INDEXES FROM $table_name WHERE Key_name ='$Key_name'")=='') {
+         if ($wpdb->query($wpdb->prepare("SHOW INDEXES FROM $table_name WHERE Key_name = %s", $Key_name))=='') {
            $sql_createtable.=",\n INDEX $Key_name $Column_name";
          }
        }
@@ -1077,12 +1077,14 @@ function nsp_StatAppend() {
   // Country (ip2nation table) or language
   $countrylang="";
   if($wpdb->get_var("SHOW TABLES LIKE 'ip2nation'") == 'ip2nation') {
-    $sql='SELECT *
+    $qry = $wpdb->get_row($wpdb->prepare(
+         'SELECT *
           FROM ip2nation
-          WHERE ip < INET_ATON("'.$ipAddress.'")
+          WHERE ip < INET_ATON( %s )
           ORDER BY ip DESC
-          LIMIT 0,1';
-    $qry = $wpdb->get_row($sql);
+          LIMIT 0,1'    
+          ,$ipAddress
+    ));
     if (isset($qry->country)) {
       $countrylang=$qry->country;
     }  
@@ -1101,7 +1103,12 @@ function nsp_StatAppend() {
     if ($int>=1) {
       $t=gmdate('Ymd', current_time('timestamp')-86400*$int*30);
 
-      $results =$wpdb->query( "DELETE FROM " . $table_name . " WHERE date < '" . $t . "'");
+      $results =$wpdb->query($wpdb->prepare( 
+         "DELETE FROM $table_name
+          WHERE date < %s
+          ",
+          $t
+          ));
     }
   }
 
@@ -1113,12 +1120,14 @@ function nsp_StatAppend() {
     if ($int>=1) {
       $t=gmdate('Ymd', current_time('timestamp')-86400*$int*30);
 
-      $results =$wpdb->query(
-         "DELETE FROM " . $table_name . "
-          WHERE date < '" . $t . "' and
+      $results =$wpdb->query($wpdb->prepare(
+         "DELETE FROM $table_name
+          WHERE date < %s and
                 feed='' and
                 spider<>''
-         ");
+         ",
+         $t
+         ));
     }
   }
 
@@ -1138,42 +1147,27 @@ function nsp_StatAppend() {
     }
 
     $login = $userdata ? $userdata->user_login : null;
-
-    $insert =
-      "INSERT INTO " . $table_name . "(
-        date,
-        time,
-        ip,
-        urlrequested,
-        agent,
-        referrer,
-        search,
-        nation,
-        os,
-        browser,
-        searchengine,
-        spider,
-        feed,
-        user,
-        timestamp
-       ) VALUES (
-        '$vdate',
-        '$vtime',
-        '$ipAddress',
-        '$urlRequested',
-        '".addslashes(strip_tags($userAgent))."',
-        '$referrer','" .
-        addslashes(strip_tags($search_phrase))."',
-        '".$countrylang."',
-        '$os',
-        '$browser',
-        '$searchengine',
-        '$spider',
-        '$feed',
-        '$login',
-        '$timestamp'
-       )";
-    $results = $wpdb->query( $insert );
+    
+    $results = $wpdb->insert( 
+      $table_name, 
+       array( 
+          'date' => $vdate, 
+          'time' => $vtime, 
+          'ip' => substr($ipAddress, 0, 39),
+          'urlrequested' => substr($urlRequested, 0, 250),
+          'agent' => substr(strip_tags($userAgent), 0, 250),
+          'referrer' => substr($referrer, 0, 512),
+          'search' => substr(strip_tags($search_phrase), 0, 250),
+          'nation' => substr($countrylang, 0, 2),
+          'os' => substr($os, 0, 30),
+          'browser' => substr($browser, 0, 32),
+          'searchengine' => substr($searchengine, 0, 16),
+          'spider' => substr($spider, 0, 32),
+          'feed' => substr($feed, 0, 8),
+          'user' => substr($login, 0, 16),
+          'timestamp' => $timestamp
+      ), array( '%s')
+    );   
   }
 }
 add_action('send_headers', 'nsp_StatAppend');
@@ -1245,13 +1239,14 @@ function nsp_ExpandVarsInsideCode($body) {
 
   # look for %since%
   if(strpos(strtolower($body),"%since%") !== FALSE) {
-    $qry = $wpdb->get_results(
+    // not needs prepare
+    $qry = $wpdb->get_var(
       "SELECT date
        FROM $table_name
        ORDER BY date
        LIMIT 1;
       ");
-    $body = str_replace("%since%", nsp_hdate($qry[0]->date), $body);
+    $body = str_replace("%since%", nsp_hdate($qry), $body);
   }
 
   # look for %os%
@@ -1278,16 +1273,17 @@ function nsp_ExpandVarsInsideCode($body) {
     $act_time = current_time('timestamp');
     $from_time = date('Y-m-d H:i:s', strtotime('-4 minutes', $act_time));
     $to_time = date('Y-m-d H:i:s', $act_time);
-    $qry = $wpdb->get_results(
+    // use prepare
+     $qry = $wpdb->get_var($wpdb->prepare(
       "SELECT count(DISTINCT(ip)) AS visitors
        FROM $table_name
        WHERE
          spider='' AND
          feed='' AND
-         date = '".gmdate("Ymd", $act_time)."' AND
-         timestamp BETWEEN '$from_time' AND '$to_time';
-      ");
-    $body = str_replace("%visitorsonline%", $qry[0]->visitors, $body);
+         date = %s AND
+         timestamp BETWEEN %s AND %s;
+      ", gmdate("Ymd", $act_time), $from_time, $to_time));   
+    $body = str_replace("%visitorsonline%", $qry, $body);
   }
 
   # look for %usersonline%
@@ -1295,22 +1291,24 @@ function nsp_ExpandVarsInsideCode($body) {
     $act_time = current_time('timestamp');
     $from_time = date('Y-m-d H:i:s', strtotime('-4 minutes', $act_time));
     $to_time = date('Y-m-d H:i:s', $act_time);
-    $qry = $wpdb->get_results(
+    // use prepare
+    $qry = $wpdb->get_var($wpdb->prepare(
       "SELECT count(DISTINCT(ip)) AS users
        FROM $table_name
        WHERE
          spider='' AND
          feed='' AND
-         date = '".gmdate("Ymd", $act_time)."' AND
+         date = %s AND
          user<>'' AND
-         timestamp BETWEEN '$from_time' AND '$to_time';
-      ");
-    $body = str_replace("%usersonline%", $qry[0]->users, $body);
+         timestamp BETWEEN %s AND %s;
+      ", gmdate("Ymd", $act_time), $from_time, $to_time));
+    $body = str_replace("%usersonline%", $qry, $body);
   }
 
   # look for %toppost%
   if(strpos(strtolower($body),"%toppost%") !== FALSE) {
-    $qry = $wpdb->get_results(
+    // not needs prepare
+    $qry = $wpdb->get_row(
       "SELECT urlrequested,count(*) AS totale
        FROM $table_name
        WHERE
@@ -1321,12 +1319,13 @@ function nsp_ExpandVarsInsideCode($body) {
        ORDER BY totale DESC
        LIMIT 1;
       ");
-    $body = str_replace("%toppost%", nsp_DecodeURL($qry[0]->urlrequested), $body);
+    $body = str_replace("%toppost%", nsp_DecodeURL($qry->urlrequested), $body);
   }
 
   # look for %topbrowser%
   if(strpos(strtolower($body),"%topbrowser%") !== FALSE) {
-    $qry = $wpdb->get_results(
+    // not needs prepare
+    $qry = $wpdb->get_row(
        "SELECT browser,count(*) AS totale
         FROM $table_name
         WHERE
@@ -1336,12 +1335,13 @@ function nsp_ExpandVarsInsideCode($body) {
         ORDER BY totale DESC
         LIMIT 1;
        ");
-    $body = str_replace("%topbrowser%", nsp_DecodeURL($qry[0]->browser), $body);
+    $body = str_replace("%topbrowser%", nsp_DecodeURL($qry->browser), $body);
   }
 
   # look for %topos%
   if(strpos(strtolower($body),"%topos%") !== FALSE) {
-    $qry = $wpdb->get_results(
+    // not needs prepare
+    $qry = $wpdb->get_row(
       "SELECT os,count(*) AS totale
        FROM $table_name
        WHERE
@@ -1351,12 +1351,13 @@ function nsp_ExpandVarsInsideCode($body) {
        ORDER BY totale DESC
        LIMIT 1;
       ");
-    $body = str_replace("%topos%", nsp_DecodeURL($qry[0]->os), $body);
+    $body = str_replace("%topos%", nsp_DecodeURL($qry->os), $body);
   }
 
   # look for %topsearch%
   if(strpos(strtolower($body),"%topsearch%") !== FALSE) {
-    $qry = $wpdb->get_results(
+    // not needs prepare
+    $qry = $wpdb->get_row(
       "SELECT search, count(*) AS csearch
        FROM $table_name
        WHERE
@@ -1365,7 +1366,7 @@ function nsp_ExpandVarsInsideCode($body) {
        ORDER BY csearch DESC
        LIMIT 1;
       ");
-    $body = str_replace("%topsearch%", nsp_DecodeURL($qry[0]->search), $body);
+    $body = str_replace("%topsearch%", nsp_DecodeURL($qry->search), $body);
   }
 
   return $body;
@@ -1532,8 +1533,8 @@ function nsp_MakeOverview($print ='dashboard') {
   $table_name = nsp_TABLENAME;
 
   $overview_table='';
-	global $nsp_option_vars;
-	$offsets = get_option($nsp_option_vars['stats_offsets']['name']);
+  global $nsp_option_vars;
+  $offsets = get_option($nsp_option_vars['stats_offsets']['name']);
 
   // $since = NewStatPress_Print('%since%');
   $since = nsp_ExpandVarsInsideCode('%since%');
@@ -1636,9 +1637,10 @@ function nsp_MakeOverview($print ='dashboard') {
     }
 
     // query requests
+    // not needs prepare
     $qry_total = $wpdb->get_row($sql_QueryTotal);
-    $qry_tyear = $wpdb->get_row($sql_QueryTotal. " AND date LIKE '$thisyear%'");
-
+    // use prepare
+    $qry_tyear = $wpdb->get_row($wpdb->prepare($sql_QueryTotal. " AND date LIKE %s", $thisyear.'%'));
 
     if (get_option($nsp_option_vars['calculation']['name'])=='sum') {
 
@@ -1657,8 +1659,9 @@ function nsp_MakeOverview($print ='dashboard') {
       }
       for($i=0;$i<$day;$i++)
       {
-        $qry_daylmonth = $wpdb->get_row($sql_QueryTotal. " AND date LIKE '$lastmonth$i%'");
-        $qry_day=$wpdb->get_row($sql_QueryTotal. " AND date LIKE '$year$month$i%'");
+        // use prepare
+        $qry_daylmonth = $wpdb->get_row($wpdb->prepare($sql_QueryTotal. " AND date LIKE %s", $lastmonth.$i.'%' ));
+        $qry_day       = $wpdb->get_row($wpdb->prepare($sql_QueryTotal. " AND date LIKE %s", $year.$month.$i.'%' ));
         $tot+=$qry_day->$row;
         $totlm+=$qry_daylmonth->$row;
 
@@ -1669,13 +1672,14 @@ function nsp_MakeOverview($print ='dashboard') {
 
     }
     else { // classic
-      $qry_tmonth = $wpdb->get_row($sql_QueryTotal. " AND date LIKE '$thismonth%'");
-      $qry_lmonth = $wpdb->get_row($sql_QueryTotal. " AND date LIKE '$lastmonth%'");
+      // use prepare
+      $qry_tmonth = $wpdb->get_row($wpdb->prepare($sql_QueryTotal. " AND date LIKE %s", $thismonth.'%'));
+      $qry_lmonth = $wpdb->get_row($wpdb->prepare($sql_QueryTotal. " AND date LIKE %s", $lastmonth.'%'));
     }
 
-
-    $qry_y = $wpdb->get_row($sql_QueryTotal. " AND date LIKE '$yesterday'");
-    $qry_t = $wpdb->get_row($sql_QueryTotal. " AND date LIKE '$today'");
+    // use prepare
+    $qry_y = $wpdb->get_row($wpdb->prepare($sql_QueryTotal. " AND date LIKE %s", $yesterday));
+    $qry_t = $wpdb->get_row($wpdb->prepare($sql_QueryTotal. " AND date LIKE %s", $today));
 
     $calculated_result=nsp_CalculateVariation($qry_tmonth->$row, $qry_lmonth->$row);
 
@@ -1729,17 +1733,18 @@ function nsp_MakeOverview($print ='dashboard') {
 
       $date=gmdate('Ymd', current_time('timestamp')-86400*$gg);
 
-      $qry_visitors  = $wpdb->get_row("SELECT count(DISTINCT ip) AS total FROM $table_name WHERE feed='' AND spider='' AND date = '$date'");
-      $visitors[$gg] = $qry_visitors->total;
+      // use prepare
+      $qry_visitors  = $wpdb->get_var($wpdb->prepare("SELECT count(DISTINCT ip) AS total FROM $table_name WHERE feed='' AND spider='' AND date = %s", $date));
+      $visitors[$gg] = $qry_visitors;
 
-      $qry_pageviews = $wpdb->get_row("SELECT count(date) AS total FROM $table_name WHERE feed='' AND spider='' AND date = '$date'");
-      $pageviews[$gg]= $qry_pageviews->total;
+      $qry_pageviews = $wpdb->get_var($wpdb->prepare("SELECT count(date) AS total FROM $table_name WHERE feed='' AND spider='' AND date = %s", $date));
+      $pageviews[$gg]= $qry_pageviews;
 
-      $qry_spiders   = $wpdb->get_row("SELECT count(date) AS total FROM $table_name WHERE feed='' AND spider<>'' AND date = '$date'");
-      $spiders[$gg]  = $qry_spiders->total;
+      $qry_spiders   = $wpdb->get_var($wpdb->prepare("SELECT count(date) AS total FROM $table_name WHERE feed='' AND spider<>'' AND date = %s", $date));
+      $spiders[$gg]  = $qry_spiders;
 
-      $qry_feeds     = $wpdb->get_row("SELECT count(date) AS total FROM $table_name WHERE feed<>'' AND spider='' AND date = '$date'");
-      $feeds[$gg]    = $qry_feeds->total;
+      $qry_feeds     = $wpdb->get_var($wpdb->prepare("SELECT count(date) AS total FROM $table_name WHERE feed<>'' AND spider='' AND date = %s", $date));
+      $feeds[$gg]    = $qry_feedsl;
 
       $total= $visitors[$gg] + $pageviews[$gg] + $spiders[$gg] + $feeds[$gg];
       if ($total > $maxxday) $maxxday= $total;

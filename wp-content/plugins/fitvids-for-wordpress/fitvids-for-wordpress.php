@@ -3,7 +3,7 @@
 Plugin Name: FitVids for WordPress
 Plugin URI: http://wordpress.org/extend/plugins/fitvids-for-wordpress/
 Description: This plugin makes videos responsive using the FitVids jQuery plugin on WordPress.
-Version: 3.0.6
+Version: 3.0.8
 Tags: videos, fitvids, responsive
 Author: Kevin Dees
 Author URI: https://kevdees.com
@@ -16,7 +16,6 @@ if ( ! function_exists('add_action')) {
 
 class FitVidsWP
 {
-
 	public $path = null;
 	public $message = '';
 	public $request = array();
@@ -25,7 +24,7 @@ class FitVidsWP
 	public $transient = 'fitvids-admin-notice';
 	public $id = 'fitvids-wp';
 
-	function __construct()
+    public function __construct()
 	{
 		$this->path = plugin_dir_path(__FILE__);
 		$this->setup_request();
@@ -35,12 +34,14 @@ class FitVidsWP
 		add_action('wp_enqueue_scripts', array($this, 'scripts') );
 	}
 
-	function activation() {
+    public function activation()
+    {
 		$this->activating = true;
 		set_transient( $this->transient , true );
 	}
 
-	function activation_notice() {
+    public function activation_notice()
+    {
 		if( get_transient( $this->transient ) && ! $this->activating ) {
 			?>
 			<div class="notice notice-warning is-dismissible">
@@ -57,7 +58,7 @@ class FitVidsWP
 		add_action('load-' . $page, array($this, 'help_tab') );
 	}
 
-	function settings_page()
+    public function settings_page()
 	{
 		$post = $this->request['post'];
 
@@ -76,7 +77,8 @@ class FitVidsWP
 		require( $this->path . '/admin.php' );
 	}
 
-	function help_tab() {
+    public function help_tab()
+    {
 		$screen = get_current_screen();
 		$screen->add_help_tab( array(
 			'id' => $this->id,
@@ -86,11 +88,11 @@ class FitVidsWP
 		) );
 	}
 
-	function help_content() {
+    public function help_content() {
 		require( $this->path . '/help.php' );
 	}
 
-	function scripts()
+    public function scripts()
 	{
 		if ( get_option('fitvids_wp_jq') == 'true') {
 			$v = $this->jquery_version;
@@ -104,7 +106,7 @@ class FitVidsWP
 		add_action('wp_print_footer_scripts', array($this, 'generate_inline_js') );
 	}
 
-	function generate_inline_js()
+    public function generate_inline_js()
 	{
 		$selector = get_option('fitvids_wp_selector');
 		$ignore = $this->prepare_field( get_option('fitvids_wp_ignore_selector') );
@@ -132,8 +134,8 @@ class FitVidsWP
 		</script><?php
 	}
 
-	function prepare_field( $value, $sanitize = true ) {
-
+    public function prepare_field( $value, $sanitize = true )
+    {
 		if($value) {
 			$value = trim( $value );
 
@@ -146,27 +148,28 @@ class FitVidsWP
 		return $value;
 	}
 
-	function setup_request()
+    public function setup_request()
 	{
 		$this->request['post'] = ! empty($_POST) ? array_map('wp_unslash', $_POST ) : array();
 		$this->request['get'] = ! empty($_GET) ? array_map('wp_unslash', $_GET ) : array();
 		$this->request['uri'] = $_SERVER['REQUEST_URI'];
 	}
 
-	function print_cdn_field_checked() {
+    public function print_cdn_field_checked()
+    {
 		if (get_option('fitvids_wp_jq') == 'true') {
 			echo 'checked="checked"';
 		}
 	}
 
-	function save_option( $field ) {
+	public function save_option( $field )
+    {
 		if( !empty($this->request['post'][$field]) ) {
 			update_option($field, $this->prepare_field($this->request['post'][$field]) );
 		} else {
 			delete_option($field);
 		}
 	}
-
 }
 
 new FitVidsWP();

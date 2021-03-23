@@ -1,45 +1,36 @@
 (function( $ ) {
 	'use strict';
 
-	/**
-	 * All of the code for your admin-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
-	 */
-	 var $sortable=$();
+	 let $sortable;
 	 $(document).ready(function() {
 		$sortable = $('#sortable-list');
 	 	initSelectCategory();
 	 	initMainForm();
+		/** @since 2.5.7 fix refresh issue on open admin reorder tags. */
+		let hidden, visibilityState, visibilityChange;
+	  if (typeof document.hidden !== "undefined") {
+	    hidden = "hidden", visibilityChange = "visibilitychange", visibilityState = "visibilityState";
+	  } else if (typeof document.msHidden !== "undefined") {
+	    hidden = "msHidden", visibilityChange = "msvisibilitychange", visibilityState = "msVisibilityState";
+	  }
+	  let document_hidden = document[hidden];
+	  document.addEventListener(visibilityChange, function() {
+	    if(document_hidden != document[hidden]) {
+	      if(!document[hidden]) {
+					$("form#chooseTaxomieForm").submit();
+	      }
+	      document_hidden = document[hidden];
+	    }
+	  });
 	 });
 
 	 function sortableItems(){
-		 var min = 0;
+		 let min = 0;
 		 if($( "#range-min" ).is(':visible')) min = $( "#range-min" ).val()*1-1;
 
-		 $sortable.sortable({
+		 // $sortable.sortable({
+		 if('undefined' == typeof $sortable[0]) return;
+		 new Sortable($sortable[0],{
  			handle:'img',
  			animation:150,
  			dataIdAttr: 'data-id',
@@ -49,22 +40,23 @@
  			onSelect: function(event){ //enable shift of items.
  			},
  			onDeselect: function(event){ //if no more selected, disable shift.
-				console.log('deselecting...');
-				console.log(event);
+				// console.log('deselecting...');
+				// console.log(event);
  			},
  	 		onUpdate: function( event ) {
+ 	 			$('#spinnerAjaxUserOrdering').addClass('is-active');
 
- 	 			$('#spinnerAjaxUserOrdering').show();
-
-  				var data = {
+  				let data = {
   					'action'					: 'user_ordering',
   					'order'						: this.toArray().toString(),
  					  'start'           : min,
   					'category'				: $(this.el).attr("rel"),
+						'taxonomy'        : $("#taxonomyHiddenField").val(),
+						'post_type'       : $("#post-type").val(),
   					'deefuseNounceUserOrdering'	: rpwc2.deefuseNounceUserOrdering
   				}
   				$.post(ajaxurl, data, function (response){
-  					$('#spinnerAjaxUserOrdering').hide();
+  					$('#spinnerAjaxUserOrdering').removeClass('is-active');
   				});
   			},
  			onRemove:function(event){
@@ -72,13 +64,13 @@
  	 	});
 	 }
 	 function updateSortableList(response){
-		 $sortable.sortable('destroy');
+		 Sortable.get($sortable[0]).destroy();
 		 $sortable.html('');
-		 for (var idx in response.data) {
-			 var $html = $('<div data-id="'+response.data[idx].id+'" class="sortable-items"></div>');
+		 for (let idx in response.data) {
+			 let $html = $('<div data-id="'+response.data[idx].id+'" class="sortable-items"></div>');
 			 $html.append($('<img src="'+response.data[idx].img+'">'));
 			 $html.append($(
-				 '<span class="title">').append($('<a href="'+response.data[idx].link+'">'+response.data[idx].title+'</a>')));
+				 '<span class="title '+response.data[idx].status+'">').append($('<a href="'+response.data[idx].link+'">'+response.data[idx].title+'</a>')));
 			 $sortable.append($html);
 		 }
 		 sortableItems();
@@ -89,19 +81,20 @@
 	 */
 	 function updatePosts(start, end, reset=false){
 
-		 $('#spinnerAjaxUserOrdering').show();
-		 var total = $sortable.data('count');
-		 var data = {
+		 $('#spinnerAjaxUserOrdering').addClass('is-active');
+		 let total = $sortable.data('count');
+		 let data = {
 			 'action'					: 'get_more_posts',
 			 'start'					:start-1,
 			 'offset'         :end-start+1, /*+1 to include upper limit*/
 			 'term'           : $('#selectCatToRetrieve').val(),
 			 'post-type'      : $('#post-type').val(),
+			 'taxonomy'        : $("#taxonomyHiddenField").val(),
 			 'deefuseNounceUserOrdering'	: rpwc2.deefuseNounceUserOrdering
 		 }
      if(reset) data['reset'] = true;
 		$.post(ajaxurl, data, function (response){
-			$('#spinnerAjaxUserOrdering').hide();
+			$('#spinnerAjaxUserOrdering').removeClass('is-active');
 			updateSortableList(response);
 		 });
 	 }
@@ -112,14 +105,16 @@
 	  * - Au clic sur un des boutons radio, on enregistre la préférence concernée *
 	  */
 	function initMainForm(){
-    var sliderChange, upperRange,
+    let sliderChange, upperRange,
 			$removeItems=$('#remove-items'),
 			$rangeMin = $( "#range-min" ),
 			$rangeMax = $( "#range-max" ),
 			$slider = $( "#slider-range" ),
 			$reset = $('input#enable-reset'),
 			$resetButton = $('div#reset-order').find('div a.button'),
-			totalPosts = $( "#slider-range" ).data('max');
+			totalPosts = $( "#slider-range" ).data('max'),
+			$override = $('#override-orderby');
+
     upperRange = 20;
 		sliderChange = false;
     if(totalPosts>upperRange){
@@ -130,13 +125,13 @@
         values: [ 1, 20 ],
         slide: function( event, ui ) {
 					sliderChange = true;
-					var gridw = $sortable.width()/$sortable.children().first().outerWidth(true);
+					let gridw = $sortable.width()/$sortable.children().first().outerWidth(true);
 					gridw = Math.floor(gridw);
 					gridw = gridw*gridw-1;
-					var low= ui.value, hi = ui.values[1]-1;
+					let low= ui.value, hi = ui.values[1]-1;
 					if(ui.values[1]-ui.values[0]>gridw){
 						if(ui.value == ui.values[1]){
-							low = ui.values[0]+1;
+							low = ++ui.values[0];
 							hi = ui.value;
 						}
 						$(this).slider('option','values',[low, hi]);
@@ -184,64 +179,59 @@
 	 	// On rend la liste triable.
 		sortableItems();
 	 	// Au clic sur les boutons radio on enrehistre les préférences //1,9,11,7,14
-	 	$("#form_result input.option_order").change(function (){
+	 	$('#catOrderedRadioBox').change('input.settings', function (event){
+			/** @since 2.5.10 */
+			let $yes = $('input#yes', $(this)), order='false',
+			    $radio = $('input.option_order', $(this));
+
 	 		$('#spinnerAjaxRadio').show();
 
-	 		if($("#form_result input.option_order:checked").val() ==  "true" && $("#sortable-list li").length >=2){
-	 			$('#spinnerAjaxUserOrdering').show();
+	 		if( $yes.is(':checked') ){
+				$override.prop('disabled',false);
+				order = 'true';
+	 		}else $override.prop('disabled',true);
 
-	 			var data = {
-	 				'action'					: 'user_ordering',
-	 				'order'						: $sortable.sortable('toArray').toString(),
-					'start'           :$( "#range-min" ).val()-1,
-	 				'category'					: $sortable.attr("rel"),
-	 				'deefuseNounceUserOrdering'	: rpwc2.deefuseNounceUserOrdering
-	 			}
-	 			$.post(ajaxurl, data, function (response){
-	 				//alert(response);
-	 				$('#spinnerAjaxUserOrdering').hide();
-	 			});
+	 		$radio.prop('disabled', true);
 
-	 		}
-
-
-	 		$("#form_result input.option_order").attr('disabled', 'disabled');
-
-	 		var data = {
+	 		let data = {
 	 			'action'				: 'cat_ordered_changed',
 	 			'current_cat'			: $("#termIDCat").val(),
-	 			'valueForManualOrder'	: $("#form_result input.option_order:checked").val(),
+				'post_type'       : $("#post-type").val(),
+	 			'valueForManualOrder'	: order,
+				'override'        : $override.is(':checked'),
 	 			'deefuseNounceOrder'	: rpwc2.deefuseNounceCatReOrder
 	 		}
 
 	 		$.post(ajaxurl, data, function (response){
 	 			$('#debug').html(response);
 	 			$('#spinnerAjaxRadio').hide();
-	 			$("#form_result input.option_order").attr('disabled', false);
+	 			$radio.prop('disabled', false);
 	 		});
 
 	 		return false;
 	 	});
+
 		$('input[name="insert-order"]', $removeItems).on('pointerup mouseup touchend', function(e){
 			e.stopPropagation();
 		});
+
 		$removeItems.on('change','input[name="insert-order"]', function(event){
-			var $this = $(event.target),
+			let $this = $(event.target),
 				rank = $this.val()*1,
 				min = $rangeMin.val()*1,
 				max = $rangeMax.val()*1;
-			var $msg = $this.parent().next('span.error').text('');
+			let $msg = $this.parent().next('span.error').text('');
 			if(''==$this.val()) return;
 			if((rank>=min && $this.val()<=max) || rank <1 || rank > $this.attr('max')*1){
 				$msg.text(rpwc2.insertRange);
 				$this.val('');
 				return;
 			}else{ //if value is valid, remove items and move them
-				$('#spinnerAjaxUserOrdering').show();
-				var items=[], first, last, move='';
-				var $selected = $sortable.children('.selected');
+				$('#spinnerAjaxUserOrdering').addClass('is-active');
+				let items=[], first, last, move='';
+				let $selected = $sortable.children('.selected');
 				if(0==$selected.length){
-					$msg.text(rpwc2.insertRange);
+					$msg.text(rpwc2.noselection);
 					$this.val('');
 					return;
 				}
@@ -258,7 +248,7 @@
 					last = rank; //move down the order.
 					move = 'down';
 				}
-	 			var data = {
+	 			let data = {
 	 				'action'		: 'user_shuffle',
 	 				'items'			: items,
 					'start'     : first,
@@ -268,10 +258,11 @@
 					'offset'    : max-min+1,
 					'post'      : $('#post-type').val(),
 	 				'category'	: $sortable.attr("rel"),
+					'valueForManualOrder'	: $("#form_result input.option_order:checked").val(),
 	 				'deefuseNounceUserOrdering'	: rpwc2.deefuseNounceUserOrdering
 	 			}
 	 			$.post(ajaxurl, data, function (response){
-	 				$('#spinnerAjaxUserOrdering').hide();
+	 				$('#spinnerAjaxUserOrdering').removeClass('is-active');
           //update sortable items.
 					updateSortableList(response);
 					$this.val('');
@@ -286,12 +277,10 @@
 	  * et on soulet le formulaire
 	  */
 	 function initSelectCategory(){
-	 	$("#selectCatToRetrieve").change(
-	 		function(event){
-	 			var taxonomy = $("#selectCatToRetrieve option:selected").parent().attr("id");
+	 	$("#selectCatToRetrieve").prop('disabled', false).change(function(event){
+	 			let taxonomy = $("#selectCatToRetrieve option:selected").parent().attr("id");
 	 			$("#taxonomyHiddenField").val(taxonomy);
 	 			$("form#chooseTaxomieForm").submit();
 	 		}
-	 	);
-	 }
+	 	)}
 })( jQuery );

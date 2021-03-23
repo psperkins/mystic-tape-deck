@@ -1,17 +1,14 @@
-import React, { Fragment } from 'react';
-import { formsScript, formsScriptPayload } from '../../constants/leadinConfig';
+import React from 'react';
+import { RawHTML } from '@wordpress/element';
 
 export default function FormSaveBlock({ attributes }) {
   const { portalId, formId } = attributes;
 
   if (portalId && formId) {
     return (
-      <Fragment>
-        <script charset="utf-8" type="text/javascript" src={formsScript} />
-        <script>
-          {`hbspt.forms.create({ portalId: '${portalId}', formId: '${formId}', ${formsScriptPayload} })`}
-        </script>
-      </Fragment>
+      <RawHTML>
+        {`[hubspot portal="${portalId}" id="${formId}" type="form"]`}
+      </RawHTML>
     );
   }
   return null;

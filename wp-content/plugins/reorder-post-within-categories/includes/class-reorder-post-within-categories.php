@@ -163,13 +163,13 @@ class Reorder_Post_Within_Categories {
 		//hook for notices
 		$this->loader->add_action('admin_notices', $plugin_admin, 'admin_dashboard_notice');
 		//Action qui sauvegardera le paamÃ©trage du plugin
-		$this->loader->add_action('init', $plugin_admin, 'save_admin_options');
+		$this->loader->add_action('init', $plugin_admin, 'save_admin_options_on_init');
 		// Ajout de la page de paramÃ©trage du plugins
 		$this->loader->add_action('admin_menu', $plugin_admin, 'add_setting_page');
 
 		// Ajout des pages de classement des post pour les post et custom post type concernÃ©s
-		$this->loader->add_action('admin_menu', $plugin_admin, 'add_order_pages');
-
+		/** @since 2.5.1 delay hook for learnPress reorder page */
+		$this->loader->add_action('admin_menu', $plugin_admin, 'add_order_pages',20,1);
 		$this->loader->add_action('wp_ajax_cat_ordered_changed', $plugin_admin, 'category_order_change');
     $this->loader->add_action('wp_ajax_user_ordering', $plugin_admin, 'save_order');
     $this->loader->add_action('wp_ajax_user_shuffle', $plugin_admin, 'shuffle_order');
@@ -196,9 +196,16 @@ class Reorder_Post_Within_Categories {
 		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		//filter post queries.
 		if ((defined('DOING_AJAX') && DOING_AJAX) || !is_admin()) {
-			$this->loader->add_filter('posts_join', $plugin_public, 'filter_posts_join', 10, 2);
+			$this->loader->add_filter('posts_join', $plugin_public, 'filter_posts_join', 5, 2);
 			$this->loader->add_filter('posts_where', $plugin_public, 'filter_posts_where', 10, 2);
-			$this->loader->add_filter('posts_orderby', $plugin_public, 'filter_posts_orderby', 10, 2);
+      $this->loader->add_filter('posts_orderby', $plugin_public, 'filter_posts_orderby', 10 , 2);
+			// $this->loader->add_filter('posts_request', $plugin_public, 'filter_posts_request', 10, 2);
+      /** @since 2.4.4 adjacent post query */
+      $this->loader->add_filter('get_previous_post_join', $plugin_public, 'filter_adjacent_post_join', 5, 5);
+      $this->loader->add_filter('get_next_post_join', $plugin_public, 'filter_adjacent_post_join', 5, 5);
+      $this->loader->add_filter('get_previous_post_where', $plugin_public, 'filter_prev_post_where', 10, 5);
+			$this->loader->add_filter('get_next_post_where', $plugin_public, 'filter_next_post_where', 10, 5);
+
 		}
 	}
 

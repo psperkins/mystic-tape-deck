@@ -62,10 +62,7 @@ const Circle = styled.circle.attrs(() => ({
 
 export default function UISpinner({ size = 20 }) {
   return (
-    <SpinnerOuter
-      className="private-spinner private-spinner--link"
-      data-loading={true}
-    >
+    <SpinnerOuter>
       <SpinnerInner>
         <svg height={size} width={size} viewBox="0 0 50 50">
           <Circle color={CALYPSO_MEDIUM} />

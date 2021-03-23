@@ -1,46 +1,49 @@
-=== Featured Images in RSS for Mailchimp & Other Email ===
-Contributors: presswizards, freemius
+=== Featured Images in RSS for Mailchimp & More ===
+Contributors: 5starplugins
 Donate link: https://5starplugins.com/
 Tags: featured images in rss, rss images, featured image, thumbnails, images in rss, mailchimp, mailchimp rss, rss campaigns, infusionsoft, hubspot, constant contact, content marketing, marketing automation
 Requires at least: 2.9
-Tested up to: 5.1
+Tested up to: 5.6
+Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Outputs images in your RSS feed to Mailchimp, Infusionsoft, Hubspot, and other services that use RSS feed data for content marketing.
+Send images to RSS instantly for free. Output blog or WooCommerce photos to Mailchimp RSS email campaigns, ActiveCampaign, Infusionsoft, Hubspot, Bloglovin’, Feedly and more. 
 
 == Description ==
 
-Get images in your RSS feed instantly for free. Output blog featured photos to Mailchimp RSS emails, Infusionsoft, Hubspot, Constant Contact, Zoho, Feedburner, Bloglovin’, Feedly, and other services that use RSS feed data. A trusted plugin, developed in San Diego, CA (US), with over 30,000 active installs and 65+ five-star reviews. We actively answer every support forum thread.
+Get images in your RSS feed instantly for free. Output blog featured images to Mailchimp RSS email campaigns, ActiveCampaign, Infusionsoft, Hubspot, Zoho, Feedburner, Bloglovin’, Feedly, and other services that use RSS feed data. Also works with WooCommerce product images for product-based RSS campaigns! A trusted plugin, developed in California with over 30,000 active installs and 68+ five star reviews. We actively answer every support forum thread.
 
-Features:
+Featured Images In RSS was built for content marketers. Easy set-up with minimal configuration to get up and running in minutes.
 
-* Featured image size: Select from thumbnail, medium, large, any theme-specific sizes, and full size.
-* Image Position: Select Image left above text, Image left text wrap, Image right text wrap, and Image centered above text.
+This plugin is forever free. Upgrade to Premium to unlock powerful features for content marketing. Developed and supported in the United States by 5 Star Plugins.
+
+Free Features:
+
+* Can be used in any marketing automation service.
+* Select Featured Image Size: thumbnail, medium, large, any theme-specific sizes, or full size
+* Select Image Position: left above text, left text wrap, right text wrap, or centered above text
 * Padding: Instantly set the spacing between the image and the body text.
-* Feedly: Now support webfeedsFeaturedVisual class name on image HTML.
+* Feedly: Supports webfeedsFeaturedVisual class name on image HTML.
+* WooCommerce: Instantly add product photos to the product RSS feeds, and create product-based RSS campaigns.
+* Free support through the WordPress Support Forum.
+* Plugin updates with free version new features, fixes and security patches.
 
+> Premium Upgrade Features
 
-> **Premium Version Now Available**
+> Enjoy a 14-day free trial no credit card required. Check out this full suite of image customization features for professional marketing.
 
-> Pro Marketer Features
-
-> Upgrade to Pro Marketer for a full suite of image customization features for professional marketing. Works with Mailchimp, Feedburner, Bloglovin’, Feedly, Infusionsoft, Hubspot, Constant Contact, and other services that use RSS feed data.
-
-> * World-class Support: The main reason to upgrade is our expert support - we'll get everything working and looking great
-> * Media and Enclosure Tag Options: Output images in media and/or enclosure tags for best image support
-> * Option to use Media tag images only: Fix duplicate images issues when using image tags for advanced template designs
-> * Custom Image Sizes: Completely customize the size of image display for RSS feeds
-> * Feature First Image: No featured photos set? No problem. It will use the first photo from the body of your blog post
-> * Disable Responsive Images: Helps fix services that have issues with the responsive image code, like Mailchimp's Preview
-> * Exclude Categories: Exclude unwanted categories not meant to be included in the RSS feed, like Homepage or Featured categories
-> * Custom Content in Feeds: Add custom content (text or HTML) before or after the post such as backlinks or ads
-> * Publish Delay: Delay new posts from instantly hitting the RSS feed for SEO advantages or to safeguard from typos or accidents
-
-**Need help** or wish it did something else as well? Use the [Support](http://wordpress.org/support/plugin/featured-images-for-rss-feeds) tab to submit your thoughts.
-
-**Love this plugin?** Please submit a [rating and review](https://wordpress.org/support/plugin/featured-images-for-rss-feeds/reviews/?filter=5#new-post), I'd appreciate your praise. (Have an issue? Post to the support forums before leaving a bad review.)
+> * Tech Support: Expert support in the U.S. to help get everything working and looking great.
+> * Media and Enclosure Tags: Some services require it and it allows you to custom design email templates.
+> * Use Media tag images only: Fix duplicate images issues when using image tags for advanced template designs.
+> * Custom Image Sizes: Completely customize the size of image display for RSS feeds.
+> * Feature Body Image: No featured photos set? No problem. Use the first photo from the body of posts.
+> * Disable Responsive Images: Helps fix services that have issues with the responsive image code, like Mailchimp’s Preview.
+> * Exclude Categories: Exclude unwanted categories not meant to be included in the RSS feed, like Homepage or Featured categories.
+> * Custom Content in Feeds: Add custom content (text or HTML) before or after the post such as backlinks or ads.
+> * Publish Delay: Add a time buffer to new posts from instantly hitting the RSS feed to safeguard from typos or accidents.
+> * Premium plugin updates with new features, fixes and security patches.
 
 **Real Testimonials**
 
@@ -51,6 +54,10 @@ Features:
 > "It just works – lovely! Great with MailChimp. I installed this plugin, changed the (very simple) settings and the featured images started appearing in my MailChimp campaigns straight away – perfect!" - @barn2media [Read the review](https://wordpress.org/support/topic/it-just-works-lovely-great-with-mailchimp/)
 
 We promise you'll love the features this plugin provides for your content marketing automation!
+
+**Need help** or wish it did something else as well? Use the [Support](http://wordpress.org/support/plugin/featured-images-for-rss-feeds) tab to submit your thoughts.
+
+**Love this plugin?** Please submit a [rating and review](https://wordpress.org/support/plugin/featured-images-for-rss-feeds/reviews/?filter=5#new-post), I'd appreciate your praise. (Have an issue? Post to the support forums before leaving a bad review.)
 
 == Installation ==
 
@@ -63,37 +70,95 @@ Or use the manual upload method if you have a plugin ZIP file:
 3. Configure the plugin options as desired.
 
 == Frequently Asked Questions ==
+
+= SUPPORT =
+Visit the WordPress support forum here for free plugin support only. Premium support is provided through our Premium Knowledge Center and by contacting us from your WordPress Dashboard plugin settings page.
+
+= How do I use it? Where do I go to edit plugin options? =
+After successful installation and activation, go to “Featured Images” settings in your WordPress Dashboard. Look for it in the black left sidebar. This is where you can configure this plugin and find links to support.
+
 = Images are not aligning or resizing properly =
-* Please note that the alignment and sizing CSS is sometimes stripped out depending on the RSS reader/service you're using it with, and may require custom CSS inside the service you're using (Mailchimp, etc)
-* [View an example of Mailchimp RSS Template Code](https://wordpress.org/support/topic/example-mailchimp-rss-template-code)
-* [Need to center your RSS image in Mailchimp?](https://wordpress.org/support/topic/image-center-on-rss-mailchimp-campaign)
-* The Premium version now includes media and image tag support, which may work better with your RSS service.
+Please note that the alignment and sizing CSS is sometimes stripped out depending on the RSS reader/service you’re using it with, and may require custom CSS inside the service you’re using (Mailchimp, etc)
 
-= No images showing in your RSS feed or double images issues? =
-* If the plugin is installed/activated, and images still aren’t showing [click here](https://wordpress.org/support/topic/installed-no-images-showing)
-* [What to do if you have two images](https://wordpress.org/support/topic/2-images)
+[View an example of Mailchimp RSS Template Code](https://wordpress.org/support/topic/example-mailchimp-rss-template-code)
 
-= Included Features =
-* Free Features:
+[Need to center your RSS image in Mailchimp?](https://wordpress.org/support/topic/image-center-on-rss-mailchimp-campaign)
+
+The Premium version now includes media and image tag support, which may work better with your RSS service.
+
+= No images showing in your RSS feed? =
+Always check your raw feed first. Validate your feed is working here [https://validator.w3.org/feed/](https://validator.w3.org/feed/) and you can use other services to preview what the feed displays visually.
+
+If the images are NOT showing up in your raw feed with our plugin installed and activated, please visit the forum to submit the issue if you use the free version or contact our Premium support page if upgraded.
+
+If they are showing in the raw feed, then it's a reader service issue and not a feed issue with this plugin.
+
+Be sure your site is NOT blocking image requests that do not have the referrer domain set in the request header, usually an option or setting labeled "protect images" or "disable image hotlinking". If there's not an obvious plugin cause of this, it could be a CDN like Cloudflare, or some lines like these in your .htaccess file:
+RewriteCond %{HTTP_REFERER} !^https://domain.com/.*$ [NC]
+RewriteCond %{HTTP_REFERER} !^https://www.domain.com/.*$ [NC]
+RewriteRule .*\.(jpg|jpeg|gif|png|bmp)$ - [F,NC]
+
+= Images ARE showing in RSS but not showing in Mailchimp =
+First, make sure the RSS feed URL set-up in Mailchimp is correct and validated. Validate your feed is working here [https://validator.w3.org/feed/](https://validator.w3.org/feed/)
+
+Please see our [Mailchimp specific help](https://support.5starplugins.com/article/23-i-can-t-view-images-in-my-newsletter) if all of the above is correct and you still can’t view the images in your Mailchimp email. 
+
+= Images ARE showing in RSS but not showing in Hubspot =
+First, make sure the RSS feed URL set-up in Hubspot is correct and validated. Validate your feed is working here [https://validator.w3.org/feed/](https://validator.w3.org/feed/)
+
+If images are showing up in your feed data, then it may be a Hubspot specific setting, and you may need to enable images in the Hubspot feed reader, as mentioned in these Hubspot articles:
+
+How-to set-up an RSS to email in Hubspot:
+[https://knowledge.hubspot.com/blog-user-guide-v2/how-to-set-up-an-rss-to-email-blog-subscription-for-an-external-blog](https://knowledge.hubspot.com/blog-user-guide-v2/how-to-set-up-an-rss-to-email-blog-subscription-for-an-external-blog)
+
+Hubspot RSS module product update: 
+[http://designers.hubspot.com/blog/product-update-new-rss-module-images](http://designers.hubspot.com/blog/product-update-new-rss-module-images)
+
+Hubspot RSS email styling:
+[https://knowledge.hubspot.com/articles/kcs_article/email/can-i-style-the-main-body-content-of-my-rss-email](https://knowledge.hubspot.com/articles/kcs_article/email/can-i-style-the-main-body-content-of-my-rss-email)
+
+If it's still not working, it’s best to contact Hubspot support to see if they can help with how to link up the image in the RSS description field, or the image in the Media tag, to the RSS item URL.
+
+= Double images showing =
+You might have both the featured image set, as well as a body image inserted. Delete the body image to have one image show up. If your theme doesn’t show the featured image, and you’re adding a body image so it shows, then either change themes or customize the theme so it displays the featured image – it can be easy or hard, depending on how the theme is coded and styled. 
+
+This issue can occur in some services when using advanced design features. Our Premium version fix duplicate images issues with an option to use Media tag images only. It can fix duplicate images issues when using image tags for advanced template designs.
+
+Still having trouble with double images? Visit our forum thread for free version users: [https://wordpress.org/support/topic/2-images/](https://wordpress.org/support/topic/2-images/)
+
+= How does the plugin work with Mailchimp? =
+There are two ways our plugin works within Mailchimp, the free way and the Premium way.
+
+The free way: It prepends the <description> part of the RSS feed with the image URL, and so in Mailchimp using the RSSITEM:CONTENT or RSSITEM:CONTENT_FULL merge tag will show the image successfully, with two caveats: one, if your website is not on https, Mailchimp's Preview Mode has an issue with the images, but a test or real email send should work fine. And two, you may need some custom CSS to style/size it.
+
+The Premium way: When you check the Media Tag option, it creates and includes the Media:Content block, and then in Mailchimp you can use the RSSITEM:IMAGE merge tag, and place the image wherever you like, create custom designs, etc. Those same two caveats apply, non-https websites may not show the images in Preview Mode but should work when sent, and custom CSS is even more desirable, which we can help with, and which is why it's a Premium option.
+
+= Blurry images in Mailchimp or other Services =
+Blurry images usually means the size selected in the plugin's option page is too small. Try increasing it, or using "Full" size. If still blurry using Full, then the original image size uploaded is too small, upload a larger image.
+
+The other option is to use some custom CSS to display the image(s) smaller in the email, max width should always be 600px for Mailchimp, so make sure your images are at least that large, and ideally exactly that width, with a reasonable height (300-500px typically).
+
+= Free Features =
 * Featured image size: Select from thumbnail, medium, large, any theme-specific sizes, and full size.
 * Image Position: Select Image left above text, Image left text wrap, Image right text wrap, and Image centered above text.  
 * Padding: Instantly set the spacing between the image and the body text.
 * Feedly: Now support Feedly's webfeedsFeaturedVisual class name on image HTML.
 
 = Premium Version Features =
-**Pro Marketer Features**
+Upgrade to the Premium version for a full suite of image customization features for professional marketing.
 
-Upgrade to Pro Marketer for a full suite of image customization features for professional marketing. Works with Mailchimp, Feedburner, Bloglovin’, Feedly, Infusionsoft, Hubspot, Constant Contact, and other services that use RSS feed data.
+Enjoy a 14-day free trial no credit card required. Check out this full suite of image customization features for professional marketing.
 
-* World-class Support: The main reason to upgrade is our expert support - we'll get everything working and looking great
-* Media and Enclosure Tag Options: Output images in media and/or enclosure tags for best image support
-* Option to use Media tag images only: Fix duplicate images issues when using image tags for advanced template designs
-* Custom Image Sizes: Completely customize the size of image display for RSS feeds
-* Feature First Image: No featured photos set? No problem. It will use the first photo from the body of your blog post
-* Disable Responsive Images: Helps fix services that have issues with the responsive image code, like Mailchimp's Preview
-* Exclude Categories: Exclude unwanted categories not meant to be included in the RSS feed, like Homepage or Featured categories
-* Custom Content in Feeds: Add custom content (text or HTML) before or after the post such as backlinks or ads  
-* Publish Delay: Delay new posts from instantly hitting the RSS feed for SEO advantages or to safeguard from typos or accidents
+* Tech Support: Expert support in the U.S. to help get everything working and looking great.
+* Media and Enclosure Tags: Some services require it and it allows you to custom design email templates.
+* Use Media tag images only: Fix duplicate images issues when using image tags for advanced template designs.
+* Custom Image Sizes: Completely customize the size of image display for RSS feeds.
+* Feature Body Image: No featured photos set? No problem. Use the first photo from the body of posts.
+* Disable Responsive Images: Helps fix services that have issues with the responsive image code, like Mailchimp’s Preview.
+* Exclude Categories: Exclude unwanted categories not meant to be included in the RSS feed, like Homepage or Featured categories.
+* Custom Content in Feeds: Add custom content (text or HTML) before or after the post such as backlinks or ads.
+* Publish Delay: Add a time buffer to new posts from instantly hitting the RSS feed to safeguard from typos or accidents.
+* Premium plugin updates with new features, fixes and security patches.
 
 = Testimonials =
 **Real Testimonials**
@@ -121,6 +186,21 @@ Please submit a [rating and review](https://wordpress.org/support/plugin/feature
 4. A sad example of a plain RSS feed with no images, because they aren't using this plugin. Don't have sad RSS feeds, use this plugin!
 
 == Changelog ==
+= 1.5.7 =
+* Updated: Update Freemius SDK to latest version, updated WordPress compatibility to v5.6
+* Improved: Top banner and upgrade responsive layout
+
+= 1.5.6 =
+* Fixed: Premium version fix for Enclosure tag to remove width and height attributes that resulted in invalid feeds. Feeds now validate at https://validator.w3.org/feed/
+
+= 1.5.5 =
+* Fixed: Premium version fix for "Use Only Media Tag Image" option bug removed all body images, now only skips adding featured image to body/rss desc as intended.
+
+= 1.5.4 =
+* Fixed: Fatal error on some sites due to incorrect version of file uploaded to repo, apologies!
+
+= 1.5.3 =
+* Updated: Update Freemius SDK to latest version, updated WordPress compatibility to v5.3
 
 = 1.5.2 =
 * Updated: Update Freemius SDK to latest version, updated WordPress compatibility to v5.1
@@ -178,5 +258,5 @@ Please submit a [rating and review](https://wordpress.org/support/plugin/feature
 
 == Upgrade Notice ==
 
-= 1.5.2 =
-* Updated: Update Freemius SDK, updated WordPress compatibility to v5.1
+= 1.5.7 =
+* Updated: Update Freemius SDK to latest version, updated WordPress compatibility to v5.6, Improved: Top banner and upgrade responsive layout

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { pluginPath } from '../../constants/leadinConfig';
 
 export default styled.div`
-  background-image: url(${pluginPath}/images/hubspot.svg);
+  background-image: url(${pluginPath}/assets/images/hubspot.svg);
   background-color: #f5f8fa;
   background-repeat: no-repeat;
   background-position: center 25px;

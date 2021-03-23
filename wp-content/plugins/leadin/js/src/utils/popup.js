@@ -26,5 +26,5 @@ const getWindowOptions = (
 };
 
 export const openPopup = (url, windowName, options = getWindowOptions()) => {
-  return open(url, '_blank', options);
+  return window.open(url, '_blank', options);
 };

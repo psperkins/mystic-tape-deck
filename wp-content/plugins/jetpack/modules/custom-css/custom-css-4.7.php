@@ -1,16 +1,20 @@
 <?php
+
+use Automattic\Jetpack\Assets;
+
 /**
  * Alternate Custom CSS source for 4.7 compat.
  *
  * @since 4.4.2
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 /**
  * Class Jetpack_Custom_CSS_Enhancements
  */
 class Jetpack_Custom_CSS_Enhancements {
+
 	/**
 	 * Set up the actions and filters needed for our compatability layer on top of core's Custom CSS implementation.
 	 */
@@ -30,10 +34,6 @@ class Jetpack_Custom_CSS_Enhancements {
 		add_filter( 'customize_value_custom_css', array( __CLASS__, 'customize_value_custom_css' ), 10, 2 );
 		add_filter( 'customize_update_custom_css_post_content_args', array( __CLASS__, 'customize_update_custom_css_post_content_args' ), 10, 3 );
 		add_filter( 'update_custom_css_data', array( __CLASS__, 'update_custom_css_data' ), 10, 2 );
-
-		// Handle Sass/LESS.
-		add_filter( 'customize_value_custom_css', array( __CLASS__, 'customize_value_custom_css' ), 10, 2 );
-		add_filter( 'customize_update_custom_css_post_content_args', array( __CLASS__, 'customize_update_custom_css_post_content_args' ), 10, 3 );
 
 		// Stuff for stripping out the theme's default stylesheet...
 		add_filter( 'stylesheet_uri', array( __CLASS__, 'style_filter' ) );
@@ -59,31 +59,21 @@ class Jetpack_Custom_CSS_Enhancements {
 		}
 
 		wp_register_style( 'jetpack-codemirror',      plugins_url( 'custom-css/css/codemirror.css', __FILE__ ), array(), '20120905' );
-		$deps = array();
-		if ( ! function_exists( 'wp_enqueue_code_editor' ) ) {
-			// If Core < 4.9
-			$deps[] = 'jetpack-codemirror';
-		}
-		wp_register_style( 'jetpack-customizer-css',  plugins_url( 'custom-css/css/customizer-control.css', __FILE__ ), $deps, '20140728' );
+		wp_register_style( 'jetpack-customizer-css',  plugins_url( 'custom-css/css/customizer-control.css', __FILE__ ), array(), '20140728' );
 		wp_register_script( 'jetpack-codemirror',     plugins_url( 'custom-css/js/codemirror.min.js', __FILE__ ), array(), '3.16', true );
-		$deps = array( 'customize-controls', 'underscore' );
-		$src  = Jetpack::get_file_url_for_environment(
+
+		$src    = Assets::get_file_url_for_environment(
 			'_inc/build/custom-css/custom-css/js/core-customizer-css.core-4.9.min.js',
 			'modules/custom-css/custom-css/js/core-customizer-css.core-4.9.js'
 		);
-		if ( ! function_exists( 'wp_enqueue_code_editor' ) ) {
-			// If Core < 4.9
-			$deps[] = 'jetpack-codemirror';
-			$src = Jetpack::get_file_url_for_environment(
-				'_inc/build/custom-css/custom-css/js/core-customizer-css.min.js',
-				'modules/custom-css/custom-css/js/core-customizer-css.js'
-			);
-		}
-		wp_register_script( 'jetpack-customizer-css', $src, $deps, JETPACK__VERSION, true );
+		wp_register_script( 'jetpack-customizer-css', $src, array(
+			'customize-controls',
+			'underscore'
+		), JETPACK__VERSION, true );
 
 		wp_register_script(
 			'jetpack-customizer-css-preview',
-			Jetpack::get_file_url_for_environment(
+			Assets::get_file_url_for_environment(
 				'_inc/build/custom-css/custom-css/js/core-customizer-css-preview.min.js',
 				'modules/custom-css/custom-css/js/core-customizer-css-preview.js'
 			),
@@ -375,9 +365,9 @@ class Jetpack_Custom_CSS_Enhancements {
 		$content_help = __( 'Set a different content width for full size images.', 'jetpack' );
 		if ( ! empty( $GLOBALS['content_width'] ) ) {
 			$content_help .= sprintf(
-				_n( ' The default content width for the <strong>%1$s</strong> theme is %2$d pixel.', ' The default content width for the <strong>%1$s</strong> theme is %2$d pixels.', intval( $GLOBALS['content_width'] ), 'jetpack' ),
+				_n( ' The default content width for the <strong>%1$s</strong> theme is %2$d pixel.', ' The default content width for the <strong>%1$s</strong> theme is %2$d pixels.', (int) $GLOBALS['content_width'], 'jetpack' ),
 				wp_get_theme()->Name,
-				intval( $GLOBALS['content_width'] )
+				(int) $GLOBALS['content_width']
 			);
 		}
 
@@ -1027,7 +1017,7 @@ class Jetpack_Custom_CSS_Enhancements {
 	 * @return int Integer.
 	 */
 	public static function intval_base10( $value ) {
-		return intval( $value, 10 );
+		return (int) $value;
 	}
 
 	/**

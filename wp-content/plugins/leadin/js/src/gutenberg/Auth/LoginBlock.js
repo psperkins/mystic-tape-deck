@@ -9,7 +9,12 @@ export default function LoginBlock() {
   return (
     <GutenbergWrapper>
       <UIContainer textAlign="center">
-        <UIButton onClick={loginThroughPopup}>{i18n.signIn}</UIButton>
+        <UIButton
+          onClick={loginThroughPopup}
+          data-test-id="leadin-login-button"
+        >
+          {i18n.signIn}
+        </UIButton>
       </UIContainer>
     </GutenbergWrapper>
   );

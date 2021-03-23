@@ -7,7 +7,9 @@ const locationOrigin = hubspotBaseUrl.replace('local', 'app');
 
 export default function loginThroughPopup(handleLogin) {
   const onLogin =
-    typeof handleLogin === 'function' ? handleLogin : () => location.reload();
+    typeof handleLogin === 'function'
+      ? handleLogin
+      : () => window.location.reload();
 
   const handler = event => {
     if (event.data === POPUP_LOGIN_COMPLETED) {

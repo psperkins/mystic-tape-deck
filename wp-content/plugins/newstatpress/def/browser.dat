@@ -1,4 +1,14 @@
 Camino|Camino|Camino|
+Chromium 99|Chromium/99|Chromium11|
+Chromium 98|Chromium/98|Chromium11|
+Chromium 97|Chromium/97|Chromium11|
+Chromium 96|Chromium/96|Chromium11|
+Chromium 95|Chromium/95|Chromium11|
+Chromium 94|Chromium/94|Chromium11|
+Chromium 93|Chromium/93|Chromium11|
+Chromium 92|Chromium/92|Chromium11|
+Chromium 91|Chromium/91|Chromium11|
+Chromium 90|Chromium/90|Chromium11|
 Chromium 89|Chromium/89|Chromium11|
 Chromium 88|Chromium/88|Chromium11|
 Chromium 87|Chromium/87|Chromium11|
@@ -181,6 +191,16 @@ Chrome 87|Chrome/87|Chrome2015|
 Chrome 88|Chrome/88|Chrome2015|
 Chrome 89|Chrome/89|Chrome2015|
 Chrome 8|Chrome/8|Chrome|
+Chrome 90|Chrome/90|Chrome|
+Chrome 91|Chrome/91|Chrome|
+Chrome 92|Chrome/92|Chrome|
+Chrome 93|Chrome/93|Chrome|
+Chrome 94|Chrome/94|Chrome|
+Chrome 95|Chrome/95|Chrome|
+Chrome 96|Chrome/96|Chrome|
+Chrome 97|Chrome/97|Chrome|
+Chrome 98|Chrome/98|Chrome|
+Chrome 99|Chrome/99|Chrome|
 Chrome 9|Chrome/9|Chrome|
 Chrome|Chrome|Chrome|
 Dillo|Dillo|Dillo|
@@ -267,7 +287,27 @@ Firefox 77|Firefox/77|Firefox|
 Firefox 78|Firefox/78|Firefox|
 Firefox 79|Firefox/79|Firefox|
 Firefox 7|Firefox/7|Firefox|
+Firefox 80|Firefox/80|Firefox|
+Firefox 81|Firefox/81|Firefox|
+Firefox 82|Firefox/82|Firefox|
+Firefox 83|Firefox/83|Firefox|
+Firefox 84|Firefox/84|Firefox|
+Firefox 85|Firefox/85|Firefox|
+Firefox 86|Firefox/86|Firefox|
+Firefox 87|Firefox/87|Firefox|
+Firefox 88|Firefox/88|Firefox|
+Firefox 89|Firefox/89|Firefox|
 Firefox 8|Firefox/8|Firefox|
+Firefox 90|Firefox/90|Firefox|
+Firefox 91|Firefox/91|Firefox|
+Firefox 92|Firefox/92|Firefox|
+Firefox 93|Firefox/93|Firefox|
+Firefox 94|Firefox/94|Firefox|
+Firefox 95|Firefox/95|Firefox|
+Firefox 96|Firefox/96|Firefox|
+Firefox 97|Firefox/97|Firefox|
+Firefox 98|Firefox/98|Firefox|
+Firefox 99|Firefox/99|Firefox|
 Firefox 9|Firefox/9|Firefox|
 Firefox|Firefox|Firefox|
 Firefox|Phoenix|Firefox|

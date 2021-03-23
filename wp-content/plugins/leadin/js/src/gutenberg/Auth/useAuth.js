@@ -5,16 +5,14 @@ export default function useAuth() {
   const [auth, setAuth] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  function handleEffect() {
+  useEffect(() => {
     getAuth()
       .then(response => {
         setAuth(!!response);
         setLoading(false);
       })
-      .catch(() => handleEffect());
-  }
-
-  useEffect(handleEffect, []);
+      .catch(() => setLoading(false));
+  }, []);
 
   return { auth, loading };
 }

@@ -18,6 +18,9 @@ export default function registerFormBlock() {
       formId: {
         type: 'string',
       },
+      formName: {
+        type: 'string',
+      },
     },
     edit: props => <FormBlockEdit {...props} />,
     save: props => <FormBlockSave {...props} />,

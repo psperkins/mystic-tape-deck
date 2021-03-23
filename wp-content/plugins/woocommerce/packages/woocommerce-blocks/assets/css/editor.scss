@@ -18,10 +18,11 @@
 	.wc-block-grid {
 		.wc-block-grid__products {
 			list-style: none;
-			margin: 0;
+			margin: 0 (-$gap/2) $gap;
+			padding: 0;
 
-			.wp-block-button__link {
-				color: inherit;
+			.wc-block-grid__product {
+				margin: 0 0 $gap-large 0;
 			}
 		}
 
@@ -34,4 +35,22 @@
 			display: block;
 		}
 	}
+}
+
+// Style inline notices in the inspector.
+.components-base-control {
+	+ .wc-block-base-control-notice {
+		margin: -$gap 0 $gap;
+	}
+
+	& + .wc-block-base-control-notice:last-child {
+		margin: -$gap 0 $gap-small;
+	}
+}
+
+// This border has been upstreamed to WooCommerce Admin, so it can be removed
+// from here once @woocommerce/components gets updated.
+// https://github.com/woocommerce/woocommerce-admin/pull/5901
+.woocommerce-search-list__list {
+	border: 1px solid $gray-200;
 }

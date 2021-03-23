@@ -1,306 +1,194 @@
 <?php
 /**
- * PHP and WordPress configuration compatibility functions for the Gutenberg
- * editor plugin.
+ * Temporary compatibility shims for features present in Gutenberg, pending
+ * upstream commit to the WordPress core source repository. Functions here
+ * exist only as long as necessary for corresponding WordPress support, and
+ * each should be associated with a Trac ticket.
  *
  * @package gutenberg
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	die( 'Silence is golden.' );
+/**
+ * Determine if the current theme needs to load separate block styles or not.
+ *
+ * @return bool
+ */
+function gutenberg_should_load_separate_block_assets() {
+	$load_separate_styles = gutenberg_is_fse_theme();
+	/**
+	 * Determine if separate styles will be loaded for blocks on-render or not.
+	 *
+	 * @param bool $load_separate_styles Whether separate styles will be loaded or not.
+	 *
+	 * @return bool
+	 */
+	return apply_filters( 'load_separate_block_assets', $load_separate_styles );
 }
 
 /**
- * Splits a UTF-8 string into an array of UTF-8-encoded codepoints.
+ * Remove the `wp_enqueue_registered_block_scripts_and_styles` hook if needed.
  *
- * @since 0.5.0
- *
- * Based on WordPress' _mb_substr() compat function.
- *
- * @param string $str        The string to split.
- * @return array
+ * @return void
  */
-function _gutenberg_utf8_split( $str ) {
-	if ( _wp_can_use_pcre_u() ) {
-		// Use the regex unicode support to separate the UTF-8 characters into
-		// an array.
-		preg_match_all( '/./us', $str, $match );
-		return $match[0];
+function gutenberg_remove_hook_wp_enqueue_registered_block_scripts_and_styles() {
+	if ( gutenberg_should_load_separate_block_assets() ) {
+		/**
+		 * Avoid enqueueing block assets of all registered blocks for all posts, instead
+		 * deferring to block render mechanics to enqueue scripts, thereby ensuring only
+		 * blocks of the content have their assets enqueued.
+		 *
+		 * This can be removed once minimum support for the plugin is outside the range
+		 * of the version associated with closure of the following ticket.
+		 *
+		 * @see https://core.trac.wordpress.org/ticket/50328
+		 *
+		 * @see WP_Block::render
+		 */
+		remove_action( 'enqueue_block_assets', 'wp_enqueue_registered_block_scripts_and_styles' );
 	}
-
-	$regex = '/(
-		  [\x00-\x7F]                  # single-byte sequences   0xxxxxxx
-		| [\xC2-\xDF][\x80-\xBF]       # double-byte sequences   110xxxxx 10xxxxxx
-		| \xE0[\xA0-\xBF][\x80-\xBF]   # triple-byte sequences   1110xxxx 10xxxxxx * 2
-		| [\xE1-\xEC][\x80-\xBF]{2}
-		| \xED[\x80-\x9F][\x80-\xBF]
-		| [\xEE-\xEF][\x80-\xBF]{2}
-		| \xF0[\x90-\xBF][\x80-\xBF]{2} # four-byte sequences   11110xxx 10xxxxxx * 3
-		| [\xF1-\xF3][\x80-\xBF]{3}
-		| \xF4[\x80-\x8F][\x80-\xBF]{2}
-	)/x';
-
-	// Start with 1 element instead of 0 since the first thing we do is pop.
-	$chars = array( '' );
-	do {
-		// We had some string left over from the last round, but we counted it
-		// in that last round.
-		array_pop( $chars );
-
-		// Split by UTF-8 character, limit to 1000 characters (last array
-		// element will contain the rest of the string).
-		$pieces = preg_split(
-			$regex,
-			$str,
-			1000,
-			PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
-		);
-
-		$chars = array_merge( $chars, $pieces );
-
-		// If there's anything left over, repeat the loop.
-		if ( count( $pieces ) > 1 ) {
-			$str = array_pop( $pieces );
-		} else {
-			break;
-		}
-	} while ( $str );
-
-	return $chars;
 }
 
-/**
- * Disables wpautop behavior in classic editor when post contains blocks, to
- * prevent removep from invalidating paragraph blocks.
- *
- * @param  array  $settings  Original editor settings.
- * @param  string $editor_id ID for the editor instance.
- * @return array             Filtered settings.
- */
-function gutenberg_disable_editor_settings_wpautop( $settings, $editor_id ) {
-	$post = get_post();
-	if ( 'content' === $editor_id && is_object( $post ) && has_blocks( $post ) ) {
-		$settings['wpautop'] = false;
-	}
-
-	return $settings;
-}
-add_filter( 'wp_editor_settings', 'gutenberg_disable_editor_settings_wpautop', 10, 2 );
+add_action( 'init', 'gutenberg_remove_hook_wp_enqueue_registered_block_scripts_and_styles' );
 
 /**
- * Add rest nonce to the heartbeat response.
+ * Callback hooked to the register_block_type_args filter.
  *
- * @param  array $response Original heartbeat response.
- * @return array           New heartbeat response.
- */
-function gutenberg_add_rest_nonce_to_heartbeat_response_headers( $response ) {
-	$response['rest-nonce'] = wp_create_nonce( 'wp_rest' );
-	return $response;
-}
-add_filter( 'wp_refresh_nonces', 'gutenberg_add_rest_nonce_to_heartbeat_response_headers' );
-
-/**
- * As a substitute for the default content `wpautop` filter, applies autop
- * behavior only for posts where content does not contain blocks.
+ * This hooks into block registration to inject the default context into the block object.
+ * It can be removed once the default context is added into Core.
  *
- * @param  string $content Post content.
- * @return string          Paragraph-converted text if non-block content.
+ * @param array $args Block attributes.
+ * @return array Block attributes.
  */
-function gutenberg_wpautop( $content ) {
-	if ( has_blocks( $content ) ) {
-		return $content;
-	}
+function gutenberg_inject_default_block_context( $args ) {
+	if ( is_callable( $args['render_callback'] ) ) {
+		$block_render_callback   = $args['render_callback'];
+		$args['render_callback'] = function( $attributes, $content, $block = null ) use ( $block_render_callback ) {
+			global $post, $wp_query;
 
-	return wpautop( $content );
-}
-remove_filter( 'the_content', 'wpautop' );
-add_filter( 'the_content', 'gutenberg_wpautop', 6 );
+			// Check for null for back compatibility with WP_Block_Type->render
+			// which is unused since the introduction of WP_Block class.
+			//
+			// See:
+			// - https://core.trac.wordpress.org/ticket/49927
+			// - commit 910de8f6890c87f93359c6f2edc6c27b9a3f3292 at wordpress-develop.
 
-
-/**
- * Check if we need to load the block warning in the Classic Editor.
- *
- * @since 3.4.0
- */
-function gutenberg_check_if_classic_needs_warning_about_blocks() {
-	global $pagenow;
-
-	if ( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) || ! isset( $_REQUEST['classic-editor'] ) ) {
-		return;
-	}
-
-	$post = get_post();
-	if ( ! $post ) {
-		return;
-	}
-
-	if ( ! has_blocks( $post ) ) {
-		return;
-	}
-
-	// Enqueue the JS we're going to need in the dialog.
-	wp_enqueue_script( 'wp-a11y' );
-	wp_enqueue_script( 'wp-sanitize' );
-
-	add_action( 'admin_footer', 'gutenberg_warn_classic_about_blocks' );
-}
-add_action( 'admin_enqueue_scripts', 'gutenberg_check_if_classic_needs_warning_about_blocks' );
-
-/**
- * Adds a warning to the Classic Editor when trying to edit a post containing blocks.
- *
- * @since 3.4.0
- */
-function gutenberg_warn_classic_about_blocks() {
-	$post = get_post();
-
-	$gutenberg_edit_link = get_edit_post_link( $post->ID, 'raw' );
-
-	$classic_edit_link = $gutenberg_edit_link;
-	$classic_edit_link = add_query_arg(
-		array(
-			'classic-editor'     => '',
-			'hide-block-warning' => '',
-		),
-		$classic_edit_link
-	);
-
-	$revisions_link = '';
-	if ( wp_revisions_enabled( $post ) ) {
-		$revisions = wp_get_post_revisions( $post );
-
-		// If there's only one revision, that won't help.
-		if ( count( $revisions ) > 1 ) {
-			reset( $revisions ); // Reset pointer for key().
-			$revisions_link = get_edit_post_link( key( $revisions ) );
-		}
-	}
-	?>
-		<style type="text/css">
-			#blocks-in-post-dialog .notification-dialog {
-				position: fixed;
-				top: 50%;
-				left: 50%;
-				width: 500px;
-				box-sizing: border-box;
-				transform: translate(-50%, -50%);
-				margin: 0;
-				padding: 25px;
-				max-height: 90%;
-				background: #fff;
-				box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-				line-height: 1.5;
-				z-index: 1000005;
-				overflow-y: auto;
+			if ( null === $block ) {
+				return $block_render_callback( $attributes, $content );
 			}
 
-			@media only screen and (max-height: 480px), screen and (max-width: 450px) {
-				#blocks-in-post-dialog .notification-dialog {
-					top: 0;
-					left: 0;
-					width: 100%;
-					height: 100%;
-					transform: none;
-					max-height: 100%;
+			$registry   = WP_Block_Type_Registry::get_instance();
+			$block_type = $registry->get_registered( $block->name );
+
+			// For WordPress versions that don't support the context API.
+			if ( ! $block->context ) {
+				$block->context = array();
+			}
+
+			// Inject the post context if not done by Core.
+			$needs_post_id = ! empty( $block_type->uses_context ) && in_array( 'postId', $block_type->uses_context, true );
+			if ( $post instanceof WP_Post && $needs_post_id && ! isset( $block->context['postId'] ) && 'wp_template' !== $post->post_type && 'wp_template_part' !== $post->post_type ) {
+				$block->context['postId'] = $post->ID;
+			}
+			$needs_post_type = ! empty( $block_type->uses_context ) && in_array( 'postType', $block_type->uses_context, true );
+			if ( $post instanceof WP_Post && $needs_post_type && ! isset( $block->context['postType'] ) && 'wp_template' !== $post->post_type && 'wp_template_part' !== $post->post_type ) {
+				/*
+				* The `postType` context is largely unnecessary server-side, since the
+				* ID is usually sufficient on its own. That being said, since a block's
+				* manifest is expected to be shared between the server and the client,
+				* it should be included to consistently fulfill the expectation.
+				*/
+				$block->context['postType'] = $post->post_type;
+			}
+
+			// Inject the query context if not done by Core.
+			$needs_query = ! empty( $block_type->uses_context ) && in_array( 'query', $block_type->uses_context, true );
+			if ( ! isset( $block->context['query'] ) && $needs_query ) {
+				if ( isset( $wp_query->tax_query->queried_terms['category'] ) ) {
+					$block->context['query'] = array( 'categoryIds' => array() );
+
+					foreach ( $wp_query->tax_query->queried_terms['category']['terms'] as $category_slug_or_id ) {
+						$block->context['query']['categoryIds'][] = 'slug' === $wp_query->tax_query->queried_terms['category']['field'] ? get_cat_ID( $category_slug_or_id ) : $category_slug_or_id;
+					}
+				}
+
+				if ( isset( $wp_query->tax_query->queried_terms['post_tag'] ) ) {
+					if ( isset( $block->context['query'] ) ) {
+						$block->context['query']['tagIds'] = array();
+					} else {
+						$block->context['query'] = array( 'tagIds' => array() );
+					}
+
+					foreach ( $wp_query->tax_query->queried_terms['post_tag']['terms'] as $tag_slug_or_id ) {
+						$tag_ID = $tag_slug_or_id;
+
+						if ( 'slug' === $wp_query->tax_query->queried_terms['post_tag']['field'] ) {
+							$tag = get_term_by( 'slug', $tag_slug_or_id, 'post_tag' );
+
+							if ( $tag ) {
+								$tag_ID = $tag->term_id;
+							}
+						}
+						$block->context['query']['tagIds'][] = $tag_ID;
+					}
 				}
 			}
-		</style>
 
-		<div id="blocks-in-post-dialog" class="notification-dialog-wrap">
-			<div class="notification-dialog-background"></div>
-			<div class="notification-dialog">
-				<div class="blocks-in-post-message">
-					<p><?php _e( 'This post was previously edited in Gutenberg. You can continue in the Classic Editor, but you may lose data and formatting.', 'gutenberg' ); ?></p>
-					<?php
-					if ( $revisions_link ) {
-						?>
-							<p>
-							<?php
-								/* translators: link to the post revisions page */
-								printf( __( 'You can also <a href="%s">browse previous revisions</a> and restore a version of the post before it was edited in Gutenberg.', 'gutenberg' ), esc_url( $revisions_link ) );
-							?>
-							</p>
-						<?php
-					} else {
-						?>
-							<p><strong><?php _e( 'Because this post does not have revisions, you will not be able to revert any changes you make in the Classic Editor.', 'gutenberg' ); ?></strong></p>
-						<?php
-					}
-					?>
-				</div>
-				<p>
-					<a class="button button-primary blocks-in-post-gutenberg-button" href="<?php echo esc_url( $gutenberg_edit_link ); ?>"><?php _e( 'Edit in Gutenberg', 'gutenberg' ); ?></a>
-					<button type="button" class="button blocks-in-post-classic-button"><?php _e( 'Continue to Classic Editor', 'gutenberg' ); ?></button>
-				</p>
-			</div>
-		</div>
-
-		<script type="text/javascript">
-			/* <![CDATA[ */
-			( function( $ ) {
-				var dialog = {};
-
-				dialog.init = function() {
-					// The modal
-					dialog.warning = $( '#blocks-in-post-dialog' );
-					// Get the links and buttons within the modal.
-					dialog.warningTabbables = dialog.warning.find( 'a, button' );
-
-					// Get the text within the modal.
-					dialog.rawMessage = dialog.warning.find( '.blocks-in-post-message' ).text();
-
-					// Hide all the #wpwrap content from assistive technologies.
-					$( '#wpwrap' ).attr( 'aria-hidden', 'true' );
-
-					// Detach the warning modal from its position and append it to the body.
-					$( document.body )
-						.addClass( 'modal-open' )
-						.append( dialog.warning.detach() );
-
-					// Reveal the modal and set focus on the Gutenberg button.
-					dialog.warning
-						.removeClass( 'hidden' )
-						.find( '.blocks-in-post-gutenberg-button' ).focus();
-
-					// Attach event handlers.
-					dialog.warningTabbables.on( 'keydown', dialog.constrainTabbing );
-					dialog.warning.on( 'click', '.blocks-in-post-classic-button', dialog.dismissWarning );
-
-					// Make screen readers announce the warning message after a short delay (necessary for some screen readers).
-					setTimeout( function() {
-						wp.a11y.speak( wp.sanitize.stripTags( dialog.rawMessage.replace( /\s+/g, ' ' ) ), 'assertive' );
-					}, 1000 );
-				};
-
-				dialog.constrainTabbing = function( event ) {
-					var firstTabbable, lastTabbable;
-
-					if ( 9 !== event.which ) {
-						return;
-					}
-
-					firstTabbable = dialog.warningTabbables.first()[0];
-					lastTabbable = dialog.warningTabbables.last()[0];
-
-					if ( lastTabbable === event.target && ! event.shiftKey ) {
-						firstTabbable.focus();
-						event.preventDefault();
-					} else if ( firstTabbable === event.target && event.shiftKey ) {
-						lastTabbable.focus();
-						event.preventDefault();
-					}
-				};
-
-				dialog.dismissWarning = function() {
-					// Hide modal.
-					dialog.warning.remove();
-					$( '#wpwrap' ).removeAttr( 'aria-hidden' );
-					$( 'body' ).removeClass( 'modal-open' );
-				};
-
-				$( document ).ready( dialog.init );
-			} )( jQuery );
-			/* ]]> */
-		</script>
-	<?php
+			return $block_render_callback( $attributes, $content, $block );
+		};
+	}
+	return $args;
 }
+
+add_filter( 'register_block_type_args', 'gutenberg_inject_default_block_context' );
+
+/**
+ * Amends the paths to preload when initializing edit post.
+ *
+ * @see https://core.trac.wordpress.org/ticket/50606
+ *
+ * @since 8.4.0
+ *
+ * @param  array $preload_paths Default path list that will be preloaded.
+ * @return array Modified path list to preload.
+ */
+function gutenberg_preload_edit_post( $preload_paths ) {
+	$additional_paths = array( '/?context=edit' );
+	return array_merge( $preload_paths, $additional_paths );
+}
+
+add_filter( 'block_editor_preload_paths', 'gutenberg_preload_edit_post' );
+
+/**
+ * Override post type labels for Reusable Block custom post type.
+ * The labels are different from the ones in Core.
+ *
+ * Remove this when Core receives the new labels (minimum supported version WordPress 5.8)
+ *
+ * @return array Array of new labels for Reusable Block post type.
+ */
+function gutenberg_override_reusable_block_post_type_labels() {
+	return array(
+		'name'                     => _x( 'Reusable blocks', 'post type general name', 'gutenberg' ),
+		'singular_name'            => _x( 'Reusable block', 'post type singular name', 'gutenberg' ),
+		'menu_name'                => _x( 'Reusable blocks', 'admin menu', 'gutenberg' ),
+		'name_admin_bar'           => _x( 'Reusable block', 'add new on admin bar', 'gutenberg' ),
+		'add_new'                  => _x( 'Add New', 'Reusable block', 'gutenberg' ),
+		'add_new_item'             => __( 'Add new Reusable block', 'gutenberg' ),
+		'new_item'                 => __( 'New Reusable block', 'gutenberg' ),
+		'edit_item'                => __( 'Edit Reusable block', 'gutenberg' ),
+		'view_item'                => __( 'View Reusable block', 'gutenberg' ),
+		'all_items'                => __( 'All Reusable blocks', 'gutenberg' ),
+		'search_items'             => __( 'Search Reusable blocks', 'gutenberg' ),
+		'not_found'                => __( 'No reusable blocks found.', 'gutenberg' ),
+		'not_found_in_trash'       => __( 'No reusable blocks found in Trash.', 'gutenberg' ),
+		'filter_items_list'        => __( 'Filter reusable blocks list', 'gutenberg' ),
+		'items_list_navigation'    => __( 'Reusable blocks list navigation', 'gutenberg' ),
+		'items_list'               => __( 'Reusable blocks list', 'gutenberg' ),
+		'item_published'           => __( 'Reusable block published.', 'gutenberg' ),
+		'item_published_privately' => __( 'Reusable block published privately.', 'gutenberg' ),
+		'item_reverted_to_draft'   => __( 'Reusable block reverted to draft.', 'gutenberg' ),
+		'item_scheduled'           => __( 'Reusable block scheduled.', 'gutenberg' ),
+		'item_updated'             => __( 'Reusable block updated.', 'gutenberg' ),
+	);
+}
+add_filter( 'post_type_labels_wp_block', 'gutenberg_override_reusable_block_post_type_labels', 10, 0 );

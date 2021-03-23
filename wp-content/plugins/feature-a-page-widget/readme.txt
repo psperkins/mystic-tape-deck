@@ -3,8 +3,8 @@ Contributors: mrwweb
 Donate link: https://www.paypal.me/rootwiley
 Tags: Widget, Widgets, Sidebar, Featured Page, Featured Post
 Requires at least: 3.9
-Tested up to: 4.8
-Stable tag: 2.1.1
+Tested up to: 5.5
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -63,6 +63,11 @@ English (default), German (`de_DE`), Serbian (`sr_RS`), Polish (`pl_PL`), Spanis
 == Frequently Asked Questions ==
 
 **[Full Version 2.0 Documentation](http://mrwweb.com/wordpress-plugins/feature-a-page-widget/version-2-documentation/)**
+
+= Is this plugin compatible with WordPress 5.0 / "Gutenberg"? =
+Yes.
+
+Because this is a widget, there is no direct integration with the WordPress post editor and the basic features of this plugin are uneffected. However, if you are using the new editor, note the new location of the Excerpt field in the sidebar.
 
 = How do I set the widget image? =
 
@@ -140,132 +145,13 @@ If this plugin is more than a little off, you might be looking for a different p
 
 == Changelog ==
 
-= 2.1.1 (June 8, 2017) =
-- Increase "Page to Feature" list transient caching time from 1 to 4 hours following no reported problems since 2.1.0 release.
-- [Fix] Revise widget query to avoid conflict with plugins including Events Manager. [Props @betyonfire](https://wordpress.org/support/topic/custom-post-types-appear-in-widget-but-not-on-page/)
-- Improve inline documentation thoroughness, clearness, and formatting
-- Increase and standardize whitespace throughout plugin
+= 2.2.0 (August 12, 2020) =
+- Support for WordPress 5.5
+- Fix deprecated use of jQuery.live(). Props, Roy!
+- Upgrade Chosen to 1.8.7 (supports jQuery 3.X)
 
-= 2.1.0 (May 18, 2017) =
-* [New] Implement caching on Widgets admin screen for massive performance improvements (70-80% reduction in query time in testing) on sites with lots of pages and multiple widgets.
-* [Fix] Make sure layout previews appear in browsers other than Chrome.
-* [Fix] Update layout image to SVG in supporting browsers so it stays crisp on zoomed pages.
-* Update Chosen to 1.7.0
-* Rename enqueued Chosen CSS handle to "chosen" (previously "chosen_css") to hopefully reduce potential for plugin and theme conflicts.
-* Technical note: The select list HTML is now saved as a transient that expires after 1 hour. The transient is also reset after any time a supported published post is first published or updated. There were no problems during testing, but please be sure to [open a support ticket](https://wordpress.org/support/plugin/feature-a-page-widget) if you have problems with the "Page to Feature."
-* Removed 2.0 upgrade info and pre-2.0 documentation. See old version of plugin readme to access that information.
-* See also: 2.0.11 changelog
-
-= 2.0.11 (March 31, 2017 - Not publicly released on wordpress.org) =
-* [Fix] "Read More" link screen reader text should always contain title, even when "Hide Title" option is true.
-* [Fix] Correct logic to hide widgets that don't have a set featured page ID.
-* [Workaround] Added way to disable widget select list to resolve performance problems when above fix is still insufficient. Use `add_filter( 'fpw_temp_memory_fix', '__return_true' );`
-* Theoretical query performance improvements on Widgets admin screen
-* Remove redundant `esc_attr()` ([Props @flyjam](https://wordpress.org/support/topic/using-filter-at-widget_title-to-have-tags-in-it/))
-* Ditch PHP "typecasting" with `(int)` for `intval()`
-* Cleaned up readme following new plugin repo design.
-
-= 2.0.10 (April 29, 2016) =
-* **[Important Notice] Feature a Page Widget now requires WordPress 3.9 or higher.**
-* [Fix] Custom Sidebars compatibility fix.
-
-= 2.0.9 (March 29, 2016) =
-* [Fix] Restore compatibility with Site Origin Page Builder plugin
-
-= 2.0.8 (March 28, 2016) =
-* [Fix] Inexplicable partial update caused old script names to attempt to be loaded. This completes the 2.0.7 update of Chosen and should resolve any issues.
-
-= 2.0.7 (March 27, 2016) =
-* [New] Support "selective refresh" feature in WordPress 4.5 for faster previews when using the widget in the customizer.
-* Update Chosen to 1.5.1
-* Bump "Tested up to:" to 4.5
-
-= 2.0.6 (Dec 15, 2015) =
-* [Fix] Add isset checks to resolve AJAX warnings. ([Props @maxwelton.](https://wordpress.org/support/topic/ajax-php-warning))
-* [Fix] Support WPML in dropdown page list via `suppress_filters`. (Thanks, Maarten.)
-* [Security][i18n] Escape translated strings for improved security.
-* [Fix] Show Help Text again on Contextual Help tab of widget screen.
-* [Layout] Center images if they don't fill full-width of widget.
-
-= 2.0.5 (Sep 7, 2015) =
-* [i18n] New Dutch translation. Thanks to [Patrick Catthoor](https://profiles.wordpress.org/pc1271)!
-* [i18n News] If you have translation for this plugin, I would love to include it, ideally before the [move to translate.wordpress.org for plugins](https://make.wordpress.org/plugins/2015/09/01/plugin-translations-on-wordpress-org/). [Contact me](http://mrwweb.com/contact/) if you're interested.
-* Bump "Tested to:" number
-
-= 2.0.4 (Aug 28, 2015) =
-- [Fix] Compatibility fix for WPMU Custom Sidebars (Thanks [oxygensmith for reporting](https://wordpress.org/support/topic/conflict-with-wpmu-custom-sidebars?replies=1))
-- [i18n] New Italian translation. Thanks to [Carmine Scaglione](https://profiles.wordpress.org/scaglione).
-
-= 2.0.3 (May 29, 2015) =
-* [i18n] Spanish Translations. Thanks to [Luuuciano](https://wordpress.org/support/profile/luuuciano)!
-
-= 2.0.2 (May 1, 2015) =
-* [Fix] One string missing i18n. (Thanks, Maciej Gryniuk!)
-* [Fix] Prevent clipped radio buttons with browser zoom.
-* [New] `fpw_read_more_ellipsis` to filter punctuation in read more link. [Forum request.](https://wordpress.org/support/topic/excerpt-ellipses?replies=2#post-6861677)
-* [i18n] Polish Translation from Maciej Gryniuk! (Update .pot file too.)
-* [New] Added  missing space in "Read More" link noted in ["WordPress Plugin Review: Feature a Page Widget."](http://beyond-paper.com/wordpress-plugin-review-feature-a-page-widget/)
-* [Documentation] New sticky [Support Forum post about accessible read more link](https://wordpress.org/support/topic/does-your-read-more-link-say-read-more-about-title).
-
-= 2.0.1 (April 19, 2015) =
-* [Fix] Give `fieldset` a full `name` attribute to avoid SiteOrigin Page Builder error.
-* [New] Explicitly support SiteOrigin Page Builder via new script/style enqueues and JS event bindings.
-* [Change] Rename "Chosen" library slug CSS/JS to hopefully avoid conflicts with other bundled versions.
-* [Change] Remove priority of enqueues in admin. Not really sure why it was there in the first place...
-
-= 2.0.0 (April 14, 2015) =
-* **MAJOR UPDATE** Requires WordPress 3.8+. New template override system. Please update templates ASAP.
-* [New] Updated widget form design matches WordPress 3.8 admin and replaces all but one image with Dashicons.
-* [New] Options for hiding Title, Image, and Excerpt and adding "Read More" link.
-* [New] Features Posts by default! (And new filter for adding other post types!)
-* [New] Changes to templates for great flexibility. (Old templates will partially still work but support may be removed in future versions.)
-* [New] Filters for adding post types, modifying "Read More" link, adding custom layouts, and more!
-* [New] Docblock commenting throughout plugin for better in-code documentation.
-* [Change] Rename widget title to "Feature a Page" in admin.
-* [Fix] Remove `/assets/` folder from plugin package for faster downloads.
-* [Fix] Drop hAtom support because it was broken without author and date. (Would you like to see schema.org support? Let me know.)
-* [New] Introduce plugin compatibility fixes for Jetpack, DiggDigg, and podPress.
-* Various small CSS changes to widget layouts for [hopefully] improved consistency.
-* Reorganized files, WordPress code formatting improvements, and cleaner markup in most places
-* Remove use of `extract()` for more readable code.
-* [i18n] German translation files by [Christoph Toschko](https://profiles.wordpress.org/jomit/). Thanks, Christoph!
-* [i18n] Serbian translation from Ogi Djuraskovic of [FirstSiteGuide.com](http://firstsiteguide.com/). Thanks, Ogi!
-* [Update] Update Chosen JS library to v1.4.2.
+[Full Changelog](https://plugins.trac.wordpress.org/browser/feature-a-page-widget/trunk/changelog.txt)
 
 == Upgrade Notice ==
-= 2.1.0 =
-Bug fixes and major admin performance improvements.
-
-= 2.0.10 =
-New: Requires WordPress 3.9 or higher. Fix Custom Sidebars plugin compatibility.
-
-= 2.0.9 =
-Restore Site Origin Page Builder plugin compatibility
-
-= 2.0.8 =
-Fixes 2.0.7 release that added "Support for 4.5 'Selective Refresh' Customizer previews"
-
-= 2.0.7 =
-Support for 4.5 "Selective Refresh" Customizer previews
-
-= 2.0.6 =
-Better WPML support, resolve AJAX warning, and security hardening
-
-= 2.0.5 =
-New Dutch translation. v2.0.0 IS A MAJOR UPDATE. Visit plugin home for detailed information about updates. / 2.0.0: Improved interface, ability to feature any post type, new template system, more filters, and more!
-
-= 2.0.4 =
-Italian translation & WPMU Sidebars plugin compatibility fix.
-v2.0 IS A MAJOR UPDATE. Visit plugin home for detailed information about updates. / 2.0.0: Improved interface, ability to feature any post type, new template system, more filters, and more!
-
-= 2.0.3 =
-v2.0 IS A MAJOR UPDATE. Visit plugin home for detailed information about updates. / 2.0.0: Improved interface, ability to feature any post type, new template system, more filters, and more! / 2.0.3: Add Spanish translation.
-
-= 2.0.2 =
-v2.0 IS A MAJOR UPDATE. Visit plugin home for detailed information about updates. / 2.0.0: Improved interface, ability to feature any post type, new template system, more filters, and more! / 2.0.2: New Polish translation, multiple small bug fixes, new `fpw_read_more_ellipsis` filter.
-
-= 2.0.1 =
-v2.0 IS A MAJOR UPDATE. Visit plugin home for detailed information about updates. / 2.0.0: Improved interface, ability to feature any post type, new template system, more filters, and more! / 2.0.1: Support for SiteOrigin Page Builder Widget Editing
-
-= 2.0.0 =
-**MAJOR UPDATE.** Improved interface, ability to feature any post type, new template system, more filters, and more! Visit plugin home for detailed information about updates.
+= 2.2.0 =
+WordPress 5.5/jQuery compatibility

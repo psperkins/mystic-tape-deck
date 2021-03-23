@@ -2,8 +2,8 @@
 Contributors: kevindees
 Tags: videos, fitvids, responsive
 Requires at least: 3.9
-Tested up to: 5.2
-Stable Tag: 3.0.6
+Tested up to: 5.6
+Stable Tag: 3.0.8
 
 This plugin makes videos responsive using the FitVids jQuery plugin on WordPress.
 
@@ -24,6 +24,12 @@ Upload the fitvids-for-wordpress plugin to your blog, Activate it!
 1. If you need help understanding how FitVids works click the help tab.
 
 == Changelog ==
+
+= 3.0.8 =
+* Add WP 5.6
+
+= 3.0.7 =
+* Add WP 5.5
 
 = 3.0.6 =
 * Update plugin version

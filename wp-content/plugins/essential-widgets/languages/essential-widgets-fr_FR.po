@@ -1,0 +1,1090 @@
+# Copyright (C) 2018-2021 Catch Plugins
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Essential Widgets\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/tags/_s\n"
+"POT-Creation-Date: 2021-03-07 13:42-0800\n"
+"PO-Revision-Date: 2021-03-07 13:42-0800\n"
+"Last-Translator: Charles Girardin <girardin.charles.57@gmail.com>\n"
+"Language-Team: Catch Plugins <info@catchplugins.com>\n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.4.2\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;esc_attr_e;esc_attr__;_nx;_x;"
+"esc_html_e;esc_html__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_n_noop:1,2;"
+"__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../admin/class-essential-widgets-admin.php:127
+#: ../admin/partials/dashboard-display.php:21
+msgid "Settings"
+msgstr "Paramètres"
+
+#: ../admin/class-essential-widgets-admin.php:140
+#: ../admin/class-essential-widgets-admin.php:141
+#: ../admin/partials/essential-widgets-admin-display.php:17
+msgid "Essential Widgets"
+msgstr "Essential Widgets"
+
+#: ../admin/class-essential-widgets-admin.php:156
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Vous n'avez pas les permissions suffisantes pour accéder à cette page."
+
+#: ../admin/class-essential-widgets-admin.php:186
+#: ../includes/ctp-tabs-removal.php:69
+msgid "Connection Error. Please try again."
+msgstr "Erreur de connexion. Veuillez réessayer."
+
+#: ../admin/partials/dashboard-display.php:26
+msgid "Switch the widgets On/Off as necessary in the section below."
+msgstr ""
+"Activez ou désactivez les widgets selon vos besoins dans la section ci-"
+"dessous."
+
+#: ../admin/partials/dashboard-display.php:27
+msgid "Click here to manage the widgets"
+msgstr "Cliquez ici pour gérer les widgets"
+
+#: ../admin/partials/essential-widgets-admin-display.php:19
+msgid ""
+"Essential Widgets is a WordPress plugin for widgets that allows you to "
+"create and add amazing widgets with high customization option on your "
+"website without affecting your wallet."
+msgstr ""
+"Essential Widgets est un plugin WordPress pour les widgets qui vous permet "
+"de créer et d'ajouter des widgets étonnants avec une option de "
+"personnalisation élevée sur votre site web sans affecter votre portefeuille."
+
+#: ../admin/partials/essential-widgets-admin-display.php:26
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#: ../admin/partials/essential-widgets-admin-display.php:27
+#: ../admin/partials/essential-widgets-admin-display.php:103
+#: ../admin/partials/essential-widgets-admin-display.php:166
+msgid "Features"
+msgstr "Caractéristiques"
+
+#: ../admin/partials/essential-widgets-admin-display.php:28
+#: ../admin/partials/essential-widgets-admin-display.php:158
+msgid "Compare Table"
+msgstr "Tableau comparatif"
+
+#: ../admin/partials/essential-widgets-admin-display.php:37
+msgid "Catch Themes & Catch Plugins Tabs"
+msgstr "Onglets Catch Themes & Catch Plugins"
+
+#: ../admin/partials/essential-widgets-admin-display.php:42
+msgid ""
+"If you want to turn off Catch Themes & Catch Plugins tabs option in Add "
+"Themes and Add Plugins page, please uncheck the following option."
+msgstr ""
+"Si vous souhaitez désactiver l'option Catch Themes & Catch Plugins dans la "
+"page \"Ajouter des thèmes et des plugins\", veuillez décocher l'option "
+"suivante."
+
+#: ../admin/partials/essential-widgets-admin-display.php:47
+msgid "Turn On Catch Themes & Catch Plugin tabs"
+msgstr "Activer les onglets Catch Themes & Catch Plugins"
+
+#: ../admin/partials/essential-widgets-admin-display.php:68
+msgid "Go Premium!"
+msgstr "Prenez Premium !"
+
+#: ../admin/partials/essential-widgets-admin-display.php:73
+msgid "Dismiss this item."
+msgstr "Rejeter ce point."
+
+#: ../admin/partials/essential-widgets-admin-display.php:77
+#: ../admin/partials/essential-widgets-admin-display.php:231
+#: ../admin/partials/sidebar.php:9
+msgid "EW: About"
+msgstr "EW : À propos"
+
+#: ../admin/partials/essential-widgets-admin-display.php:78
+#: ../admin/partials/sidebar.php:10
+msgid "EW: Advertisement Code"
+msgstr "EW : Code de la publicité"
+
+#: ../admin/partials/essential-widgets-admin-display.php:79
+#: ../admin/partials/essential-widgets-admin-display.php:247
+#: ../admin/partials/sidebar.php:11
+msgid "EW: Advertisement Images"
+msgstr "EW : Images publicitaires"
+
+#: ../admin/partials/essential-widgets-admin-display.php:80
+#: ../admin/partials/essential-widgets-admin-display.php:255
+#: ../admin/partials/sidebar.php:12
+msgid "EW: Featured Embeds"
+msgstr "EW : les intégrations en vedette"
+
+#: ../admin/partials/essential-widgets-admin-display.php:81
+#: ../admin/partials/essential-widgets-admin-display.php:263
+#: ../admin/partials/sidebar.php:13
+msgid "EW: Featured Images"
+msgstr "EW : Images en vedette"
+
+#: ../admin/partials/essential-widgets-admin-display.php:82
+#: ../admin/partials/essential-widgets-admin-display.php:271
+#: ../admin/partials/sidebar.php:14
+msgid "EW: Featured Pages"
+msgstr "EW : Pages vedettes"
+
+#: ../admin/partials/essential-widgets-admin-display.php:83
+#: ../admin/partials/essential-widgets-admin-display.php:279
+#: ../admin/partials/sidebar.php:15
+msgid "EW: Featured Posts"
+msgstr "EW : Articles en vedette"
+
+#: ../admin/partials/essential-widgets-admin-display.php:84
+#: ../admin/partials/essential-widgets-admin-display.php:287
+#: ../admin/partials/sidebar.php:16
+msgid "EW: Gallery Images"
+msgstr "EW : Galerie d'images"
+
+#: ../admin/partials/essential-widgets-admin-display.php:85
+#: ../admin/partials/essential-widgets-admin-display.php:295
+#: ../admin/partials/sidebar.php:17
+msgid "EW: Gallery Pages"
+msgstr "EW : Galerie de pages"
+
+#: ../admin/partials/essential-widgets-admin-display.php:86
+#: ../admin/partials/essential-widgets-admin-display.php:303
+#: ../admin/partials/sidebar.php:18
+msgid "EW: Gallery Posts"
+msgstr "EW : Galerie des articles"
+
+#: ../admin/partials/essential-widgets-admin-display.php:87
+#: ../admin/partials/essential-widgets-admin-display.php:319
+#: ../admin/partials/sidebar.php:19
+msgid "EW: Image"
+msgstr "EW : Image"
+
+#: ../admin/partials/essential-widgets-admin-display.php:88
+#: ../admin/partials/essential-widgets-admin-display.php:335
+#: ../admin/partials/sidebar.php:20
+msgid "EW: Image Slider"
+msgstr "EW : Diaporama"
+
+#: ../admin/partials/essential-widgets-admin-display.php:89
+#: ../admin/partials/sidebar.php:21
+msgid "EW: Newletter"
+msgstr "EW : Lettre d'information"
+
+#: ../admin/partials/essential-widgets-admin-display.php:90
+#: ../admin/partials/essential-widgets-admin-display.php:327
+#: ../admin/partials/sidebar.php:23
+msgid "EW: Video"
+msgstr "EW : Vidéo"
+
+#: ../admin/partials/essential-widgets-admin-display.php:91
+#: ../admin/partials/essential-widgets-admin-display.php:343
+#: ../admin/partials/sidebar.php:22
+msgid "EW: Tabbed Recent/Popular Posts"
+msgstr "EW : Onglet Articles récents/populaires"
+
+#: ../admin/partials/essential-widgets-admin-display.php:94
+msgid "Find out why you should upgrade to Essential Widgets Premium »"
+msgstr "Découvrez pourquoi vous devriez passer à Essential Widgets Premium »"
+
+#: ../admin/partials/essential-widgets-admin-display.php:109
+#: ../admin/partials/essential-widgets-admin-display.php:207
+#: ../includes/widgets/class-ew-archives.php:47
+msgid "EW: Archives"
+msgstr "EW : Archives"
+
+#: ../admin/partials/essential-widgets-admin-display.php:110
+msgid ""
+"The Archives widget comes with various customization options. Choose a "
+"title, limit the number of posts, select the archive type, post type, order "
+"and more with the Archives widget."
+msgstr ""
+"Le widget Archives est livré avec diverses options de personnalisation. "
+"Choisissez un titre, limitez le nombre de messages, sélectionnez le type "
+"d'archive, le type de message, l'ordre et plus encore avec le widget "
+"Archives."
+
+#: ../admin/partials/essential-widgets-admin-display.php:114
+#: ../admin/partials/essential-widgets-admin-display.php:215
+#: ../essential-widgets.php:125 ../includes/widgets/class-ew-authors.php:56
+msgid "EW: Authors"
+msgstr "EW : Auteurs"
+
+#: ../admin/partials/essential-widgets-admin-display.php:115
+msgid ""
+"Displaying the author’s information is kind of a must-have feature if your "
+"website has multiple authors. Our new WordPress widgets plugin allows you to "
+"add Authors widget. With this widget, you can show the list of the authors "
+"on your website, the number of posts, select feed type, and more."
+msgstr ""
+"L'affichage des informations relatives à l'auteur est une fonction "
+"indispensable si votre site web compte plusieurs auteurs. Notre nouveau "
+"plugin de widgets WordPress vous permet d'ajouter le widget Auteurs. Avec ce "
+"widget, vous pouvez afficher la liste des auteurs sur votre site web, le "
+"nombre de messages, sélectionner le type de flux, et plus encore."
+
+#: ../admin/partials/essential-widgets-admin-display.php:119
+#: ../admin/partials/essential-widgets-admin-display.php:223
+#: ../includes/widgets/class-ew-categories.php:57
+msgid "EW: Categories"
+msgstr "EW : Catégories"
+
+#: ../admin/partials/essential-widgets-admin-display.php:120
+msgid ""
+"Essential Widgets Pro supports Categories widget. The widget provides you "
+"with various customizable options such as the title of the widget, taxonomy "
+"option, order option, number of categories to show, display as a list or "
+"none, number of posts to display, sort by option, select feed type ton "
+"display and display as text or image."
+msgstr ""
+"Essential Widgets Pro prend en charge le widget Catégories. Le widget vous "
+"offre diverses options personnalisables telles que le titre du widget, "
+"l'option de taxonomie, l'option d'ordre, le nombre de catégories à afficher, "
+"l'affichage sous forme de liste ou aucun, le nombre de messages à afficher, "
+"le tri par option, le choix du type de flux et l'affichage sous forme de "
+"texte ou d'image."
+
+#: ../admin/partials/essential-widgets-admin-display.php:124
+#: ../admin/partials/essential-widgets-admin-display.php:175
+#: ../includes/widgets/class-ew-menus.php:54
+msgid "EW: Menus"
+msgstr "EW : Menus"
+
+#: ../admin/partials/essential-widgets-admin-display.php:125
+msgid ""
+"Bored with the same default menu? Our new WordPress plugin for widgets, "
+"Essential Widgets Pro supports Menus widget. With the Menus widget filled "
+"with various customization options, you can display your menus elegantly "
+"anywhere you want on your website."
+msgstr ""
+"Le même menu par défaut vous ennuie ? Notre nouveau plugin WordPress pour "
+"les widgets, Essential Widgets Pro, prend en charge le widget Menus. Avec le "
+"widget Menus rempli de diverses options de personnalisation, vous pouvez "
+"afficher vos menus de manière élégante où vous le souhaitez sur votre site "
+"web."
+
+#: ../admin/partials/essential-widgets-admin-display.php:129
+#: ../admin/partials/essential-widgets-admin-display.php:183
+#: ../essential-widgets.php:128 ../includes/widgets/class-ew-pages.php:61
+msgid "EW: Pages"
+msgstr "EW : Pages"
+
+#: ../admin/partials/essential-widgets-admin-display.php:130
+msgid ""
+"Display a list of pages with the Pages widget. With various customization "
+"options being provided to you, you can showcase the pages that are more "
+"important on your website wherever you want with Essential Widgets Pro."
+msgstr ""
+"Afficher une liste de pages avec le widget Pages. Grâce aux diverses options "
+"de personnalisation qui vous sont proposées, vous pouvez afficher les pages "
+"les plus importantes de votre site web où vous le souhaitez avec Essential "
+"Widgets Pro."
+
+#: ../admin/partials/essential-widgets-admin-display.php:134
+#: ../admin/partials/essential-widgets-admin-display.php:191
+#: ../includes/widgets/class-ew-posts.php:48
+msgid "EW: Posts"
+msgstr "EW : Articles"
+
+#: ../admin/partials/essential-widgets-admin-display.php:135
+msgid ""
+"Essential Widgets Pro supports Posts widget. With the widget and its "
+"customizable options, you can easily display a list of posts on your "
+"website. You can add a title, select the post type, number of items to "
+"display, order, sort by, and more."
+msgstr ""
+"Essential Widgets Pro prend en charge le widget Posts. Avec le widget et ses "
+"options personnalisables, vous pouvez facilement afficher une liste de "
+"messages sur votre site web. Vous pouvez ajouter un titre, sélectionner le "
+"type de message, le nombre d'éléments à afficher, l'ordre, le tri par, et "
+"plus encore."
+
+#: ../admin/partials/essential-widgets-admin-display.php:139
+#: ../admin/partials/essential-widgets-admin-display.php:199
+#: ../essential-widgets.php:131 ../includes/widgets/class-ew-tags.php:64
+msgid "EW: Tags"
+msgstr "EW : Mots-clés"
+
+#: ../admin/partials/essential-widgets-admin-display.php:140
+msgid ""
+"And last, but definitely not the least, the Tags widget. You can display a "
+"list of tags as cloud or list, select the order of the tags, sort by option "
+"and the number of items to be displayed. The widget also provides you with "
+"more customization options including the unit, separator, search, text type, "
+"and more."
+msgstr ""
+"Et enfin, mais ce n'est pas le moins important, le widget Mots clés (Tags). "
+"Vous pouvez afficher une liste de mots-clés sous forme de nuage ou de liste, "
+"sélectionner l'ordre des mots-clés, trier par option et le nombre d'éléments "
+"à afficher. Le widget vous offre également d'autres options de "
+"personnalisation, notamment l'unité, le séparateur, la recherche, le type de "
+"texte, etc."
+
+#: ../admin/partials/essential-widgets-admin-display.php:143
+msgid "Upgrade to Essential Widgets Premium »"
+msgstr "Mise à niveau vers Essential Widgets Premium »"
+
+#: ../admin/partials/essential-widgets-admin-display.php:151
+msgid "Get Essential Widgets Pro -"
+msgstr "Obtenir Essential Widgets Pro -"
+
+#: ../admin/partials/essential-widgets-admin-display.php:151
+msgid "Get It Here!"
+msgstr "Obtenez-le ici !"
+
+#: ../admin/partials/essential-widgets-admin-display.php:152
+msgid "You are currently using the free version of Essential Widgets."
+msgstr "Vous utilisez actuellement la version gratuite de Essential Widgets."
+
+#: ../admin/partials/essential-widgets-admin-display.php:153
+msgid ""
+"If you have purchased from catchplugins.com, then follow this link to the "
+"installation instructions (particularly step 1)."
+msgstr ""
+"Si vous avez acheté sur catchplugins.com, suivez ce lien vers les "
+"instructions d'installation (en particulier l'étape 1)."
+
+#: ../admin/partials/essential-widgets-admin-display.php:167
+msgid "Free"
+msgstr "Gratuit"
+
+#: ../admin/partials/essential-widgets-admin-display.php:168
+msgid "Pro"
+msgstr "Pro"
+
+#: ../admin/partials/essential-widgets-admin-display.php:239
+msgid "EW: Advertisement Codes"
+msgstr "EW : Codes de publicité"
+
+#: ../admin/partials/essential-widgets-admin-display.php:311
+msgid "EW: Newsletter"
+msgstr "EW : Bulletin d'information"
+
+#: ../admin/partials/footer.php:4
+msgid "Catch Plugins"
+msgstr "Catch Plugins"
+
+#: ../admin/partials/footer.php:9
+msgid "View Themes"
+msgstr "Voir les thèmes"
+
+#: ../admin/partials/footer.php:10
+msgid "View Plugins"
+msgstr "Voir les plugins"
+
+#: ../admin/partials/footer.php:11
+msgid "Support"
+msgstr "Support"
+
+#: ../admin/partials/sidebar.php:3
+msgid "Recommendations"
+msgstr "Recommandations"
+
+#: ../admin/partials/sidebar.php:7
+msgid "Get Essential Widgets Pro"
+msgstr "Obtenir Essential Widgets Pro"
+
+#: ../admin/partials/sidebar.php:25
+msgid "Get Now"
+msgstr "Obtenir maintenant"
+
+#: ../admin/partials/sidebar.php:32
+msgid "Premium Themes"
+msgstr "Thèmes payant"
+
+#: ../admin/partials/sidebar.php:33
+msgid ""
+"Check out our simple, clean and responsive Premium WordPress Themes that "
+"come with an array of crucial features with a superior functionality."
+msgstr ""
+"Découvrez nos thèmes WordPress Premium, simples, propres et réactifs, qui "
+"offrent un ensemble de fonctionnalités cruciales et de qualité supérieure."
+
+#: ../admin/partials/sidebar.php:33
+msgid "Check our premium themes."
+msgstr "Consultez nos thèmes premium."
+
+#: ../admin/partials/sidebar.php:40
+msgid "Free Themes"
+msgstr "Thèmes gratuits"
+
+#: ../admin/partials/sidebar.php:41
+msgid ""
+"Check out our collection of Free WordPress Themes that are clean, simple and "
+"feature-rich."
+msgstr ""
+"Découvrez notre collection de thèmes WordPress gratuits, propres, simples et "
+"riches en fonctionnalités."
+
+#: ../admin/partials/sidebar.php:41
+msgid "Check our free themes."
+msgstr "Consultez nos thèmes gratuits."
+
+#: ../admin/partials/sidebar.php:49
+msgid "Premium Plugins"
+msgstr "Plugins Premium"
+
+#: ../admin/partials/sidebar.php:50
+msgid ""
+"Check out our secured Premium WordPress Plugins to enhance and add extra "
+"functionalities to your website. An exceptional way to get the most out of "
+"WordPress!"
+msgstr ""
+"Consultez nos plugins WordPress Premium sécurisés pour améliorer et ajouter "
+"des fonctionnalités supplémentaires à votre site web. Une façon "
+"exceptionnelle de tirer le meilleur parti de WordPress !"
+
+#: ../admin/partials/sidebar.php:50
+msgid "Check our premium plugins."
+msgstr "Consultez nos plugins premium."
+
+#: ../admin/partials/sidebar.php:58
+msgid "Free Plugins"
+msgstr "Extensions gratuites"
+
+#: ../admin/partials/sidebar.php:59
+msgid ""
+"Check out our Free WordPress Plugins and get the taste of our service "
+"without affecting your wallet."
+msgstr ""
+"Consultez nos plugins WordPress gratuits et goûtez à notre service sans "
+"affecter votre portefeuille."
+
+#: ../admin/partials/sidebar.php:60
+msgid "check our free plugins."
+msgstr "consultez nos plugins gratuits."
+
+#: ../essential-widgets.php:58
+#, php-format
+msgid ""
+"Sorry, Pro version is already active. No need to activate Free version. If "
+"you still want to activate the Free version, please deactivate the Pro "
+"version first. %1$s&laquo; Return to Plugins%2$s."
+msgstr ""
+"Désolé, la version Pro est déjà active. Il n'est pas nécessaire d'activer la "
+"version gratuite. Si vous souhaitez toujours activer la version gratuite, "
+"veuillez d'abord désactiver la version pro. %1$s&laquo; Retour aux Plugins"
+"%2$s."
+
+#: ../essential-widgets.php:126
+msgid "EW: Category"
+msgstr "EW : Catégorie"
+
+#: ../essential-widgets.php:127
+msgid "EW: Menu"
+msgstr "EW : Menu"
+
+#: ../essential-widgets.php:129
+msgid "EW: Post"
+msgstr "EW : Article"
+
+#: ../essential-widgets.php:130
+msgid "EW: Recent Posts"
+msgstr "EW : Articles récents"
+
+#: ../includes/CatchThemesThemePlugin.php:154
+msgid "Themes by CatchThemes"
+msgstr "Thèmes par CatchThemes"
+
+#: ../includes/CatchThemesThemePlugin.php:434
+msgctxt "Plugin Installer"
+msgid "Catch Plugins"
+msgstr "Catch Plugins"
+
+#: ../includes/CatchThemesThemePlugin.php:473
+#, php-format
+msgid ""
+"You can use any of our free plugins or premium plugins from <a href=\"%s\" "
+"target=\"_blank\">Catch Plugins</a>"
+msgstr ""
+"Vous pouvez utiliser n'importe lequel de nos plugins gratuits ou de nos "
+"plugins premium de <a href=\"%s\" target=\"_blank\">Catch Plugins</a>"
+
+#: ../includes/widgets/class-ew-archives.php:25
+msgid "Archives"
+msgstr "Archives"
+
+#: ../includes/widgets/class-ew-archives.php:38
+#: ../includes/widgets/class-ew-categories.php:48
+msgid "Displays a list of categories"
+msgstr "Affiche une liste de catégories"
+
+#: ../includes/widgets/class-ew-archives.php:63
+msgid "Alphabetical"
+msgstr "Alphabétique"
+
+#: ../includes/widgets/class-ew-archives.php:64
+msgid "Daily"
+msgstr "Quotidien"
+
+#: ../includes/widgets/class-ew-archives.php:65
+msgid "Monthly"
+msgstr "Mensuel"
+
+#: ../includes/widgets/class-ew-archives.php:66
+msgid "Post By Post"
+msgstr "Publier par post"
+
+#: ../includes/widgets/class-ew-archives.php:67
+msgid "Weekly"
+msgstr "Hebdomadaire"
+
+#: ../includes/widgets/class-ew-archives.php:68
+msgid "Yearly"
+msgstr "Annuel"
+
+#: ../includes/widgets/class-ew-archives.php:73
+#: ../includes/widgets/class-ew-authors.php:67
+#: ../includes/widgets/class-ew-categories.php:77
+#: ../includes/widgets/class-ew-pages.php:89
+#: ../includes/widgets/class-ew-posts.php:71
+#: ../includes/widgets/class-ew-tags.php:89
+msgid "Ascending"
+msgstr "Ascendant"
+
+#: ../includes/widgets/class-ew-archives.php:74
+#: ../includes/widgets/class-ew-authors.php:68
+#: ../includes/widgets/class-ew-categories.php:78
+#: ../includes/widgets/class-ew-pages.php:90
+#: ../includes/widgets/class-ew-posts.php:72
+#: ../includes/widgets/class-ew-tags.php:90
+msgid "Descending"
+msgstr "Descendant"
+
+#: ../includes/widgets/class-ew-archives.php:79
+#: ../includes/widgets/class-ew-authors.php:84
+msgid "Plain"
+msgstr "Plein"
+
+#: ../includes/widgets/class-ew-archives.php:80
+#: ../includes/widgets/class-ew-authors.php:83
+#: ../includes/widgets/class-ew-categories.php:72
+#: ../includes/widgets/class-ew-tags.php:84
+msgid "List"
+msgstr "Liste"
+
+#: ../includes/widgets/class-ew-archives.php:81
+msgid "Dropdown"
+msgstr "Liste déroulante"
+
+#: ../includes/widgets/class-ew-archives.php:86
+#: ../includes/widgets/class-ew-authors.php:97
+#: ../includes/widgets/class-ew-categories.php:99
+#: ../includes/widgets/class-ew-menus.php:77
+#: ../includes/widgets/class-ew-pages.php:113
+#: ../includes/widgets/class-ew-posts.php:91
+#: ../includes/widgets/class-ew-tags.php:108
+msgid "Title:"
+msgstr "Titre:"
+
+#: ../includes/widgets/class-ew-archives.php:93
+msgid "Limit:"
+msgstr "Limite :"
+
+#: ../includes/widgets/class-ew-archives.php:100
+msgid "Type:"
+msgstr "Type :"
+
+#: ../includes/widgets/class-ew-archives.php:116
+#: ../includes/widgets/class-ew-pages.php:120
+#: ../includes/widgets/class-ew-posts.php:96
+msgid "Post Type:"
+msgstr "Type d’article:"
+
+#: ../includes/widgets/class-ew-archives.php:132
+#: ../includes/widgets/class-ew-authors.php:104
+#: ../includes/widgets/class-ew-categories.php:138
+#: ../includes/widgets/class-ew-pages.php:136
+#: ../includes/widgets/class-ew-posts.php:122
+#: ../includes/widgets/class-ew-tags.php:149
+msgid "Order:"
+msgstr "Commande:"
+
+#: ../includes/widgets/class-ew-archives.php:148
+#: ../includes/widgets/class-ew-authors.php:143
+#: ../includes/widgets/class-ew-tags.php:133
+msgid "Display as:"
+msgstr "Afficher comme:"
+
+#: ../includes/widgets/class-ew-archives.php:164
+#: ../includes/widgets/class-ew-menus.php:155
+msgid "Before:"
+msgstr "Avant :"
+
+#: ../includes/widgets/class-ew-archives.php:171
+#: ../includes/widgets/class-ew-menus.php:162
+msgid "After:"
+msgstr "Après :"
+
+#: ../includes/widgets/class-ew-archives.php:179
+#: ../includes/widgets/class-ew-authors.php:215
+msgid "Show post count?"
+msgstr "Montrer votre compteur de publications ?"
+
+#: ../includes/widgets/class-ew-archives.php:242
+msgid "Select Year"
+msgstr "Sélectionner l'année"
+
+#: ../includes/widgets/class-ew-archives.php:245
+msgid "Select Month"
+msgstr "Sélectionner le mois"
+
+#: ../includes/widgets/class-ew-archives.php:248
+msgid "Select Week"
+msgstr "Sélectionner la semaine"
+
+#: ../includes/widgets/class-ew-archives.php:251
+msgid "Select Day"
+msgstr "Sélectionner le jour"
+
+#: ../includes/widgets/class-ew-archives.php:254
+msgid "Select Post"
+msgstr "Sélectionnez un Article"
+
+#: ../includes/widgets/class-ew-authors.php:24
+#: ../includes/widgets/class-ew-tags.php:24
+#, php-format
+msgid "%s topic"
+msgid_plural "%s topics"
+msgstr[0] "%s sujet"
+msgstr[1] "%s sujets"
+
+#: ../includes/widgets/class-ew-authors.php:28
+msgid "Authors"
+msgstr "Auteurs"
+
+#: ../includes/widgets/class-ew-authors.php:47
+msgid "Displays a list of author"
+msgstr "Affiche une liste d'auteurs"
+
+#: ../includes/widgets/class-ew-authors.php:72
+msgid "Display Name"
+msgstr "Afficher le nom"
+
+#: ../includes/widgets/class-ew-authors.php:73
+msgid "Email"
+msgstr "E-mail"
+
+#: ../includes/widgets/class-ew-authors.php:74
+#: ../includes/widgets/class-ew-categories.php:83
+#: ../includes/widgets/class-ew-pages.php:96
+#: ../includes/widgets/class-ew-posts.php:81
+msgid "ID"
+msgstr "ID"
+
+#: ../includes/widgets/class-ew-authors.php:75
+msgid "Nice Name"
+msgstr "Joli nom"
+
+#: ../includes/widgets/class-ew-authors.php:76
+msgid "Post Count"
+msgstr "Nombre d'articles"
+
+#: ../includes/widgets/class-ew-authors.php:77
+msgid "Registered"
+msgstr "Enregistré"
+
+#: ../includes/widgets/class-ew-authors.php:78
+msgid "URL"
+msgstr "URL"
+
+#: ../includes/widgets/class-ew-authors.php:79
+msgid "Login"
+msgstr "Connexion"
+
+#: ../includes/widgets/class-ew-authors.php:89
+#: ../includes/widgets/class-ew-categories.php:91
+msgid "Atom"
+msgstr "Atome"
+
+#: ../includes/widgets/class-ew-authors.php:90
+#: ../includes/widgets/class-ew-categories.php:92
+msgid "RDF"
+msgstr "RDF"
+
+#: ../includes/widgets/class-ew-authors.php:91
+#: ../includes/widgets/class-ew-categories.php:93
+msgid "RSS"
+msgstr "RSS"
+
+#: ../includes/widgets/class-ew-authors.php:92
+#: ../includes/widgets/class-ew-categories.php:94
+msgid "RSS 2.0"
+msgstr "RSS 2.0"
+
+#: ../includes/widgets/class-ew-authors.php:120
+#: ../includes/widgets/class-ew-categories.php:154
+#: ../includes/widgets/class-ew-pages.php:152
+#: ../includes/widgets/class-ew-posts.php:138
+#: ../includes/widgets/class-ew-tags.php:165
+msgid "Order By:"
+msgstr "Trier par :"
+
+#: ../includes/widgets/class-ew-authors.php:136
+#: ../includes/widgets/class-ew-categories.php:177
+#: ../includes/widgets/class-ew-pages.php:175
+#: ../includes/widgets/class-ew-posts.php:115
+#: ../includes/widgets/class-ew-tags.php:181
+msgid "Number:"
+msgstr "Nombre:"
+
+#: ../includes/widgets/class-ew-authors.php:159
+#: ../includes/widgets/class-ew-categories.php:184
+#: ../includes/widgets/class-ew-pages.php:196
+#: ../includes/widgets/class-ew-tags.php:192
+msgid "Include:"
+msgstr "Contient :"
+
+#: ../includes/widgets/class-ew-authors.php:166
+#: ../includes/widgets/class-ew-categories.php:191
+#: ../includes/widgets/class-ew-pages.php:203
+#: ../includes/widgets/class-ew-tags.php:199
+msgid "Exclude:"
+msgstr "Exclure :"
+
+#: ../includes/widgets/class-ew-authors.php:171
+#: ../includes/widgets/class-ew-categories.php:196
+#: ../includes/widgets/class-ew-menus.php:142
+#: ../includes/widgets/class-ew-pages.php:208
+#: ../includes/widgets/class-ew-tags.php:186
+msgid "More Options"
+msgstr "Plus d’options"
+
+#: ../includes/widgets/class-ew-authors.php:177
+#: ../includes/widgets/class-ew-categories.php:230
+msgid "Feed Type:"
+msgstr "Type du flux:"
+
+#: ../includes/widgets/class-ew-authors.php:193
+#: ../includes/widgets/class-ew-categories.php:246
+msgid "Feed Text:"
+msgstr "Texte du flux:"
+
+#: ../includes/widgets/class-ew-authors.php:200
+#: ../includes/widgets/class-ew-categories.php:253
+msgid "Feed Image:"
+msgstr "Image du flux:"
+
+#: ../includes/widgets/class-ew-authors.php:208
+msgid "HTML?"
+msgstr "HTML ?"
+
+#: ../includes/widgets/class-ew-authors.php:222
+msgid "Exclude admin?"
+msgstr "Exclure l’administrateur ?"
+
+#: ../includes/widgets/class-ew-authors.php:229
+msgid "Show full name?"
+msgstr "Afficher le nom complet ?"
+
+#: ../includes/widgets/class-ew-authors.php:236
+#: ../includes/widgets/class-ew-categories.php:282
+#: ../includes/widgets/class-ew-tags.php:313
+msgid "Hide empty?"
+msgstr "Masquer ce qui est vide ?"
+
+#: ../includes/widgets/class-ew-categories.php:24
+msgid "Categories"
+msgstr "Catégories"
+
+#: ../includes/widgets/class-ew-categories.php:73
+#: ../includes/widgets/class-ew-posts.php:78
+msgid "None"
+msgstr "Aucun"
+
+#: ../includes/widgets/class-ew-categories.php:82
+#: ../includes/widgets/class-ew-tags.php:95
+msgid "Count"
+msgstr "Nombre"
+
+#: ../includes/widgets/class-ew-categories.php:84
+#: ../includes/widgets/class-ew-tags.php:96
+msgid "Name"
+msgstr "Nom"
+
+#: ../includes/widgets/class-ew-categories.php:85
+#: ../includes/widgets/class-ew-pages.php:99
+#: ../includes/widgets/class-ew-posts.php:77
+msgid "Slug"
+msgstr "Identifiant"
+
+#: ../includes/widgets/class-ew-categories.php:86
+msgid "Term Group"
+msgstr "Groupe de termes"
+
+#: ../includes/widgets/class-ew-categories.php:106
+#: ../includes/widgets/class-ew-tags.php:113
+msgid "Taxonomy:"
+msgstr "Taxonomie:"
+
+#: ../includes/widgets/class-ew-categories.php:122
+msgid "Style:"
+msgstr "Style :"
+
+#: ../includes/widgets/class-ew-categories.php:170
+#: ../includes/widgets/class-ew-menus.php:148
+#: ../includes/widgets/class-ew-pages.php:168
+msgid "Depth:"
+msgstr "Profondeur :"
+
+#: ../includes/widgets/class-ew-categories.php:202
+#: ../includes/widgets/class-ew-pages.php:214
+msgid "Exclude Tree:"
+msgstr "Exclure :"
+
+#: ../includes/widgets/class-ew-categories.php:209
+#: ../includes/widgets/class-ew-pages.php:189
+#: ../includes/widgets/class-ew-tags.php:242
+msgid "Child Of:"
+msgstr "Enfant de :"
+
+#: ../includes/widgets/class-ew-categories.php:216
+msgid "Current Category:"
+msgstr "Catégorie actuelle :"
+
+#: ../includes/widgets/class-ew-categories.php:223
+#: ../includes/widgets/class-ew-tags.php:256
+msgid "Search:"
+msgstr "Recherche:"
+
+#: ../includes/widgets/class-ew-categories.php:261
+#: ../includes/widgets/class-ew-pages.php:289
+msgid "Hierarchical?"
+msgstr "Hiérachique ?"
+
+#: ../includes/widgets/class-ew-categories.php:268
+msgid "Show description on hover?"
+msgstr "Afficher la description en survol ?"
+
+#: ../includes/widgets/class-ew-categories.php:275
+#: ../includes/widgets/class-ew-tags.php:299
+msgid "Show count?"
+msgstr "Afficher compteur?"
+
+#: ../includes/widgets/class-ew-menus.php:28
+msgid "Navigation"
+msgstr "Navigation"
+
+#: ../includes/widgets/class-ew-menus.php:45
+msgid "Displays a list of menus."
+msgstr "Affiche une liste de menus."
+
+#: ../includes/widgets/class-ew-menus.php:84
+msgid "Menu:"
+msgstr "Menu:"
+
+#: ../includes/widgets/class-ew-menus.php:100
+msgid "Container:"
+msgstr "Conteneur :"
+
+#: ../includes/widgets/class-ew-menus.php:116
+msgid "Container ID:"
+msgstr "ID de conteneur:"
+
+#: ../includes/widgets/class-ew-menus.php:117
+#: ../includes/widgets/class-ew-menus.php:124
+#: ../includes/widgets/class-ew-menus.php:131
+#: ../includes/widgets/class-ew-menus.php:138
+msgid "example"
+msgstr "exemple"
+
+#: ../includes/widgets/class-ew-menus.php:123
+msgid "Container Class:"
+msgstr "Classe de conteneur :"
+
+#: ../includes/widgets/class-ew-menus.php:130
+msgid "Menu ID:"
+msgstr "ID du menu :"
+
+#: ../includes/widgets/class-ew-menus.php:137
+msgid "Menu Class:"
+msgstr "Classe de menu :"
+
+#: ../includes/widgets/class-ew-menus.php:169
+#: ../includes/widgets/class-ew-pages.php:251
+msgid "Link Before:"
+msgstr "Lien précédent :"
+
+#: ../includes/widgets/class-ew-menus.php:176
+#: ../includes/widgets/class-ew-pages.php:258
+msgid "Link After:"
+msgstr "Lien suivant :"
+
+#: ../includes/widgets/class-ew-menus.php:183
+msgid "Fallback Callback Function:"
+msgstr "Fonction de rappel :"
+
+#: ../includes/widgets/class-ew-pages.php:29
+msgid "Pages"
+msgstr "Pages"
+
+#: ../includes/widgets/class-ew-pages.php:52
+msgid "Displays a list of pages."
+msgstr "Affiche une liste de pages."
+
+#: ../includes/widgets/class-ew-pages.php:94
+#: ../includes/widgets/class-ew-posts.php:76
+msgid "Author"
+msgstr "Auteur"
+
+#: ../includes/widgets/class-ew-pages.php:95
+#: ../includes/widgets/class-ew-posts.php:80
+msgid "Date"
+msgstr "Date"
+
+#: ../includes/widgets/class-ew-pages.php:97
+#: ../includes/widgets/class-ew-posts.php:85
+msgid "Menu Order"
+msgstr "Ordre du menu"
+
+#: ../includes/widgets/class-ew-pages.php:98
+#: ../includes/widgets/class-ew-pages.php:106
+msgid "Modified"
+msgstr "Modifié"
+
+#: ../includes/widgets/class-ew-pages.php:100
+#: ../includes/widgets/class-ew-posts.php:86
+msgid "Title"
+msgstr "Titre"
+
+#: ../includes/widgets/class-ew-pages.php:104
+msgid "Select"
+msgstr "Sélectionner"
+
+#: ../includes/widgets/class-ew-pages.php:105
+msgid "Created"
+msgstr "Créé"
+
+#: ../includes/widgets/class-ew-pages.php:182
+msgid "Offset:"
+msgstr "Décalage :"
+
+#: ../includes/widgets/class-ew-pages.php:221
+msgid "Meta Key:"
+msgstr "Clé méta :"
+
+#: ../includes/widgets/class-ew-pages.php:237
+msgid "Meta Value:"
+msgstr "Valeur meta :"
+
+#: ../includes/widgets/class-ew-pages.php:244
+msgid "Authors:"
+msgstr "Auteurs :"
+
+#: ../includes/widgets/class-ew-pages.php:265
+msgid "Show Date:"
+msgstr "Afficher Date:"
+
+#: ../includes/widgets/class-ew-pages.php:281
+msgid "Date Format:"
+msgstr "Format de date :"
+
+#: ../includes/widgets/class-ew-posts.php:28
+msgid "Posts"
+msgstr "Articles"
+
+#: ../includes/widgets/class-ew-posts.php:39
+msgid "Displays a list of posts."
+msgstr "Affiche une liste d'articles."
+
+#: ../includes/widgets/class-ew-posts.php:79
+msgid "Type"
+msgstr "Type"
+
+#: ../includes/widgets/class-ew-posts.php:82
+msgid "Date (Modified)"
+msgstr "Date (Dernière modification)"
+
+#: ../includes/widgets/class-ew-posts.php:83
+msgid "Parent"
+msgstr "Parent"
+
+#: ../includes/widgets/class-ew-posts.php:84
+msgid "Comment Count"
+msgstr "Nombre de commentaires"
+
+#: ../includes/widgets/class-ew-posts.php:155
+msgid "Display post date?"
+msgstr "Afficher la date de l'article?"
+
+#: ../includes/widgets/class-ew-posts.php:162
+msgid "Display post author?"
+msgstr "Afficher l'auteur de l'article?"
+
+#: ../includes/widgets/class-ew-tags.php:28
+msgid "Tags"
+msgstr "Mots-clés"
+
+#: ../includes/widgets/class-ew-tags.php:55
+msgid "Displays a list of tags"
+msgstr "Affiche une liste de mots-clés"
+
+#: ../includes/widgets/class-ew-tags.php:78
+msgid "View"
+msgstr "Voir"
+
+#: ../includes/widgets/class-ew-tags.php:79
+msgid "Edit"
+msgstr "Editer"
+
+#: ../includes/widgets/class-ew-tags.php:83
+msgid "Cloud"
+msgstr "Cloud"
+
+#: ../includes/widgets/class-ew-tags.php:85
+msgid "Round Corners"
+msgstr "Coins arrondis"
+
+#: ../includes/widgets/class-ew-tags.php:91
+msgid "Random"
+msgstr "Au hasard"
+
+#: ../includes/widgets/class-ew-tags.php:206
+msgid "Largest:"
+msgstr "Le plus grand :"
+
+#: ../includes/widgets/class-ew-tags.php:213
+msgid "Smallest:"
+msgstr "Le plus petit :"
+
+#: ../includes/widgets/class-ew-tags.php:220
+msgid "Unit:"
+msgstr "Unité:"
+
+#: ../includes/widgets/class-ew-tags.php:235
+msgid "Separator:"
+msgstr "Séparateur :"
+
+#: ../includes/widgets/class-ew-tags.php:249
+msgid "Parent:"
+msgstr "Parent:"
+
+#: ../includes/widgets/class-ew-tags.php:263
+msgid "Name Like:"
+msgstr "Nom Comme :"
+
+#: ../includes/widgets/class-ew-tags.php:270
+msgid "Single Text:"
+msgstr "Texte unique :"
+
+#: ../includes/widgets/class-ew-tags.php:277
+msgid "Multiple Text:"
+msgstr "Texte multiple :"
+
+#: ../includes/widgets/class-ew-tags.php:284
+msgid "Count Text Callback:"
+msgstr "Compter les rappels de texte :"
+
+#: ../includes/widgets/class-ew-tags.php:291
+msgid "Count Scale Callback:"
+msgstr "Rappel de l'échelle de comptage :"
+
+#: ../includes/widgets/class-ew-tags.php:306
+msgid "Pad counts?"
+msgstr "Pad counts?"
